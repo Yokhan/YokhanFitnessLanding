@@ -1,0 +1,35 @@
+/* Problem Section */
+.problem__grid {
+  display: grid;
+  gap: var(--spacing-md);
+}
+
+.problem__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.problem__card-title {
+  font-size: var(--pillar-title-size);
+  font-weight: var(--font-weight-light);
+  margin-bottom: var(--spacing-xs);
+  text-transform: none;
+}
+
+.problem__card p {
+  line-height: 1.6;
+}
+
+.problem__card p + p {
+  color: var(--color-text-muted);
+  font-size: var(--small-size);
+  line-height: 1.5;
+}
+
+@media (min-width: 768px) {
+  .problem__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+  }
+}

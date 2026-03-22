@@ -1,0 +1,184 @@
+/* Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--nav-height);
+}
+
+body {
+  background: var(--MainColor);
+  color: var(--ContrastColor);
+  font-family: var(--font-golos);
+  font-size: var(--body-size);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--letter-spacing-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Container */
+.container {
+  max-width: var(--landing-max-width);
+  margin: 0 auto;
+  padding: 0 var(--section-padding-x);
+  width: 100%;
+}
+
+/* Section */
+.section {
+  padding: var(--section-padding-y) 0;
+}
+
+/* Typography */
+.heading {
+  font-family: var(--font-unbounded);
+  font-weight: var(--font-weight-light);
+  letter-spacing: var(--letter-spacing-tight);
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-size: var(--section-title-size);
+  margin-bottom: var(--spacing-lg);
+}
+
+.section-subtitle {
+  color: var(--color-text-muted);
+  font-size: var(--body-large-size);
+  line-height: 1.5;
+  max-width: 600px;
+  margin-bottom: var(--spacing-2xl);
+}
+
+/* Glass Card */
+.glass-card {
+  position: relative;
+  background:
+    url('../images/icon-buttons-noise.webp') repeat,
+    var(--FakeGlassBg);
+  background-size: 5px 5px, auto;
+  backdrop-filter: blur(var(--FakeGlassBlur)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--FakeGlassBlur)) saturate(150%);
+  border-radius: var(--CornerRadius);
+  border: var(--FakeGlassBorder);
+  box-shadow: var(--FakeGlassShadow);
+  padding: var(--spacing-lg);
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--StrokeGlassGradient);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* CTA Button */
+.btn-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--ButtonMinHeight);
+  padding: 12px 32px;
+  border: none;
+  border-radius: var(--ButtonRadius);
+  background: var(--ButtonGlassOverlayColorGreen);
+  box-shadow: var(--ButtonDropShadow);
+  color: var(--flat-white);
+  font-family: var(--font-unbounded);
+  font-size: var(--small-size);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-tight);
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.btn-cta:hover {
+  transform: scale(1.03);
+  filter: brightness(1.1);
+}
+
+.btn-cta:focus-visible {
+  outline: 2px solid var(--color-accent-green);
+  outline-offset: 3px;
+}
+
+/* Secondary Button */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--ButtonMinHeight);
+  padding: 12px 32px;
+  border: var(--FakeGlassBorder);
+  border-radius: var(--ButtonRadius);
+  background: var(--ButtonGlassOverlayColorLight);
+  backdrop-filter: blur(12px);
+  color: var(--ContrastColor);
+  font-family: var(--font-golos);
+  font-size: var(--small-size);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.btn-secondary:hover {
+  transform: scale(1.03);
+  filter: brightness(1.1);
+}
+
+/* Text utilities */
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.text-accent-green {
+  color: var(--color-accent-green);
+}
+
+.text-accent-orange {
+  color: var(--color-accent-orange);
+}
+
+/* Links */
+a {
+  color: var(--color-accent-green);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  filter: brightness(1.2);
+}
+
+/* Visually hidden (a11y) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
