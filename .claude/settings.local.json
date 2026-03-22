@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp \"C:/Users/iohan/Documents/YokhanFitnessAppMY/frontend/public/fonts/Unbounded-VariableFont_wght.woff2\" \"C:/Users/iohan/Documents/YokhanFitnessLanding/fonts/\")",
+      "Bash(cp \"C:/Users/iohan/Documents/YokhanFitnessAppMY/frontend/public/fonts/GolosText-VariableFont_wght.woff2\" \"C:/Users/iohan/Documents/YokhanFitnessLanding/fonts/\")",
+      "Bash(cp \"C:/Users/iohan/Documents/YokhanFitnessAppMY/frontend/public/images/icon-buttons-noise.webp\" \"C:/Users/iohan/Documents/YokhanFitnessLanding/images/\")"
+    ]
+  }
+}

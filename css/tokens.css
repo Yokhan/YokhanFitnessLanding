@@ -1,0 +1,121 @@
+/* Font Faces */
+@font-face {
+  font-family: 'Unbounded';
+  src: url('../fonts/Unbounded-VariableFont_wght.woff2') format('woff2-variations');
+  font-weight: 200 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Golos Text';
+  src: url('../fonts/GolosText-VariableFont_wght.woff2') format('woff2-variations');
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+/* ========== Dark theme (default) ========== */
+:root {
+  --MainColor: #382d24;
+  --ContrastColor: #f3ead7;
+  --flat-white: #ffffff;
+
+  /* Accents */
+  --color-accent-green: #7bd062;
+  --color-accent-orange: #ff9b37;
+  --color-accent-red: #ff6868;
+
+  /* Glass */
+  --overlay-contrast: rgba(255, 255, 255, 0.08);
+  --GlassOverlayColor: rgba(243, 234, 215, 0.1);
+  --GlassSaturationBoost: rgba(128, 128, 128, 0.03);
+  --FakeGlassBlur: 24px;
+  --FakeGlassBg: rgba(255, 255, 255, 0.08);
+  --FakeGlassBorder: 1px solid rgba(255, 255, 255, 0.12);
+  --FakeGlassShadow:
+    0px 4px 12px 0px rgba(0, 0, 0, 0.15),
+    0px 1px 6px 0px rgba(0, 0, 0, 0.3),
+    inset 0px 0px 32px 0px rgba(0, 0, 0, 0.3),
+    inset 0px 0px 12px 0px rgba(255, 255, 255, 0.1),
+    inset 1px 2px 4px 0px rgba(255, 255, 255, 0.3);
+  --StrokeGlassGradient: linear-gradient(
+    177deg,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0) 29%,
+    rgba(255, 255, 255, 0.05) 77%,
+    rgba(255, 255, 255, 0.3) 100%
+  );
+  --CornerRadius: 24px;
+
+  /* Button glass */
+  --ButtonGlassOverlayColorGreen: rgba(123, 208, 98, 0.6);
+  --ButtonGlassOverlayColorLight: rgba(243, 234, 215, 0.25);
+  --ButtonRadius: 1000px;
+  --ButtonMinHeight: 44px;
+  --ButtonDropShadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.15);
+
+  /* Typography */
+  --font-unbounded: 'Unbounded', sans-serif;
+  --font-golos: 'Golos Text', sans-serif;
+  --font-weight-extralight: 250;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  /* Landing typography (larger than app) */
+  --hero-title-size: 26px;
+  --section-title-size: 24px;
+  --pillar-title-size: 18px;
+  --body-size: 16px;
+  --body-large-size: 18px;
+  --small-size: 14px;
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-body: -0.01em;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+  --spacing-4xl: 80px;
+
+  /* Layout */
+  --landing-max-width: 800px;
+  --section-padding-y: 80px;
+  --section-padding-x: 20px;
+  --nav-height: 56px;
+
+  /* Text on dark bg — slightly warmer than ContrastColor */
+  --color-text-header: #fff7dd;
+  --color-text-muted: rgba(243, 234, 215, 0.6);
+}
+
+/* ========== Light theme ========== */
+[data-theme='light'] {
+  --MainColor: #f3ead7;
+  --ContrastColor: #453427;
+  --overlay-contrast: rgba(54, 54, 54, 0.15);
+  --GlassOverlayColor: rgba(69, 52, 39, 0.1);
+  --FakeGlassBg: rgba(255, 255, 255, 0.65);
+  --FakeGlassBorder: 1px solid rgba(255, 255, 255, 0.25);
+  --ButtonGlassOverlayColorGreen: rgba(123, 208, 98, 0.6);
+  --ButtonGlassOverlayColorLight: rgba(243, 234, 215, 0.6);
+  --color-text-header: #453427;
+  --color-text-muted: rgba(69, 52, 39, 0.5);
+}
+
+/* ========== Desktop ========== */
+@media (min-width: 768px) {
+  :root {
+    --hero-title-size: 40px;
+    --section-title-size: 32px;
+    --pillar-title-size: 20px;
+    --body-size: 18px;
+    --body-large-size: 20px;
+    --section-padding-y: 120px;
+    --section-padding-x: 40px;
+  }
+}

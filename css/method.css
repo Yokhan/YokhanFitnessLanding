@@ -1,0 +1,76 @@
+/* Method Section */
+.method__pillars {
+  display: grid;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.method__pillar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.method__icon {
+  color: var(--color-accent-green);
+  flex-shrink: 0;
+  margin-bottom: var(--spacing-xs);
+}
+
+.method__pillar:nth-child(2) .method__icon {
+  color: var(--color-accent-orange);
+}
+
+.method__pillar:nth-child(3) .method__icon {
+  color: var(--color-accent-red);
+}
+
+.method__pillar-title {
+  font-size: var(--pillar-title-size);
+  font-weight: var(--font-weight-light);
+  text-transform: none;
+}
+
+.method__pillar p {
+  line-height: 1.6;
+}
+
+/* Why it works */
+.method__why {
+  border-left: 3px solid var(--color-accent-green);
+  padding-left: var(--spacing-lg);
+  margin-bottom: var(--spacing-2xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.method__block-title {
+  font-size: var(--pillar-title-size);
+  font-weight: var(--font-weight-light);
+  text-transform: none;
+  margin-bottom: var(--spacing-xs);
+}
+
+.method__why p {
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+/* Who's behind */
+.method__who {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.method__who p {
+  line-height: 1.6;
+}
+
+@media (min-width: 768px) {
+  .method__pillars {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+  }
+}
