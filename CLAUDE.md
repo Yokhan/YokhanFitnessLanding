@@ -72,3 +72,7 @@ python -m http.server 8080
 # Deploy to VPS
 scp -r . user@82.97.243.54:/var/www/yokhanfitness/
 ```
+
+## Fitness Ecosystem
+
+This project is part of the YokhanFitness ecosystem: App, Docs (knowledge base), Website (guide), and Landing page. See `.claude/rules/project-fitness-ecosystem.md` for full project map, relationships, and cross-project commands.
