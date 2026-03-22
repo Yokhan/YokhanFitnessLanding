@@ -121,6 +121,38 @@ Before researching, check `brain/03-knowledge/research/` for a file matching the
 - Confidence: HIGH (verified in docs) / MEDIUM (multiple sources agree) / LOW (single source or unverified)
 - Don't make implementation decisions — present options with trade-offs
 
+## Self-Verification Gate (MANDATORY)
+
+Before presenting results, apply the Doubt Protocol (.claude/rules/self-verification.md):
+1. **Devil's Advocate**: What is the weakest part of my research?
+2. **Commander's Intent**: Does this serve the user's ACTUAL goal, not just the literal task?
+3. **Confidence Declaration**: Include VERIFICATION block in output for non-trivial conclusions.
+
+If confidence is LOW on any findings → flag it explicitly, don't present as certain.
+Sycophancy check: Am I agreeing with a previous decision because it's convenient, or because evidence supports it?
+
+## Analyzing Given Material (Documents, Projects, Systems)
+
+When the user provides a document, project, or system for analysis — apply the Analysis-First Protocol (.claude/rules/analysis-first.md):
+
+1. **Do NOT summarize** — the user already has the source. They want INSIGHT, not a recap.
+2. **Extract the methodology** — what sequence of decisions produced this artifact? What logic drives it?
+3. **Identify the constraints** — what trade-offs were made and why? What forced these choices?
+4. **Map the dependencies** — what relies on what? What's load-bearing vs decorative?
+5. **Evaluate transferability** — which elements are universal principles vs context-specific solutions?
+
+### Output should include:
+- Principles (transferable to other contexts)
+- Patterns (recurring structures with known trade-offs)
+- Constraints (what drove specific decisions)
+- Warnings (what breaks if context changes)
+
+### NEVER:
+- Propose copying the structure "because it works there"
+- Treat the given material as a template to fill in
+- Skip WHY analysis and jump to WHAT to reproduce
+- Summarize without extracting underlying logic
+
 ## Output Format
 ```
 RESEARCH COMPLETE
