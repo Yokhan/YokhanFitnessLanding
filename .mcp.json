@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "engram": {
+      "command": "C:/Users/iohan/.local/bin/engram.exe",
+      "args": ["mcp"]
+    },
+    "claude-memory": {
+      "command": "claude-memory-mcp",
+      "args": []
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest", "--isolated"]
+    }
+  }
+}
