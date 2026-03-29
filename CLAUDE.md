@@ -72,3 +72,17 @@ python -m http.server 8080
 # Deploy to VPS
 scp -r . user@82.97.243.54:/var/www/yokhanfitness/
 ```
+
+
+## Template Updates (auto-merged 2026-03-29)
+
+### New Rules
+- `.claude/rules/context-first.md`
+- `.claude/rules/research-first.md`
+- `.claude/rules/plan-first.md`
+- `.claude/rules/writing.md`
+
+### New Features
+- `PROJECT_SPEC.md` — Auto-generated project spec. Run first session to create.
+- Implementer agent has mandatory research + planning phases
+- Pipelines (feature/bugfix/security-patch) now include Research step
