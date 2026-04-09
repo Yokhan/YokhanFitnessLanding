@@ -3,9 +3,17 @@
 # Run before major sessions or weekly to catch stale docs and violations
 # Usage: bash scripts/check-drift.sh
 
+# shellcheck source=lib/platform.sh
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+[ -f "$SCRIPT_DIR/lib/platform.sh" ] && source "$SCRIPT_DIR/lib/platform.sh"
+# Node.js is used for JSON parsing (Python removed)
+if [ -z "${NODE:-}" ]; then
+  command -v node &>/dev/null && NODE="node" || NODE=""
+fi
+
 # Template version check
-TEMPLATE_VERSION="3.0.0"
-CLAUDE_VERSION=$(grep -oP '(?<=Template Version: )[\d.]+' CLAUDE.md 2>/dev/null || echo "unknown")
+TEMPLATE_VERSION="3.4.0"
+CLAUDE_VERSION=$(sed -n 's/.*Template Version: \([0-9.]*\).*/\1/p' CLAUDE.md 2>/dev/null || echo "unknown")
 if [ "$CLAUDE_VERSION" = "unknown" ]; then
     echo "INFO: Template version not found in CLAUDE.md"
 elif [ "$CLAUDE_VERSION" != "$TEMPLATE_VERSION" ]; then
@@ -117,7 +125,7 @@ echo "[8/10] Checking template manifest..."
 MANIFEST=".template-manifest.json"
 if [ -f "$MANIFEST" ]; then
   # Validate JSON
-  if python3 -m json.tool "$MANIFEST" > /dev/null 2>&1; then
+  if _json_valid "$MANIFEST"; then
     echo "  ✅ $MANIFEST: valid JSON"
   else
     echo "  ❌ $MANIFEST: invalid JSON"
@@ -125,7 +133,7 @@ if [ -f "$MANIFEST" ]; then
   fi
 
   # Report template version
-  tpl_ver=$(python3 -c "import json; print(json.load(open('$MANIFEST')).get('template_version', 'unknown'))" 2>/dev/null || echo "unknown")
+  tpl_ver=$(_node -e "console.log(JSON.parse(require('fs').readFileSync('$MANIFEST','utf8')).template_version||'unknown')" 2>/dev/null || echo "unknown")
   echo "  Template version (manifest): $tpl_ver"
 
   # Count drifted template files
@@ -154,13 +162,10 @@ if [ -f "$MANIFEST" ]; then
     else
       drift_count=$((drift_count + 1))
     fi
-  done <<< "$(python3 -c "
-import json
-m = json.load(open('$MANIFEST'))
-for path, info in m.get('files', {}).items():
-    if info.get('category') != 'project':
-        print(f\"{path}|{info.get('hash', '')}\")
-" 2>/dev/null)"
+  done < <(_node -e "
+const m=JSON.parse(require('fs').readFileSync('$MANIFEST','utf8'));
+for(const[p,i]of Object.entries(m.files||{})){if(i.category!=='project')console.log(p+'|'+(i.hash||''));}
+" 2>/dev/null)
 
   if [ "$drift_count" -gt 0 ]; then
     echo "  ⚠️  $drift_count/$drift_total template files have drifted from manifest hashes"
@@ -176,17 +181,15 @@ fi
 echo "[9/10] Checking template rules integrity..."
 if [ -f "$MANIFEST" ]; then
   RULE_DRIFT=0
-  for rule_file in .claude/rules/*.md .claude/agents/*.md; do
+  for rule_file in .claude/rules/*.md .claude/library/*/*.md .claude/agents/*.md; do
     [ -f "$rule_file" ] || continue
     # Skip project-* files (those ARE meant to be local)
     basename_f=$(basename "$rule_file")
     case "$basename_f" in project-*) continue ;; esac
     # Check if file is in manifest and hash matches
-    EXPECTED_HASH=$(python3 -c "
-import json, os
-m = json.load(open('$MANIFEST'))
-info = m.get('files', {}).get('$rule_file', {})
-print(info.get('hash', ''))
+    EXPECTED_HASH=$(_node -e "
+const m=JSON.parse(require('fs').readFileSync('$MANIFEST','utf8'));
+const h=(m.files||{})['$rule_file']?.hash||'';console.log(h);
 " 2>/dev/null || echo "")
     if [ -n "$EXPECTED_HASH" ]; then
       ACTUAL_HASH=$(_get_hash "$rule_file")

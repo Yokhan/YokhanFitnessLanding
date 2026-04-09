@@ -149,7 +149,7 @@ DONT: try { const user = await userService.findById(id); } catch (e) { /* now wh
 - They represent THIS project specific context, patterns, and learned lessons.
 
 ### How They Interact
-- Claude Code loads ALL files from `.claude/rules/` -- both template and project rules are active
+- Claude Code loads router.md from `.claude/rules/` + project-* rules -- both template and project rules are active
 - Project rules OVERLAY template rules: if a project rule contradicts a template rule, the project rule takes precedence for this project
 - Project rules should reference the template rule they extend or override: "Extends architecture.md: in this project, we also require..."
 - When `/update-template` runs, only non-`project-` files are updated. Project rules are preserved.
@@ -215,6 +215,6 @@ Save retrospective summary to `brain/01-daily/weekly-YYYY-MM-DD.md`:
 
 ## Cross-Reference
 
-- `.claude/rules/strategic-thinking.md` -- "Kaizen" (continuous improvement): small consistent improvements compound. "Study, do not just check" (PDCA): understand WHY a lesson emerged, do not just file it.
-- `.claude/rules/self-improvement.md` -- Lessons.md protocol, promotion cycle, anti-patterns to track
-- `.claude/rules/critical-thinking.md` -- Evidence hierarchy applies to self-improvement too: 3+ occurrences = evidence, 1 occurrence = anecdote
+- `.claude/library/meta/strategic-thinking.md` -- "Kaizen" (continuous improvement): small consistent improvements compound. "Study, do not just check" (PDCA): understand WHY a lesson emerged, do not just file it.
+- `.claude/library/process/self-improvement.md` -- Lessons.md protocol, promotion cycle, anti-patterns to track
+- `.claude/library/meta/critical-thinking.md` -- Evidence hierarchy applies to self-improvement too: 3+ occurrences = evidence, 1 occurrence = anecdote

@@ -6,8 +6,22 @@
 # Project-local Claude Code settings (not synced with template)
 # .claude/settings.local.json
 
+# n8n local config (user-specific paths)
+n8n/config.json
+
 # Memory MCP local state
 .memory/
+
+# Session cache (runtime, regenerated)
+.session-cache/
+
+# MCP server dependencies (installed per-project)
+mcp-servers/*/node_modules/
+mcp-servers/*/dist/
+
+# Active rules state (project-local, set by route-task.sh)
+tasks/.active-rules
+tasks/.mode
 .engram/
 .memcp/
 .anima/
@@ -71,3 +85,8 @@ out/
 coverage/
 .coverage
 htmlcov/
+
+# Dashboard runtime (per-machine, regenerated)
+tasks/chats/
+tasks/.running-tasks.json
+tasks/.current.md.bak

@@ -82,16 +82,31 @@ is_zed_environment() {
 OS=$(detect_os)
 ARCH=$(detect_arch)
 
-# --- Check for python (needed for JSON merge) ---
-
-PYTHON=""
-if command -v python3 &>/dev/null; then
-  PYTHON="python3"
-elif command -v python &>/dev/null; then
-  PYTHON="python"
-else
-  echo "ERROR: python3 or python required for JSON merge. Install Python first."
+# --- Check for Node.js (needed for JSON merge) ---
+if ! command -v node &>/dev/null; then
+  echo "ERROR: Node.js required for JSON merge. Install: https://nodejs.org/"
   exit 1
+fi
+# Legacy compat: scripts that use $PYTHON will get node
+PYTHON="node"
+
+# --- Check for node/npm (needed for context-router MCP) ---
+HAS_NODE=false
+if command -v node &>/dev/null && command -v npm &>/dev/null; then
+  HAS_NODE=true
+  echo "Node.js: $(node --version), npm: $(npm --version)"
+else
+  echo "WARNING: Node.js/npm not found. Context-router MCP will not work."
+  echo "  Install: https://nodejs.org/ or: winget install OpenJS.NodeJS.LTS"
+fi
+
+# --- Check for docker (needed for n8n) ---
+HAS_DOCKER=false
+if command -v docker &>/dev/null; then
+  HAS_DOCKER=true
+  echo "Docker: $(docker --version 2>/dev/null | head -c 40)"
+else
+  echo "INFO: Docker not found. n8n auto-install unavailable (optional)."
 fi
 
 # --- Install helpers ---
@@ -175,9 +190,8 @@ detect_engram_path() {
 }
 
 detect_cgc() {
-  python3 -m codegraphcontext --help &>/dev/null 2>&1 || \
-  python -m codegraphcontext --help &>/dev/null 2>&1 || \
-  command -v cgc.exe &>/dev/null || command -v cgc &>/dev/null
+  command -v cgc.exe &>/dev/null || command -v cgc &>/dev/null || \
+  npx codegraphcontext --help &>/dev/null 2>&1
 }
 
 detect_cgc_path() {
@@ -254,7 +268,7 @@ run_health_check() {
 
   echo -n "  .mcp.json: "
   if [ -f ".mcp.json" ]; then
-    if $PYTHON -c "import json; json.load(open('.mcp.json'))" &>/dev/null; then
+    if node -e "JSON.parse(require('fs').readFileSync('.mcp.json','utf8'))" &>/dev/null; then
       echo "OK (valid JSON)"
     else
       echo "CORRUPT (invalid JSON!)"
@@ -271,7 +285,7 @@ run_health_check() {
     zed_path=$(detect_zed_settings_path)
     echo -n "  zed settings: "
     if [ -f "$zed_path" ]; then
-      if $PYTHON -c "import json; d=json.load(open('$zed_path')); assert 'context_servers' in d" &>/dev/null 2>&1; then
+      if node -e "const d=JSON.parse(require('fs').readFileSync('$zed_path','utf8'));if(!d.context_servers)process.exit(1)" &>/dev/null 2>&1; then
         echo "OK (context_servers found)"
       else
         echo "NO context_servers (run with --zed to configure)"
@@ -414,6 +428,83 @@ else
   DISABLED+=("chrome-devtools")
 fi
 
+# 7. context-router (template MCP — dynamic rule loading)
+echo -n "  context-router: "
+if [ -f "mcp-servers/context-router/package.json" ]; then
+  # Install deps if needed
+  if [ ! -d "mcp-servers/context-router/node_modules" ]; then
+    echo -n "installing deps... "
+    (cd mcp-servers/context-router && npm install --silent 2>/dev/null) || true
+  fi
+  if [ -d "mcp-servers/context-router/node_modules" ]; then
+    echo "ENABLED (dynamic rule routing)"
+    ENABLED+=("context-router")
+    DETECTED_SERVERS+="context-router|{\"command\":\"npx\",\"args\":[\"tsx\",\"mcp-servers/context-router/src/index.ts\"]}
+"
+  else
+    echo "FAILED (npm install failed)"
+    DISABLED+=("context-router")
+  fi
+else
+  echo "DISABLED (mcp-servers/context-router/ not found)"
+  DISABLED+=("context-router")
+fi
+
+# 8. n8n (workflow automation — optional)
+echo -n "  n8n: "
+N8N_URL="${N8N_URL:-http://localhost:5678}"
+# Check if n8n is already running
+if curl -s --connect-timeout 2 "$N8N_URL/healthz" >/dev/null 2>&1 || \
+   curl -s --connect-timeout 2 "$N8N_URL/api/v1/workflows" >/dev/null 2>&1; then
+  echo "ENABLED (running at $N8N_URL)"
+  ENABLED+=("n8n")
+elif [ "$DO_INSTALL" = true ]; then
+  # Method 1: npm (lightweight, no Docker overhead)
+  if command -v npm &>/dev/null; then
+    if command -v n8n &>/dev/null; then
+      echo "INSTALLED (npm global). Start with: n8n start"
+      ENABLED+=("n8n")
+    else
+      echo -n "installing via npm... "
+      if npm install -g n8n --silent 2>/dev/null; then
+        echo "INSTALLED (npm). Start with: n8n start"
+        ENABLED+=("n8n")
+      else
+        echo "npm install failed"
+      fi
+    fi
+  fi
+  # Method 2: Docker (if npm failed or unavailable)
+  if ! echo "${ENABLED[*]}" | grep -q "n8n" 2>/dev/null; then
+    if command -v docker &>/dev/null && docker ps &>/dev/null 2>&1; then
+      echo -n "installing via docker... "
+      if docker ps -a --format '{{.Names}}' 2>/dev/null | grep -q "^n8n$"; then
+        docker start n8n >/dev/null 2>&1 || true
+        echo "STARTED (existing container)"
+      else
+        docker run -d --name n8n -p 5678:5678 \
+          -v n8n_data:/home/node/.n8n \
+          -e N8N_SECURE_COOKIE=false \
+          --restart unless-stopped \
+          n8nio/n8n:latest >/dev/null 2>&1 && echo "INSTALLED (docker)" || echo "FAILED"
+      fi
+      sleep 3
+      if curl -s --connect-timeout 5 "$N8N_URL/healthz" >/dev/null 2>&1; then
+        ENABLED+=("n8n")
+      else
+        DISABLED+=("n8n")
+      fi
+    else
+      echo "SKIPPED (no npm or docker available)"
+      echo "    Install: npm install -g n8n  OR  docker run n8nio/n8n"
+      DISABLED+=("n8n")
+    fi
+  fi
+else
+  echo "NOT RUNNING (optional — start with: n8n start OR --install)"
+  DISABLED+=("n8n")
+fi
+
 # DEPRECATED
 echo -n "  memcp: "
 echo "DEPRECATED (will be disabled if present)"
@@ -436,42 +527,26 @@ else
   echo "No existing .mcp.json — creating new"
 fi
 
-MERGED_JSON=$($PYTHON -c "
-import json, sys
-
-existing = json.loads('''$EXISTING_JSON''')
-servers = existing.get('mcpServers', {})
-
-detected_lines = '''$DETECTED_SERVERS'''.strip().split('\n')
-added = []
-preserved = []
-for line in detected_lines:
-    if not line.strip():
-        continue
-    key, val_json = line.split('|', 1)
-    if key in servers:
-        preserved.append(key)
-    else:
-        servers[key] = json.loads(val_json)
-        added.append(key)
-
-deprecated = ['memcp', 'claude-memory']
-disabled_list = []
-for dep in deprecated:
-    if dep in servers:
-        servers[dep]['disabled'] = True
-        disabled_list.append(dep)
-
-if added:
-    print(f'Added: {chr(44).join(added)}', file=sys.stderr)
-if preserved:
-    print(f'Preserved: {chr(44).join(preserved)}', file=sys.stderr)
-if disabled_list:
-    print(f'Disabled (deprecated): {chr(44).join(disabled_list)}', file=sys.stderr)
-
-existing['mcpServers'] = servers
-print(json.dumps(existing, indent=2))
-" 2>&1 1>/tmp/mcp_merged.json)
+MERGED_JSON=$(node -e "
+const fs=require('fs');
+const existing=JSON.parse(process.argv[1]);
+const servers=existing.mcpServers||{};
+const lines=process.argv[2].trim().split('\n');
+const added=[],preserved=[];
+for(const line of lines){
+  if(!line.trim())continue;
+  const i=line.indexOf('|');if(i<0)continue;
+  const key=line.slice(0,i),val=JSON.parse(line.slice(i+1));
+  if(servers[key]){preserved.push(key);}else{servers[key]=val;added.push(key);}
+}
+const deprecated=['memcp','claude-memory'],disabled=[];
+for(const d of deprecated){if(servers[d]){servers[d].disabled=true;disabled.push(d);}}
+if(added.length)process.stderr.write('Added: '+added.join(',')+'\n');
+if(preserved.length)process.stderr.write('Preserved: '+preserved.join(',')+'\n');
+if(disabled.length)process.stderr.write('Disabled (deprecated): '+disabled.join(',')+'\n');
+existing.mcpServers=servers;
+fs.writeFileSync('/tmp/mcp_merged.json',JSON.stringify(existing,null,2));
+" "$EXISTING_JSON" "$DETECTED_SERVERS" 2>&1)
 
 if [ -n "$MERGED_JSON" ]; then
   echo "$MERGED_JSON"
@@ -514,29 +589,18 @@ if [ "$DO_ZED" = true ] || is_zed_environment; then
   ZED_SETTINGS_PATH=$(detect_zed_settings_path)
 
   # Generate context_servers snippet from detected servers
-  ZED_SNIPPET=$($PYTHON -c "
-import json
-
-detected_lines = '''$DETECTED_SERVERS'''.strip().split('\n')
-context_servers = {}
-
-for line in detected_lines:
-    if not line.strip():
-        continue
-    key, val_json = line.split('|', 1)
-    val = json.loads(val_json)
-
-    # Convert mcpServers format to context_servers format
-    if 'command' in val:
-        cs = {'command': {'path': val['command'], 'args': val.get('args', [])}}
-        if 'env' in val:
-            cs['command']['env'] = val['env']
-        context_servers[key] = cs
-    elif 'url' in val:
-        context_servers[key] = {'url': val['url']}
-
-print(json.dumps({'context_servers': context_servers}, indent=2))
-")
+  ZED_SNIPPET=$(node -e "
+const lines=process.argv[1].trim().split('\n');
+const cs={};
+for(const line of lines){
+  if(!line.trim())continue;
+  const i=line.indexOf('|');if(i<0)continue;
+  const key=line.slice(0,i),val=JSON.parse(line.slice(i+1));
+  if(val.command){const e={command:{path:val.command,args:val.args||[]}};if(val.env)e.command.env=val.env;cs[key]=e;}
+  else if(val.url){cs[key]={url:val.url};}
+}
+console.log(JSON.stringify({context_servers:cs},null,2));
+" "$DETECTED_SERVERS")
 
   if [ "$DRY_RUN" = true ]; then
     echo "Would add to Zed settings ($ZED_SETTINGS_PATH):"
@@ -545,32 +609,18 @@ print(json.dumps({'context_servers': context_servers}, indent=2))
     if [ -f "$ZED_SETTINGS_PATH" ]; then
       # Merge into existing Zed settings
       cp "$ZED_SETTINGS_PATH" "${ZED_SETTINGS_PATH}.bak"
-      $PYTHON -c "
-import json, sys
-
-with open('$ZED_SETTINGS_PATH') as f:
-    settings = json.load(f)
-
-snippet = json.loads('''$ZED_SNIPPET''')
-cs = settings.get('context_servers', {})
-new_cs = snippet.get('context_servers', {})
-
-added = []
-for k, v in new_cs.items():
-    if k not in cs:
-        cs[k] = v
-        added.append(k)
-
-settings['context_servers'] = cs
-
-with open('$ZED_SETTINGS_PATH', 'w') as f:
-    json.dump(settings, f, indent=2)
-
-if added:
-    print(f'Added to Zed: {chr(44).join(added)}')
-else:
-    print('Zed settings already up to date.')
-"
+      node -e "
+const fs=require('fs');
+const settings=JSON.parse(fs.readFileSync('$ZED_SETTINGS_PATH','utf8'));
+const snippet=JSON.parse(process.argv[1]);
+const cs=settings.context_servers||{};
+const newCs=snippet.context_servers||{};
+const added=[];
+for(const[k,v]of Object.entries(newCs)){if(!cs[k]){cs[k]=v;added.push(k);}}
+settings.context_servers=cs;
+fs.writeFileSync('$ZED_SETTINGS_PATH',JSON.stringify(settings,null,2));
+console.log(added.length?'Added to Zed: '+added.join(','):'Zed settings already up to date.');
+" "$ZED_SNIPPET"
       echo "Updated $ZED_SETTINGS_PATH (backup: .bak)"
     else
       echo "Zed settings not found at: $ZED_SETTINGS_PATH"

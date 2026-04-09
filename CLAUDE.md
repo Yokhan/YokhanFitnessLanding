@@ -1,70 +1,122 @@
 # YokhanFitnessLanding — Landing Page
-
-Static HTML+CSS landing page for yokhanfitness.ru.
+<!-- Template Version: 3.4.0 -->
 
 ## Status
+**IN PROGRESS** — Landing page built. Deploy target: VPS 82.97.243.54.
 
-**IN PROGRESS** — Initial setup. Deploy target: VPS 82.97.243.54.
+## Philosophy — Quality Over Speed
+1. **Think before you type.** Research and planning ARE the work. Code is just output.
+2. **Doubt is a feature.** Surface uncertainty. Enumerate alternatives before choosing.
+3. **Slower is faster.** 30-min plan saves 3h rework. Test scenarios prevent production bugs.
+4. **One thing done well > three halfway.** Finish, verify, commit before starting next.
+5. **If unsure, STOP and ask.** Never produce code just to show progress.
+
+Slow down: shared/core, can't articulate WHY, 3+ iterations, HIGH/CRITICAL risk.
+Speed OK: XS+LOW, covered by tests, following approved plan.
 
 ## Stack
-
 - **Language:** HTML + CSS (static, no framework)
 - **Design:** Glassmorphism from YokhanFitnessApp design tokens
 - **Fonts:** Unbounded (headings) + Golos Text (body)
 - **Deploy:** Static files on Timeweb VPS
 
 ## Map
-
 - `index.html` — single-page landing (5 screens)
 - `css/` — styles, design tokens
 - `fonts/` — Unbounded + Golos Text woff2
 - `images/` — noise texture, backgrounds
 - `tasks/` — session handoff + lessons
+- `scripts/` — automation, routing, verification, research helpers
 
-## Design Tokens (from FIT app)
+## How This Template Works
 
-Colors:
-- Main background: `#f3ead7` (warm beige)
-- Contrast text: `#453427` (dark brown)
-- Green accent: `#7bd062`
-- Orange accent: `#ff9b37`
-- Red: `#ff6868`
+**Rules are NOT pre-loaded.** They live in `.claude/library/` and load ON DEMAND per task.
 
-Typography:
-- Headings: Unbounded, weight 200-700
-- Body: Golos Text, weight 400-700
-- Negative letter-spacing throughout
+**On every new task**:
+1. User gives task (any language, any jargon)
+2. YOU extract English keywords: task type + domain + action
+3. Call `get_context(keywords="...")` → default depth=brief (~50 tokens: mode + agent + file list)
+4. For M+ tasks: `get_context(keywords="...", depth="normal")` → includes full rule text
+5. For L/XL or unfamiliar domain: `depth="full"` → rules + lessons + git + registry + ecosystem
+6. Work. Read specific files from the list only when you need them.
 
-Glass effects:
-- `backdrop-filter: blur(24px) saturate(150%)`
-- Multi-layer shadows with inset highlights
-- Noise texture overlay
+**On task switch**: `switch_context(keywords="...")`
+**After compaction**: `get_active_rules()`
+**Fallback (no MCP)**: `bash scripts/route-task.sh "<keywords>"` + Read listed files
+**Manual**: `/mode-code` `/mode-design` `/mode-review` `/mode-research` `/mode-write` `/mode-fix` `/mode-plan`
 
-## Landing Structure (5 screens)
+## Session Start
+1. `bash scripts/context-restore.sh` — shows mode, task, lessons, git state
+2. If Engram: `mem_session_start` + `mem_context`
+3. `get_context(keywords="<first task>")` → ready to work
 
-1. Hero — pain point + CTA to TG quiz bot
-2. Problem — 4 blocks they recognize
-3. Method — "научный минимализм", 3 pillars
-4. Proof — 3 anonymized client cases
-5. CTA — quiz bot + pricing + guide link
+## Session End
+Update `tasks/current.md` with handoff (status, files, next steps, blockers).
+If Engram: `mem_session_end` with summary.
 
-## Content Spec
+## MCP Memory (Engram) — PROACTIVE
+- After EVERY decision/bug/discovery → `mem_save` immediately
+- Before research → `mem_search` first
+- On task switch → `mem_save` summary of paused task
+- If no Engram → tasks/lessons.md + brain/ (file fallback)
 
-Ready texts in: `PersonalAssistant/brain/02-projects/personal-strategy/specs/landing-yokhanfitness.md`
+## Runtime Helpers (use instead of manual tool calls)
+```
+bash scripts/route-task.sh <task>      — route to relevant rules (0 tokens)
+bash scripts/research.sh <path>        — auto research (replaces 6 tool calls)
+bash scripts/plan-scaffold.sh <task>   — auto plan template in tasks/current.md
+bash scripts/verify-check.sh --size M  — auto verification checklist
+bash scripts/context-restore.sh        — context recovery after compaction
+bash scripts/measure-context.sh        — token budget meter (chars/token heuristic)
+bash scripts/blast-radius.sh <file>    — BFS impact analysis: all affected files
+bash scripts/import-graph.sh [dir]     — hot files: most-imported modules
+bash scripts/scan-repo.sh <path>       — security scan before opening untrusted repos
+```
 
-## Rules
+## Security & Integrations
+Hooks enforce automatically: prompt injection scanning, sensitive path blocking, dangerous command blocking, session audit logging. See `.claude/hooks/`.
+Optional: **CodeSight** codebase index — see `integrations/codesight.md`, enable in `.mcp.json`.
 
-- Files < 250 lines
-- Russian language, "ты" form
-- NO AI-sounding text
-- Mobile-first responsive
-- Dark theme support via CSS variables
-- Test on: Chrome, Safari, Firefox
-- CTA links to: t.me/YokhanAssistance_bot (quiz)
-- Guide link: guide.yokhanfitness.ru
+## Design Work — HARD RULES (Figma, CSS, UI)
+1. **NEVER hardcode visual values.** Use tokens/variables. Create tokens FIRST if missing.
+2. **NEVER build from raw shapes.** Use components. Create components FIRST if missing.
+3. **Build order: System→Tokens→Components→Screens.** NEVER skip to screens.
+4. **Every container must have layout mode** (auto-layout / flexbox / grid).
+5. **8 states**: Default, Hover, Active, Focus, Disabled, Loading, Error, Empty.
+6. **Before creating**: search_design_system — does it already exist?
+Violation = revert and redo. Full pipeline: `.claude/library/domain/domain-design-pipeline.md`
+
+## Commands (23)
+/setup-project, /implement, /commit-push-pr, /review, /refactor, /sprint, /brain-sync, /weekly,
+/status, /rollback, /onboard, /update-template, /hotfix, /retrospective, /sync-all,
+/audit-tools, /mode-code, /mode-design, /mode-review, /mode-research, /mode-write, /mode-fix, /mode-plan
+
+## Self-Improvement
+After each correction: classify type (BUG/KNOWLEDGE_GAP/STYLE/DESIGN_DISAGREEMENT/MISUNDERSTANDING).
+BUG or KNOWLEDGE_GAP → log to tasks/lessons.md with Track (BUG/KNOWLEDGE/PATTERN/PROCESS) + Severity (P0-P3).
+When >50 entries → promote via `/weekly`.
+
+## Token Economy
+- Trust skills/memory over re-reading. Don't re-read files you read this session.
+- Only read files you WILL use. Parallelize independent tool calls.
+- Route outputs >20 lines to subagents. After 2 failed corrections → /clear.
+- Task switching → HANDOFF.md (status + files + next steps), fresh session.
+
+## DON'T
+- Code files > 375 lines — split them
+- No `any` — use `unknown` + type guards
+- No mutations — return new objects
+- No editing main/master directly
+- No skipping tests before commit
+- No committing secrets (.env, API keys)
+- No presenting solutions without self-verification
+- No "you're right!" without logging WHY
+- No new code without checking tool-registry first
+- No hardcoded visual values (use tokens)
+- No building screens without components (system→tokens→components→screens)
+- No surface-level analysis ("works"=HTTP 200 is NOT analysis)
 
 ## Build & Deploy
-
 ```bash
 # Local preview
 python -m http.server 8080
@@ -73,16 +125,22 @@ python -m http.server 8080
 scp -r . user@82.97.243.54:/var/www/yokhanfitness/
 ```
 
+## Project Rules
+- Files < 250 lines
+- Russian language, "ты" form
+- NO AI-sounding text
+- Mobile-first responsive
+- Dark theme default via CSS variables
+- CTA links to: t.me/YokhanGym_bot
+- Guide link: guide.yokhanfitness.ru
 
-## Template Updates (auto-merged 2026-03-29)
+## Design Tokens (from FIT app)
+Colors: MainColor `#382d24` (dark), ContrastColor `#f3ead7` (beige), Green `#7bd062`, Orange `#ff9b37`, Red `#ff6868`
+Typography: Unbounded (headings, wt 200-700), Golos Text (body, wt 400-700), negative letter-spacing
+Glass: `backdrop-filter: blur(24px) saturate(150%)`, multi-layer shadows, noise texture
 
-### New Rules
-- `.claude/rules/context-first.md`
-- `.claude/rules/research-first.md`
-- `.claude/rules/plan-first.md`
-- `.claude/rules/writing.md`
+## Template Version
+3.4.0 — Run `bash scripts/check-drift.sh` to verify health.
 
-### New Features
-- `PROJECT_SPEC.md` — Auto-generated project spec. Run first session to create.
-- Implementer agent has mandatory research + planning phases
-- Pipelines (feature/bugfix/security-patch) now include Research step
+## Compaction
+After compaction: `bash scripts/context-restore.sh` to recover mode + task + rules.
