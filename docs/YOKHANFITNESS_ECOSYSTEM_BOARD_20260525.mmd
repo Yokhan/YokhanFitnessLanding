@@ -1,0 +1,109 @@
+flowchart LR
+  title["YokhanFitness ecosystem map<br/>public site as health-system entry"]
+
+  subgraph Awareness["First acquaintance"]
+    content["Content and personal profile<br/>Telegram, articles, referrals"]
+    home["yokhanfitness.ru<br/>Oura-style ecosystem home"]
+    channel["@igor_it_fit<br/>trust and warm context"]
+  end
+
+  subgraph Segments["Homepage segmentation"]
+    men["Modern man<br/>strength, back, control"]
+    women["Modern woman<br/>shape, confidence, energy"]
+    goals["Goal chooser<br/>weight, glutes, back, strength, restart"]
+    archetypes["Archetypes<br/>tech, ceo, care, creator, mom, gamer, free, sage"]
+  end
+
+  subgraph Training["Training families"]
+    coaching["Train with Igor<br/>personal coaching"]
+    personal["YokhanFitness Personal<br/>coach-led tracking"]
+    selfTrain["Self-training app<br/>YokhanFitnessAppMY"]
+    bot["@YokhanGym_bot<br/>quiz, source, lead, consultation"]
+  end
+
+  subgraph Support["Support services"]
+    guide["Guide<br/>education and warm-up"]
+    knowledge["Knowledge base<br/>programs, exercises, articles"]
+    safety["Safety layer<br/>FirstAid and MedKit"]
+    nutrition["Nutrition/cart<br/>WellnesCartApp"]
+    calls["Calls and secure access<br/>YokhanCallService plus VPN/client layer"]
+  end
+
+  subgraph Decisions["Routing gates"]
+    gateFit{"Ready to choose<br/>a training path?"}
+    gateCoach{"Needs Igor<br/>personally?"}
+    gateSafety{"Medical red flag<br/>or unsafe symptom?"}
+    gateSelf{"Wants independent<br/>training first?"}
+  end
+
+  subgraph Metrics["Decision metrics"]
+    starts["Bot starts<br/>changes source priority"]
+    consults["Consult requests<br/>changes offer focus"]
+    appOpens["App opens<br/>changes self-training priority"]
+    proof["Proof collected<br/>changes site trust layer"]
+  end
+
+  title --> home
+  content --> home
+  content --> channel
+  channel --> home
+
+  home --> men
+  home --> women
+  home --> goals
+  home --> archetypes
+
+  men --> gateFit
+  women --> gateFit
+  goals --> gateFit
+  archetypes --> gateFit
+
+  gateFit -->|yes| gateCoach
+  gateFit -->|not yet| guide
+  gateCoach -->|yes| bot
+  gateCoach -->|yes after sale| personal
+  gateCoach -->|no| gateSelf
+  gateSelf -->|yes| selfTrain
+  gateSelf -->|no| guide
+  gateSafety --> safety
+
+  bot --> coaching
+  coaching --> personal
+  personal --> proof
+  selfTrain --> appOpens
+  guide --> knowledge
+  knowledge --> gateFit
+  nutrition --> coaching
+  calls --> coaching
+  safety --> gateFit
+
+  bot --> starts
+  bot --> consults
+  coaching --> consults
+  home --> starts
+  home --> appOpens
+
+  noteHome["Homepage must expand acquaintance:<br/>who Igor is, what exists, what path fits."]
+  noteSplit["Do not merge AppMY and Personal yet:<br/>self-training and coach-led tracking have different jobs."]
+  noteFooter["Support services belong in ecosystem/footer depth,<br/>not as first-screen distractions."]
+
+  home ~~~ noteHome
+  personal ~~~ noteSplit
+  Support ~~~ noteFooter
+
+  classDef title fill:#211f1d,stroke:#211f1d,color:#fffaf2
+  classDef source fill:#e7f0dc,stroke:#6f7f5f,color:#1f2a1f
+  classDef surface fill:#f7eadf,stroke:#a46f4d,color:#2d211b
+  classDef work fill:#edf0ff,stroke:#6e6ea8,color:#202033
+  classDef gate fill:#fff1c8,stroke:#a27821,color:#2f260f
+  classDef metric fill:#e9f4f6,stroke:#4f8492,color:#10272d
+  classDef risk fill:#f4dddd,stroke:#b65a52,color:#3a1512
+  classDef comment fill:#6b4d3d,stroke:#3a281f,color:#fff7ee
+
+  class title title
+  class content,channel source
+  class home,men,women,goals,archetypes,guide,knowledge,safety,nutrition,calls surface
+  class coaching,personal,selfTrain,bot work
+  class gateFit,gateCoach,gateSafety,gateSelf gate
+  class starts,consults,appOpens,proof metric
+  class noteHome,noteSplit,noteFooter comment

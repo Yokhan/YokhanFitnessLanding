@@ -1,121 +1,165 @@
-/* Font Faces */
 @font-face {
-  font-family: 'Unbounded';
-  src: url('../fonts/Unbounded-VariableFont_wght.woff2') format('woff2-variations');
-  font-weight: 200 700;
+  font-family: "Unbounded";
+  src: url("../fonts/Unbounded-VariableFont_wght.woff2")
+    format("woff2-variations");
+  font-weight: 300 600;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Golos Text';
-  src: url('../fonts/GolosText-VariableFont_wght.woff2') format('woff2-variations');
-  font-weight: 400 700;
+  font-family: "Golos Text";
+  src: url("../fonts/GolosText-VariableFont_wght.woff2")
+    format("woff2-variations");
+  font-weight: 300 600;
   font-display: swap;
 }
 
-/* ========== Dark theme (default) ========== */
 :root {
-  --MainColor: #382d24;
-  --ContrastColor: #f3ead7;
-  --flat-white: #ffffff;
+  --font-display: "Unbounded", sans-serif;
+  --font-body: "Golos Text", sans-serif;
+  --font-accent: Georgia, serif;
+  --font-weight-regular: 350;
+  --font-weight-strong: 600;
 
-  /* Accents */
-  --color-accent-green: #7bd062;
-  --color-accent-orange: #ff9b37;
-  --color-accent-red: #ff6868;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 2rem;
+  --text-2xl: 3rem;
+  --line-tight: 1.08;
+  --line-hero: 1.08;
+  --line-body: 1.5;
+  --letter-spacing-tight: 0;
+  --letter-spacing-body: 0;
 
-  /* Glass */
-  --overlay-contrast: rgba(255, 255, 255, 0.08);
-  --GlassOverlayColor: rgba(243, 234, 215, 0.1);
-  --GlassSaturationBoost: rgba(128, 128, 128, 0.03);
-  --FakeGlassBlur: 24px;
-  --FakeGlassBg: rgba(255, 255, 255, 0.08);
-  --FakeGlassBorder: 1px solid rgba(255, 255, 255, 0.12);
-  --FakeGlassShadow:
-    0px 4px 12px 0px rgba(0, 0, 0, 0.15),
-    0px 1px 6px 0px rgba(0, 0, 0, 0.3),
-    inset 0px 0px 32px 0px rgba(0, 0, 0, 0.3),
-    inset 0px 0px 12px 0px rgba(255, 255, 255, 0.1),
-    inset 1px 2px 4px 0px rgba(255, 255, 255, 0.3);
-  --StrokeGlassGradient: linear-gradient(
-    177deg,
-    rgba(255, 255, 255, 0.3) 0%,
-    rgba(255, 255, 255, 0) 29%,
-    rgba(255, 255, 255, 0.05) 77%,
-    rgba(255, 255, 255, 0.3) 100%
-  );
-  --CornerRadius: 24px;
+  --color-ink-980: #171511;
+  --color-ink-900: #252119;
+  --color-ink-760: #50483c;
+  --color-ink-620: #756a5b;
+  --color-cream-80: #fffaf1;
+  --color-cream-120: #f8efe2;
+  --color-cream-180: #efe2cf;
+  --color-cream-260: #dfcfba;
+  --color-sage-500: #62735d;
+  --color-moss-700: #303a2b;
+  --color-copper-520: #a96f45;
+  --color-berry-420: #9b686b;
+  --color-sky-420: #6c8588;
+  --color-action-520: #2a72de;
+  --color-action-620: #195dc5;
 
-  /* Button glass */
-  --ButtonGlassOverlayColorGreen: rgba(123, 208, 98, 0.6);
-  --ButtonGlassOverlayColorLight: rgba(243, 234, 215, 0.25);
-  --ButtonRadius: 1000px;
-  --ButtonMinHeight: 44px;
-  --ButtonDropShadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.15);
+  --surface-page: var(--color-cream-120);
+  --surface-page-soft: var(--color-cream-80);
+  --surface-panel: var(--color-cream-80);
+  --surface-panel-muted: var(--color-cream-180);
+  --surface-panel-strong: #ffffff;
+  --surface-ink: var(--color-ink-980);
+  --surface-soft: rgba(37, 33, 25, 0.06);
+  --surface-soft-strong: rgba(37, 33, 25, 0.1);
+  --surface-nav: rgba(248, 239, 226, 0.88);
+  --surface-glass: rgba(255, 250, 241, 0.72);
+  --surface-glass-strong: rgba(255, 250, 241, 0.86);
+  --surface-nav-glass: rgba(255, 250, 241, 0.68);
+  --surface-nav-dark: rgba(23, 21, 17, 0.18);
+  --media-wash-light: rgba(255, 250, 241, 0.88);
+  --media-wash-soft: rgba(255, 250, 241, 0.48);
+  --media-wash-hero: rgba(255, 250, 241, 0.08);
+  --surface-warm: rgba(169, 111, 69, 0.14);
+  --surface-sage: rgba(98, 115, 93, 0.14);
+  --surface-sky: rgba(108, 133, 136, 0.14);
+  --surface-berry: rgba(155, 104, 107, 0.14);
+  --surface-inverse-soft: rgba(255, 250, 241, 0.08);
+  --media-overlay-soft: rgba(23, 21, 17, 0.16);
+  --media-overlay-strong: rgba(23, 21, 17, 0.5);
+  --media-overlay-deep: rgba(23, 21, 17, 0.66);
+  --media-overlay-hero: rgba(23, 21, 17, 0.42);
 
-  /* Typography */
-  --font-unbounded: 'Unbounded', sans-serif;
-  --font-golos: 'Golos Text', sans-serif;
-  --font-weight-extralight: 250;
-  --font-weight-light: 300;
-  --font-weight-regular: 400;
-  --font-weight-medium: 500;
-  --font-weight-bold: 700;
+  --text-primary: var(--color-ink-980);
+  --text-secondary: var(--color-ink-760);
+  --text-muted: rgba(37, 33, 25, 0.58);
+  --text-inverse: var(--color-cream-80);
+  --text-inverse-muted: rgba(255, 250, 241, 0.78);
+  --text-inverse-soft: rgba(255, 250, 241, 0.72);
+  --accent-primary: var(--color-ink-980);
+  --accent-primary-strong: var(--color-moss-700);
+  --accent-warm: var(--color-copper-520);
+  --accent-sage: var(--color-sage-500);
+  --accent-sky: var(--color-sky-420);
+  --accent-berry: var(--color-berry-420);
+  --accent-action: var(--color-action-520);
+  --accent-action-strong: var(--color-action-620);
 
-  /* Landing typography (larger than app) */
-  --hero-title-size: 26px;
-  --section-title-size: 24px;
-  --pillar-title-size: 18px;
-  --body-size: 16px;
-  --body-large-size: 18px;
-  --small-size: 14px;
-  --letter-spacing-tight: -0.02em;
-  --letter-spacing-body: -0.01em;
+  --border-subtle: 1px solid rgba(37, 33, 25, 0.12);
+  --border-strong: 1px solid rgba(37, 33, 25, 0.2);
+  --border-inverse: 1px solid rgba(255, 250, 241, 0.28);
+  --border-glass: 1px solid rgba(255, 250, 241, 0.44);
+  --border-nav-inverse: 1px solid rgba(255, 250, 241, 0.3);
+  --shadow-soft: 0 32px 90px rgba(37, 33, 25, 0.16);
+  --shadow-card: 0 20px 50px rgba(37, 33, 25, 0.1);
+  --shadow-glass: 0 22px 70px rgba(37, 33, 25, 0.18);
+  --shadow-nav-solid: 0 18px 64px rgba(37, 33, 25, 0.12);
 
-  /* Spacing */
-  --spacing-xs: 4px;
-  --spacing-sm: 8px;
-  --spacing-md: 16px;
-  --spacing-lg: 24px;
-  --spacing-xl: 32px;
-  --spacing-2xl: 48px;
-  --spacing-3xl: 64px;
-  --spacing-4xl: 80px;
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.125rem;
+  --radius-pill: 999px;
 
-  /* Layout */
-  --landing-max-width: 800px;
-  --section-padding-y: 80px;
-  --section-padding-x: 20px;
-  --nav-height: 56px;
+  --space-min: 0.25rem;
+  --space-half: 0.5rem;
+  --space-base: 1rem;
+  --space-1-5: 1.5rem;
+  --space-2: 2rem;
+  --space-lg: 4rem;
 
-  /* Text on dark bg — slightly warmer than ContrastColor */
-  --color-text-header: #fff7dd;
-  --color-text-muted: rgba(243, 234, 215, 0.6);
+  --content-xs: 16.25rem;
+  --content-sm: 21.25rem;
+  --content-md: 28.75rem;
+  --content-card: 24.375rem;
+  --content-lg: 47.5rem;
+  --content-xl: 57.5rem;
+  --content-2xl: 77.5rem;
+  --viewport-min: 20rem;
+  --viewport-full: 100svh;
+  --layout-max: var(--content-2xl);
+  --layout-frame-inset: 1.25rem;
+  --content-mobile-max: var(--content-sm);
+  --section-padding-y: var(--space-lg);
+  --section-padding-x: var(--space-base);
+  --promo-height: 2.25rem;
+  --nav-height: 4.5rem;
+  --nav-height-pdp: 5.625rem;
+  --nav-solid-offset: 7.5rem;
+  --button-min-height: 2.875rem;
+  --media-section-min: 33.75rem;
+  --media-card-min: 28.75rem;
+  --media-card-min-lg: 38.75rem;
+  --card-min: 14.375rem;
+  --card-min-lg: 18.75rem;
+  --metric-dot-size: 0.625rem;
+  --border-width-strong: 0.1875rem;
+  --focus-ring: 0 0 0 3px rgba(98, 115, 93, 0.32);
+  --shadow-dot: 0 0 0 var(--space-half) var(--surface-warm);
+  --blur-control: blur(18px) saturate(130%);
+  --blur-glass: blur(26px) saturate(140%);
+  --blur-nav-default: blur(28px) saturate(145%);
+  --blur-nav-solid: blur(22px) saturate(150%);
+  --motion-fast: 160ms ease;
+
+  --image-hero: url("https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=2200&q=80");
+  --image-fitness: url("https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1400&q=80");
+  --image-health: url("https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1400&q=80");
+  --image-method: url("https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&w=2200&q=80");
+  --image-women: url("https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1400&q=80");
+  --image-men: url("https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=1400&q=80");
+  --image-food: url("https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1400&q=80");
+  --image-calls: url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80");
 }
 
-/* ========== Light theme ========== */
-[data-theme='light'] {
-  --MainColor: #f3ead7;
-  --ContrastColor: #453427;
-  --overlay-contrast: rgba(54, 54, 54, 0.15);
-  --GlassOverlayColor: rgba(69, 52, 39, 0.1);
-  --FakeGlassBg: rgba(255, 255, 255, 0.65);
-  --FakeGlassBorder: 1px solid rgba(255, 255, 255, 0.25);
-  --ButtonGlassOverlayColorGreen: rgba(123, 208, 98, 0.6);
-  --ButtonGlassOverlayColorLight: rgba(243, 234, 215, 0.6);
-  --color-text-header: #453427;
-  --color-text-muted: rgba(69, 52, 39, 0.5);
-}
-
-/* ========== Desktop ========== */
-@media (min-width: 768px) {
+@media (min-width: 53.75rem) {
   :root {
-    --hero-title-size: 40px;
-    --section-title-size: 32px;
-    --pillar-title-size: 20px;
-    --body-size: 18px;
-    --body-large-size: 20px;
-    --section-padding-y: 120px;
-    --section-padding-x: 40px;
+    --section-padding-y: calc(var(--space-lg) * 1.5);
+    --section-padding-x: var(--space-2);
   }
 }

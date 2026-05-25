@@ -1,19 +1,19 @@
 /* Problem Section */
 .problem__grid {
   display: grid;
-  gap: var(--spacing-md);
+  gap: var(--space-base);
 }
 
 .problem__card {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: var(--space-half);
 }
 
 .problem__card-title {
-  font-size: var(--pillar-title-size);
-  font-weight: var(--font-weight-light);
-  margin-bottom: var(--spacing-xs);
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-regular);
+  margin-bottom: var(--space-min);
   text-transform: none;
 }
 
@@ -22,14 +22,14 @@
 }
 
 .problem__card p + p {
-  color: var(--color-text-muted);
-  font-size: var(--small-size);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
   line-height: 1.5;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 48rem) {
   .problem__grid {
     grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-lg);
+    gap: var(--space-1-5);
   }
 }

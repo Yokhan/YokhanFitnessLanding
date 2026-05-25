@@ -1,77 +1,60 @@
-/* CTA Section */
+.cta-section {
+  background: var(--surface-page-soft);
+}
+
 .cta-section__inner {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--spacing-md);
+  display: grid;
+  gap: var(--space-1-5);
 }
 
 .cta-section__text {
-  line-height: 1.6;
-  max-width: 600px;
+  max-width: var(--content-lg);
+  color: var(--text-secondary);
+  font-size: var(--text-lg);
 }
 
-.cta-section__text + .cta-section__text {
-  color: var(--color-text-muted);
+.offer-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-half);
+  padding: var(--space-base);
 }
 
-.cta-section__btn {
-  margin-top: var(--spacing-md);
-  margin-bottom: var(--spacing-xl);
+.offer-strip span {
+  background: var(--surface-panel-strong);
+  border: var(--border-subtle);
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  padding: var(--space-half) var(--space-base);
 }
 
-.cta-section__pricing {
-  max-width: 480px;
-}
-
-.cta-section__pricing p {
-  line-height: 1.6;
-}
-
-.cta-section__pricing p + p {
-  margin-top: var(--spacing-xs);
-}
-
-.cta-section__pricing strong {
-  font-weight: var(--font-weight-medium);
-}
-
-.cta-section__guide {
-  font-size: var(--small-size);
-  color: var(--color-text-muted);
-  margin-top: var(--spacing-md);
-}
-
-/* Footer */
 .footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  padding: var(--spacing-xl) 0;
-}
-
-[data-theme='light'] .footer {
-  border-top-color: rgba(69, 52, 39, 0.08);
+  border-top: var(--border-subtle);
+  padding: var(--space-half) 0;
+  background: var(--surface-page);
 }
 
 .footer__inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--spacing-md);
+  gap: var(--space-base);
   flex-wrap: wrap;
 }
 
 .footer__brand {
-  font-size: 12px;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
   text-transform: uppercase;
-  color: var(--color-text-muted);
 }
 
 .footer__tg {
-  font-size: var(--small-size);
-  color: var(--color-text-muted);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
   text-decoration: none;
 }
 
 .footer__tg:hover {
-  color: var(--ContrastColor);
+  color: var(--text-primary);
 }

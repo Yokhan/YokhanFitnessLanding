@@ -1,0 +1,115 @@
+.programs {
+  background: var(--surface-page-soft);
+}
+
+.programs--soft {
+  background: var(--surface-page);
+}
+
+.program-grid {
+  display: grid;
+  gap: var(--space-base);
+}
+
+.program-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-base);
+  min-height: var(--card-min);
+  background: var(--surface-panel);
+  border: var(--border-subtle);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-1-5);
+}
+
+.program-card--featured {
+  background:
+    linear-gradient(140deg, var(--surface-sage), transparent 70%),
+    var(--surface-panel-strong);
+}
+
+.program-card__tag {
+  align-self: flex-start;
+  background: var(--surface-soft);
+  border: var(--border-subtle);
+  border-radius: var(--radius-pill);
+  color: var(--accent-sage);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-strong);
+  padding: var(--space-min) var(--space-base);
+  text-transform: uppercase;
+}
+
+.program-card h3,
+.step-card h3 {
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-tight);
+}
+
+.program-card p,
+.step-card p {
+  color: var(--text-secondary);
+}
+
+.program-card ul {
+  display: grid;
+  gap: var(--space-half);
+  margin-top: auto;
+  padding-left: var(--space-1-5);
+  color: var(--text-muted);
+}
+
+.step-grid {
+  display: grid;
+  gap: var(--space-base);
+}
+
+.step-card {
+  display: grid;
+  gap: var(--space-base);
+  background: var(--surface-soft);
+  border: var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1-5);
+}
+
+.step-card span {
+  color: var(--accent-warm);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+}
+
+.health-note {
+  max-width: var(--content-lg);
+  margin-top: var(--space-1-5);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+@media (min-width: 45rem) {
+  .program-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .program-card--featured {
+    grid-column: span 2;
+  }
+
+  .step-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 63.75rem) {
+  .program-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .program-card--featured {
+    grid-column: span 1;
+  }
+}

@@ -1,0 +1,2197 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Фото-система — YokhanFitness</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #FAF8F4; -webkit-font-smoothing: antialiased; }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+const {
+  useState
+} = React;
+
+/* ═══ DESIGN TOKENS ═══ */
+const C = {
+  bg: "#FAF8F4",
+  card: "#FFF",
+  bdr: "#E8E2D9",
+  text: "#2C2824",
+  mid: "#6E665C",
+  muted: "#A49E94",
+  light: "#C9C3B9",
+  accent: "#A0522D",
+  accentBg: "rgba(160,82,45,0.06)",
+  green: "#4A7C59",
+  greenBg: "rgba(74,124,89,0.06)",
+  blue: "#4A6A8A",
+  blueBg: "rgba(74,106,138,0.06)",
+  amber: "#8B7535",
+  amberBg: "rgba(139,117,53,0.06)"
+};
+const ff = {
+  serif: "'Playfair Display',Georgia,serif",
+  sans: "'Source Sans 3','Segoe UI',sans-serif",
+  mono: "'DM Mono',monospace"
+};
+
+/* ═══ ATOMS ═══ */
+const Col = ({
+  gap = 16,
+  children,
+  style
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    display: "flex",
+    flexDirection: "column",
+    gap,
+    ...style
+  }
+}, children);
+const Grid = ({
+  children,
+  min = 260
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    display: "grid",
+    gridTemplateColumns: `repeat(auto-fit,minmax(${min}px,1fr))`,
+    gap: 14
+  }
+}, children);
+const Card = ({
+  children,
+  style,
+  onClick
+}) => /*#__PURE__*/React.createElement("div", {
+  onClick: onClick,
+  style: {
+    background: C.card,
+    border: `1px solid ${C.bdr}`,
+    borderRadius: 10,
+    padding: 20,
+    overflow: "hidden",
+    wordBreak: "break-word",
+    ...style
+  }
+}, children);
+const Label = ({
+  children
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    fontFamily: ff.sans,
+    fontSize: 10.5,
+    fontWeight: 600,
+    letterSpacing: 1.8,
+    textTransform: "uppercase",
+    color: C.light,
+    marginBottom: 3
+  }
+}, children);
+const P = ({
+  children,
+  style
+}) => /*#__PURE__*/React.createElement("p", {
+  style: {
+    fontFamily: ff.sans,
+    fontSize: 14.5,
+    lineHeight: 1.75,
+    color: C.mid,
+    margin: 0,
+    overflowWrap: "break-word",
+    ...style
+  }
+}, children);
+const H2 = ({
+  children
+}) => /*#__PURE__*/React.createElement("h2", {
+  style: {
+    fontFamily: ff.serif,
+    fontSize: 24,
+    fontWeight: 600,
+    color: C.text,
+    margin: "0 0 8px",
+    lineHeight: 1.2
+  }
+}, children);
+const H3 = ({
+  children,
+  style
+}) => /*#__PURE__*/React.createElement("h3", {
+  style: {
+    fontFamily: ff.serif,
+    fontSize: 17,
+    fontWeight: 600,
+    color: C.text,
+    margin: 0,
+    overflowWrap: "break-word",
+    ...style
+  }
+}, children);
+const Pill = ({
+  active,
+  onClick,
+  children
+}) => /*#__PURE__*/React.createElement("button", {
+  onClick: onClick,
+  style: {
+    padding: "7px 15px",
+    borderRadius: 20,
+    cursor: "pointer",
+    fontSize: 13,
+    fontFamily: ff.sans,
+    fontWeight: 500,
+    transition: "all .2s",
+    border: active ? `1.5px solid ${C.accent}` : `1px solid ${C.bdr}`,
+    background: active ? C.accentBg : "transparent",
+    color: active ? C.accent : C.muted
+  }
+}, children);
+const Metric = ({
+  label,
+  value,
+  sub,
+  color
+}) => /*#__PURE__*/React.createElement(Card, {
+  style: {
+    borderLeft: `3px solid ${color}`
+  }
+}, /*#__PURE__*/React.createElement(Label, null, label), /*#__PURE__*/React.createElement("div", {
+  style: {
+    fontFamily: ff.serif,
+    fontSize: 22,
+    fontWeight: 700,
+    color
+  }
+}, value), /*#__PURE__*/React.createElement("div", {
+  style: {
+    fontSize: 12,
+    color: C.muted,
+    marginTop: 2,
+    fontFamily: ff.sans
+  }
+}, sub));
+const Callout = ({
+  color,
+  children
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    padding: "14px 18px",
+    borderRadius: 8,
+    background: `${color}09`,
+    border: `1px solid ${color}22`,
+    fontFamily: ff.sans,
+    fontSize: 13.5,
+    lineHeight: 1.7,
+    color
+  }
+}, children);
+const Tag = ({
+  color,
+  bg,
+  children,
+  nowrap = true
+}) => /*#__PURE__*/React.createElement("span", {
+  style: {
+    fontSize: 11,
+    fontWeight: 600,
+    color,
+    background: bg,
+    padding: "2px 8px",
+    borderRadius: 4,
+    whiteSpace: nowrap ? "nowrap" : "normal"
+  }
+}, children);
+const Num = ({
+  n
+}) => /*#__PURE__*/React.createElement("div", {
+  style: {
+    minWidth: 30,
+    height: 30,
+    borderRadius: 6,
+    background: C.accentBg,
+    border: `1px solid ${C.accent}33`,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: 12,
+    fontWeight: 700,
+    color: C.accent,
+    fontFamily: ff.mono,
+    flexShrink: 0
+  }
+}, String(n).padStart(2, "0"));
+
+/* ═══ TABS ═══ */
+const TABS = [{
+  id: "diag",
+  label: "Диагностика"
+}, {
+  id: "lens",
+  label: "Линзы"
+}, {
+  id: "arch",
+  label: "Архетипы"
+}, {
+  id: "pipe",
+  label: "Пайплайн"
+}, {
+  id: "gear",
+  label: "Снаряжение"
+}, {
+  id: "sys",
+  label: "Система"
+}, {
+  id: "kpi",
+  label: "KPI"
+}, {
+  id: "psych",
+  label: "Психология"
+}, {
+  id: "calc",
+  label: "Калькулятор"
+}, {
+  id: "road",
+  label: "Роадмап"
+}];
+
+/* ════════════════════════════════════════════
+   TAB 1: DIAGNOSIS
+   ════════════════════════════════════════════ */
+function Diag() {
+  return /*#__PURE__*/React.createElement(Col, {
+    gap: 28
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(H2, null, "\u0422\u0435\u043A\u0443\u0449\u0435\u0435 \u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0435"), /*#__PURE__*/React.createElement(P, null, "6\u20138 \u043F\u043E\u0434\u0445\u043E\u0434\u043E\u0432 \u0432 \u0434\u0435\u043D\u044C. \u0421\u044A\u0451\u043C\u043A\u0430 \u043D\u0430 \u0437\u0435\u0440\u043A\u0430\u043B\u043A\u0443/\u0431\u0435\u0437\u0437\u0435\u0440\u043A\u0430\u043B\u043A\u0443, \u043F\u0435\u0440\u0435\u0434\u0430\u0447\u0430 \u0446\u0438\u0444\u0440\u044B \u0441\u0440\u0430\u0437\u0443 \u043D\u0430 \u0442\u0435\u043B\u0435\u0444\u043E\u043D. \u0414\u043E\u0445\u043E\u0434 4\u20138 \u0442\u044B\u0441. \u20BD \u043F\u0440\u0438 \u0444\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u0438\u0445 3\u20134 \u043F\u0440\u043E\u0434\u0443\u043A\u0442\u0438\u0432\u043D\u044B\u0445 \u0447\u0430\u0441\u0430\u0445 \u0438\u0437 6\u20138. \u0426\u0435\u043D\u043E\u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0441\u0438\u0442\u0443\u0430\u0442\u0438\u0432\u043D\u043E\u0435 \u2014 \u043E\u0442 2 000 \u20BD \u0437\u0430 \u043F\u043E\u0440\u0442\u0440\u0435\u0442 \u0434\u043E \xAB\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u043D\u0435 \u0436\u0430\u043B\u043A\u043E\xBB. \u041D\u0435\u0442 \u0432\u0438\u0437\u0438\u0442\u043E\u043A, \u0441\u043E\u0446\u0441\u0435\u0442\u0435\u0439, \u043F\u0435\u0447\u0430\u0442\u0438, \u043F\u0430\u0440\u0442\u043D\u0451\u0440\u0441\u0442\u0432.")), /*#__PURE__*/React.createElement(Grid, null, /*#__PURE__*/React.createElement(Metric, {
+    label: "\u0412\u044B\u0440\u0443\u0447\u043A\u0430",
+    value: "4\u20138K \u20BD/\u0434\u0435\u043D\u044C",
+    sub: "\u2248120\u2013240K \u20BD \u0437\u0430 \u043C\u0435\u0441\u044F\u0446 \u0441\u0435\u0437\u043E\u043D\u0430",
+    color: C.accent
+  }), /*#__PURE__*/React.createElement(Metric, {
+    label: "\u041F\u0440\u043E\u0434\u0443\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C",
+    value: "~50%",
+    sub: "3\u20134 \u0447 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B \u0438\u0437 6\u20138 \u0447",
+    color: C.amber
+  }), /*#__PURE__*/React.createElement(Metric, {
+    label: "\u042D\u0444\u0444\u0435\u043A\u0442\u0438\u0432\u043D\u044B\u0439 \u0447\u0435\u043A",
+    value: "~1 300 \u20BD",
+    sub: "\u0441 \u0443\u0447\u0451\u0442\u043E\u043C \u0434\u043E\u043D\u0430\u0442\u043E\u0432 \u0438 \u0443\u0441\u0442\u0443\u043F\u043E\u043A",
+    color: C.accent
+  }), /*#__PURE__*/React.createElement(Metric, {
+    label: "\u041F\u043E\u0442\u0435\u043D\u0446\u0438\u0430\u043B",
+    value: "12\u201320K \u20BD/\u0434\u0435\u043D\u044C",
+    sub: "\u0442\u0435 \u0436\u0435 \u0447\u0430\u0441\u044B, \u043D\u043E \u0441 \u0441\u0438\u0441\u0442\u0435\u043C\u043E\u0439",
+    color: C.green
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(H3, {
+    style: {
+      marginBottom: 12
+    }
+  }, "\u0413\u0434\u0435 \u0442\u0435\u0440\u044F\u044E\u0442\u0441\u044F \u0434\u0435\u043D\u044C\u0433\u0438"), /*#__PURE__*/React.createElement(Col, {
+    gap: 10
+  }, [{
+    t: "Размытый прайсинг",
+    imp: "–30–40% чека",
+    d: "«Сколько не жалко» — антипаттерн. По Ариели, люди не умеют определять ценность в вакууме: нужен якорь. Без фиксированной цены якорь = ноль, клиент платит минимум, с которым не стыдно. Фиксированный пакет переносит ответственность за цену с клиента на структуру продукта."
+  }, {
+    t: "Мёртвая зона 14:00–17:00",
+    imp: "–2–3 клиента/день",
+    d: "После обеда подходы прекращаются. Но 17–20 — golden hour: лучший свет, пары после пляжа, семьи после ужина. Самое маржинальное время пропускается. По Канеману, это истощение Системы 2 — решение не «собраться», а убрать нужду в волевом усилии через структуру дня."
+  }, {
+    t: "Нулевой LTV клиента",
+    imp: "–100% повторных",
+    d: "Клиент уходит без следа. Зеленоградск — не Мальдивы: семьи возвращаются каждое лето, калининградцы приезжают на выходные. Без точки контакта повторная продажа невозможна. По Сьюэллу, клиент — актив с пожизненной стоимостью, а не одноразовая транзакция."
+  }, {
+    t: "Плоский продукт",
+    imp: "–500–1500 ₽/клиент",
+    d: "Одна позиция — цифра на телефон. Нет печати (для 55+ это и есть «настоящее фото»), нет пакетов, нет премиума. По Хормози, ценность = результат × вероятность ÷ (время + усилие). Принтер увеличивает результат при нулевых усилиях клиента."
+  }].map((x, i) => /*#__PURE__*/React.createElement(Card, {
+    key: i
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "baseline",
+      marginBottom: 6
+    }
+  }, /*#__PURE__*/React.createElement(H3, null, x.t), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 11.5,
+      fontWeight: 600,
+      color: C.accent,
+      background: C.accentBg,
+      padding: "2px 8px",
+      borderRadius: 4,
+      whiteSpace: "nowrap"
+    }
+  }, x.imp)), /*#__PURE__*/React.createElement(P, null, x.d))))), /*#__PURE__*/React.createElement(Callout, {
+    color: C.blue
+  }, /*#__PURE__*/React.createElement("strong", null, "\u041A\u043E\u043D\u0442\u0435\u043A\u0441\u0442: \u0417\u0435\u043B\u0435\u043D\u043E\u0433\u0440\u0430\u0434\u0441\u043A, 2026."), " 2,5 \u043C\u043B\u043D \u0442\u0443\u0440\u0438\u0441\u0442\u043E\u0432 \u0432 \u041A\u041E \u0437\u0430 2025 \u2014 \u0440\u0435\u043A\u043E\u0440\u0434. \u0421\u0440\u0435\u0434\u043D\u0438\u0439 \u0442\u0443\u0440\u0438\u0441\u0442: 43 \u0433\u043E\u0434\u0430, \u0434\u043E\u0445\u043E\u0434 118 \u0442\u044B\u0441. \u20BD, 60% \u0436\u0435\u043D\u0449\u0438\u043D\u044B, 50%+ \u043C\u043E\u0441\u043A\u0432\u0438\u0447\u0438. \u041E\u0441\u043D\u043E\u0432\u043D\u0430\u044F \u0430\u0443\u0434\u0438\u0442\u043E\u0440\u0438\u044F \u2014 \u0441\u0435\u043C\u044C\u0438 \u0441 1\u20132 \u0434\u0435\u0442\u044C\u043C\u0438, \u0440\u043E\u0441\u0442 \u043E\u0442 \u043F\u0430\u0440 \u0438 \u043A\u0438\u0442\u0430\u0439\u0441\u043A\u0438\u0445 \u0442\u0443\u0440\u0438\u0441\u0442\u043E\u0432. \u0421\u0440\u0435\u0434\u043D\u0438\u0439 \u0440\u0430\u0441\u0445\u043E\u0434 \u043D\u0430 \u0434\u043E\u0441\u0443\u0433: 3\u20135 \u0442\u044B\u0441. \u20BD/\u0434\u0435\u043D\u044C. \u0410\u0440\u0435\u043D\u0434\u0430 \u0436\u0438\u043B\u044C\u044F: 5 700 \u20BD/\u0441\u0443\u0442\u043A\u0438. \u0424\u043E\u0442\u043E\u0441\u0435\u0441\u0441\u0438\u044F \u0437\u0430 3 000 \u20BD \u2014 \u0446\u0435\u043D\u0430 \u043E\u0431\u0435\u0434\u0430 \u043D\u0430 \u043D\u0430\u0431\u0435\u0440\u0435\u0436\u043D\u043E\u0439. \u0421\u0411\u041F \u043F\u043E\u0432\u0441\u0435\u043C\u0435\u0441\u0442\u043D\u043E, \u0441\u0430\u043C\u043E\u0437\u0430\u043D\u044F\u0442\u043E\u0441\u0442\u044C 4\u20136% \u0447\u0435\u0440\u0435\u0437 \xAB\u041C\u043E\u0439 \u043D\u0430\u043B\u043E\u0433\xBB."));
+}
+
+/* ════════════════════════════════════════════
+   TAB 2: LENSES (FRAMEWORKS)
+   ════════════════════════════════════════════ */
+function LensTab() {
+  const [open, setOpen] = useState("kotler");
+  const fws = [{
+    id: "kotler",
+    label: "Котлер"
+  }, {
+    id: "sewell",
+    label: "Сьюэлл"
+  }, {
+    id: "jtbd",
+    label: "JTBD"
+  }, {
+    id: "cialdini",
+    label: "Чалдини"
+  }, {
+    id: "ariely",
+    label: "Ариели"
+  }, {
+    id: "kahneman",
+    label: "Канеман"
+  }, {
+    id: "hormozi",
+    label: "Хормози"
+  }, {
+    id: "pine",
+    label: "Пайн–Гилмор"
+  }];
+  const panels = {
+    kotler: /*#__PURE__*/React.createElement(Col, {
+      gap: 12
+    }, /*#__PURE__*/React.createElement(P, null, /*#__PURE__*/React.createElement("em", null, "\u041C\u0430\u0440\u043A\u0435\u0442\u0438\u043D\u0433-\u043C\u0438\u043A\u0441 (4P)"), " \u2014 \u0447\u0435\u0442\u044B\u0440\u0435 \u0432\u0437\u0430\u0438\u043C\u043E\u0437\u0430\u0432\u0438\u0441\u0438\u043C\u044B\u0445 \u0440\u044B\u0447\u0430\u0433\u0430. \u0421\u0435\u0439\u0447\u0430\u0441 \u043A\u0430\u0436\u0434\u044B\u0439 \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u0432\u0440\u0430\u0437\u043D\u043E\u0431\u043E\u0439. \u041A\u043E\u0442\u043B\u0435\u0440: \u043C\u0430\u0440\u043A\u0435\u0442\u0438\u043D\u0433 \u2014 \u043D\u0435 \u0438\u0441\u043A\u0443\u0441\u0441\u0442\u0432\u043E \u043F\u0440\u043E\u0434\u0430\u0436\u0438, \u0430 \u0441\u043E\u0437\u0434\u0430\u043D\u0438\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u0439, \u043F\u0440\u0438 \u043A\u043E\u0442\u043E\u0440\u044B\u0445 \u043F\u043E\u043A\u0443\u043F\u0430\u0442\u0435\u043B\u044C \u043F\u0440\u043E\u0434\u0430\u0451\u0442 \u0441\u0430\u043C \u0441\u0435\u0431\u0435."), /*#__PURE__*/React.createElement(Grid, null, [{
+      p: "Product → Впечатление",
+      now: "«Фото на телефон» — неотличимо от просьбы прохожему.",
+      to: "Фотосессия на променаде = часть отпуска. Продукт = эмоция + цифра + опционально печать."
+    }, {
+      p: "Price → Якорь",
+      now: "Донат — транслирует: «это не стоит денег».",
+      to: "Три пакета. Средний кажется оптимальным рядом с премиальным. Цена видна — это профессионализм."
+    }, {
+      p: "Place → Сцена",
+      now: "Хаотичное движение. Клиент не знает, что фотограф здесь.",
+      to: "2–3 точки с лучшим светом. Работа на виду. Место = часть бренда."
+    }, {
+      p: "Promotion → Мультиканал",
+      now: "Только холодный подход — отсюда выгорание к 14:00.",
+      to: "Видимая работа + Telegram + визитки + партнёрства. Подход — один из каналов, не единственный."
+    }].map((x, i) => /*#__PURE__*/React.createElement(Card, {
+      key: i
+    }, /*#__PURE__*/React.createElement(H3, {
+      style: {
+        color: C.accent,
+        marginBottom: 8
+      }
+    }, x.p), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 13,
+        color: C.accent,
+        marginBottom: 4,
+        fontFamily: ff.sans
+      }
+    }, /*#__PURE__*/React.createElement("strong", null, "\u0421\u0435\u0439\u0447\u0430\u0441:"), " ", x.now), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 13,
+        color: C.green,
+        fontFamily: ff.sans
+      }
+    }, /*#__PURE__*/React.createElement("strong", null, "\u0426\u0435\u043B\u044C:"), " ", x.to))))),
+    sewell: /*#__PURE__*/React.createElement(Col, {
+      gap: 12
+    }, /*#__PURE__*/React.createElement(P, null, /*#__PURE__*/React.createElement("em", null, "\xAB\u041A\u043B\u0438\u0435\u043D\u0442\u044B \u043D\u0430 \u0432\u0441\u044E \u0436\u0438\u0437\u043D\u044C\xBB"), " \u2014 \u043F\u0440\u0438\u0432\u043B\u0435\u0447\u0435\u043D\u0438\u0435 \u043D\u043E\u0432\u043E\u0433\u043E \u043A\u043B\u0438\u0435\u043D\u0442\u0430 \u0441\u0442\u043E\u0438\u0442 \u0432 5\u20137 \u0440\u0430\u0437 \u0434\u043E\u0440\u043E\u0436\u0435 \u0443\u0434\u0435\u0440\u0436\u0430\u043D\u0438\u044F \u0441\u0442\u0430\u0440\u043E\u0433\u043E. \u0414\u043B\u044F \xAB\u0443\u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0430 \u0441 \u0442\u0443\u0440\u0438\u0441\u0442\u0430\u043C\u0438\xBB \u044D\u0442\u043E \u0437\u0432\u0443\u0447\u0438\u0442 \u0441\u0442\u0440\u0430\u043D\u043D\u043E. \u041D\u043E \u0417\u0435\u043B\u0435\u043D\u043E\u0433\u0440\u0430\u0434\u0441\u043A \u2014 \u043D\u0435 \u0430\u044D\u0440\u043E\u043F\u043E\u0440\u0442: \u043B\u044E\u0434\u0438 \u0432\u043E\u0437\u0432\u0440\u0430\u0449\u0430\u044E\u0442\u0441\u044F."), [{
+      t: "Турист — не одноразовый",
+      d: "Семья из Москвы приезжает каждый июль. Пара из Калининграда — каждые выходные. Если был WOW, они ищут «ту девушку с камерой». Визитка + Telegram = канал. Одна семья × 3 лета = 15 000 ₽ LTV вместо 5 000 ₽ разовых."
+    }, {
+      t: "Сарафан с нулевым CAC",
+      d: "Фото попадает в семейный чат, в stories. «На променаде есть фотограф, офигенно снимает!» K-factor оффлайн-сарафана: 0.3–1.0 нового клиента на каждого существующего. Но только если есть что передать — имя, ссылку, визитку."
+    }, {
+      t: "Система > энтузиазм",
+      d: "«Хороший сервис — система, а не улыбка». Фиксированный процесс (заметила → сняла → подошла → показала → предложила → визитка) работает и в плохой день. Без системы после обеда всё разваливается — потому что держалось на энергии, а не на процессе."
+    }, {
+      t: "Чуть больше, чем ожидают",
+      d: "Клиент ожидает: получить фото. Реальность: ему дарят первый кадр, подсказывают ракурс, рассказывают историю места. Превышение ожиданий — бесплатно в производстве, бесценно в восприятии."
+    }].map((x, i) => /*#__PURE__*/React.createElement(Card, {
+      key: i
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 12,
+        alignItems: "flex-start"
+      }
+    }, /*#__PURE__*/React.createElement(Num, {
+      n: i + 1
+    }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(H3, null, x.t), /*#__PURE__*/React.createElement(P, {
+      style: {
+        marginTop: 4
+      }
+    }, x.d)))))),
+    jtbd: /*#__PURE__*/React.createElement(Col, {
+      gap: 12
+    }, /*#__PURE__*/React.createElement(P, null, /*#__PURE__*/React.createElement("em", null, "Jobs To Be Done"), " (\u041A\u0440\u0438\u0441\u0442\u0435\u043D\u0441\u0435\u043D): \u043A\u043B\u0438\u0435\u043D\u0442 \xAB\u043D\u0430\u043D\u0438\u043C\u0430\u0435\u0442\xBB \u043F\u0440\u043E\u0434\u0443\u043A\u0442 \u0434\u043B\u044F \u0440\u0430\u0431\u043E\u0442\u044B. \u041D\u0438\u043A\u0442\u043E \u043D\u0435 \u043D\u0430\u043D\u0438\u043C\u0430\u0435\u0442 \xAB\u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0430\xBB \u2014 \u043D\u0430\u043D\u0438\u043C\u0430\u044E\u0442 \u0440\u0435\u0448\u0435\u043D\u0438\u0435 \u0431\u043E\u043B\u0438. \u041F\u043E\u043D\u0438\u043C\u0430\u043D\u0438\u0435 \u0440\u0430\u0431\u043E\u0442\u044B \u043C\u0435\u043D\u044F\u0435\u0442 \u043F\u043E\u0434\u0445\u043E\u0434 \u0438 \u043E\u0444\u0444\u0435\u0440."), [{
+      job: "«Фото, где мы ВСЕ вместе»",
+      pain: "Кто-то всегда за кадром. Просить прохожего — лотерея: палец в кадре, головы обрезаны.",
+      who: "Семьи",
+      hook: "«Давайте я вас всех вместе сниму — а то всегда кто-то снимает!»"
+    }, {
+      job: "«Контент, который не стыдно выложить»",
+      pain: "Селфи на вытянутой руке — скучно, одинаково. Попросить друга — тот же ракурс снизу вверх.",
+      who: "Пары 20–35, соло",
+      hook: "«Хотите покажу ракурс, откуда это место выглядит невероятно? Я фотограф, 2 минуты»"
+    }, {
+      job: "«Зафиксировать момент по-настоящему»",
+      pain: "Телефонные фото не передают атмосферу. Через год все фотки сливаются.",
+      who: "Все сегменты",
+      hook: "Кандидный кадр → «Не смогла пройти мимо — вот что получилось. Хотите ещё несколько?»"
+    }, {
+      job: "«Сувенир — но настоящий»",
+      pain: "Магниты и открытки — банальность. Хочется чего-то уникального.",
+      who: "55+, пары",
+      hook: "Печатное фото на месте. Не «фото на телефон», а физический артефакт."
+    }].map((x, i) => /*#__PURE__*/React.createElement(Card, {
+      key: i
+    }, /*#__PURE__*/React.createElement(H3, {
+      style: {
+        color: C.accent
+      }
+    }, "\u0420\u0430\u0431\u043E\u0442\u0430: ", x.job), /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 8,
+        display: "flex",
+        flexDirection: "column",
+        gap: 4
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 13,
+        fontFamily: ff.sans,
+        color: C.mid
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: C.accent,
+        fontWeight: 600
+      }
+    }, "\u0411\u043E\u043B\u044C:"), " ", x.pain), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 13,
+        fontFamily: ff.sans,
+        color: C.mid
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: C.blue,
+        fontWeight: 600
+      }
+    }, "\u041A\u0442\u043E:"), " ", x.who), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 13,
+        fontFamily: ff.sans,
+        color: C.mid
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: C.green,
+        fontWeight: 600
+      }
+    }, "\u041F\u043E\u0434\u0445\u043E\u0434:"), " ", x.hook))))),
+    cialdini: /*#__PURE__*/React.createElement(Col, {
+      gap: 12
+    }, /*#__PURE__*/React.createElement(P, null, /*#__PURE__*/React.createElement("em", null, "\xAB\u041F\u0441\u0438\u0445\u043E\u043B\u043E\u0433\u0438\u044F \u0432\u043B\u0438\u044F\u043D\u0438\u044F\xBB"), " \u2014 \u0448\u0435\u0441\u0442\u044C \u043F\u0440\u0438\u043D\u0446\u0438\u043F\u043E\u0432. \u0414\u043B\u044F \u0443\u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0430 \u043A\u0430\u0436\u0434\u044B\u0439 \u2014 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u044B\u0439 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442, \u0430 \u043D\u0435 \u0430\u0431\u0441\u0442\u0440\u0430\u043A\u0446\u0438\u044F \u0438\u0437 \u0443\u0447\u0435\u0431\u043D\u0438\u043A\u0430."), /*#__PURE__*/React.createElement(Grid, null, [{
+      n: "Взаимность",
+      d: "Сделай кандидный кадр бесплатно → покажи → предложи сессию. Человек чувствует: ему уже дали что-то ценное, естественная реакция — ответить.",
+      p: "Метод «первый кадр в подарок»"
+    }, {
+      n: "Соцдоказательство",
+      d: "Когда одну семью фотографируют — другие смотрят. Видимый процесс работы = самая мощная реклама. Очередь из одного клиента продаёт следующих.",
+      p: "Снимать на открытых точках"
+    }, {
+      n: "Авторитет",
+      d: "Профессиональная камера + спокойная уверенность + визитка = «это специалист». Внешний вид считывается за 2 секунды.",
+      p: "Камера, опрятность, визитки"
+    }, {
+      n: "Симпатия",
+      d: "Искренний комплимент до предложения. Шутки во время съёмки. Люди покупают у тех, кто им нравится — а не у тех, кто лучше продаёт.",
+      p: "Комплимент → съёмка, не наоборот"
+    }, {
+      n: "Дефицит",
+      d: "«Сегодня у меня ещё 3 свободных слота». Это не манипуляция — это реальное планирование. Ограниченность повышает воспринимаемую ценность.",
+      p: "Дневной лимит сессий"
+    }, {
+      n: "Последовательность",
+      d: "Маленькое «да» → большое «да». «Можно покажу один кадр?» → «Хотите ещё?» → полная сессия. Каждый шаг — микро-согласие.",
+      p: "Эскалация: подарок → мини → полная"
+    }].map((x, i) => /*#__PURE__*/React.createElement(Card, {
+      key: i
+    }, /*#__PURE__*/React.createElement(Label, null, x.n), /*#__PURE__*/React.createElement(P, {
+      style: {
+        fontSize: 13,
+        marginBottom: 8
+      }
+    }, x.d), /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: C.greenBg,
+        border: `1px solid ${C.green}22`,
+        borderRadius: 6,
+        padding: "5px 10px",
+        fontSize: 12.5,
+        color: C.green
+      }
+    }, "\u2192 ", x.p))))),
+    ariely: /*#__PURE__*/React.createElement(Col, {
+      gap: 12
+    }, /*#__PURE__*/React.createElement(P, null, /*#__PURE__*/React.createElement("em", null, "\xAB\u041F\u0440\u0435\u0434\u0441\u043A\u0430\u0437\u0443\u0435\u043C\u0430\u044F \u0438\u0440\u0440\u0430\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C\xBB"), " \u2014 \u0414\u044D\u043D \u0410\u0440\u0438\u0435\u043B\u0438 \u043F\u043E\u043A\u0430\u0437\u0430\u043B, \u0447\u0442\u043E \u043B\u044E\u0434\u0438 \u0441\u0438\u0441\u0442\u0435\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u043F\u0440\u0438\u043D\u0438\u043C\u0430\u044E\u0442 \u043D\u0435\u0440\u0430\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u0440\u0435\u0448\u0435\u043D\u0438\u044F \u043F\u043E \u043F\u0440\u0435\u0434\u0441\u043A\u0430\u0437\u0443\u0435\u043C\u044B\u043C \u043F\u0430\u0442\u0442\u0435\u0440\u043D\u0430\u043C. \u0422\u0440\u0438 \u0438\u0437 \u043D\u0438\u0445 \u043A\u0440\u0438\u0442\u0438\u0447\u043D\u044B \u0434\u043B\u044F \u0446\u0435\u043D\u043E\u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u044F \u043D\u0430 \u043F\u0440\u043E\u043C\u0435\u043D\u0430\u0434\u0435."), [{
+      t: "Эффект якоря",
+      d: "Человек не знает, сколько «должна» стоить фотосессия на улице. Первая цифра, которую он видит, становится якорем. Если первым звучит «сколько не жалко» — якорь = 0. Если первым идёт пакет «Прогулка — 6 000 ₽», то «Мини — 3 000 ₽» кажется разумной сделкой. Вывод: всегда показывать цены сверху вниз, от дорогого к дешёвому."
+    }, {
+      t: "Эффект приманки (Decoy)",
+      d: "Три пакета: 1 500 / 3 000 / 6 000. Если 6 000 включает «то же + печать + прогулка», то 3 000 выглядит рациональным выбором — и это именно тот пакет, который нужно продавать чаще всего. Верхний пакет существует не для продажи, а чтобы средний казался выгодным."
+    }, {
+      t: "Бесплатное ≠ дешёвое",
+      d: "Ариели: «бесплатно» запускает совершенно другую ментальную модель, чем «дёшево». Первый кандидный кадр — бесплатный подарок — создаёт благодарность и желание ответить (взаимность по Чалдини). Но если вся услуга «за донат» — это не подарок, а обесценивание."
+    }].map((x, i) => /*#__PURE__*/React.createElement(Card, {
+      key: i
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 12,
+        alignItems: "flex-start"
+      }
+    }, /*#__PURE__*/React.createElement(Num, {
+      n: i + 1
+    }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(H3, null, x.t), /*#__PURE__*/React.createElement(P, {
+      style: {
+        marginTop: 4
+      }
+    }, x.d)))))),
+    kahneman: /*#__PURE__*/React.createElement(Col, {
+      gap: 12
+    }, /*#__PURE__*/React.createElement(P, null, /*#__PURE__*/React.createElement("em", null, "\xAB\u0414\u0443\u043C\u0430\u0439 \u043C\u0435\u0434\u043B\u0435\u043D\u043D\u043E, \u0440\u0435\u0448\u0430\u0439 \u0431\u044B\u0441\u0442\u0440\u043E\xBB"), " \u2014 \u041A\u0430\u043D\u0435\u043C\u0430\u043D \u0440\u0430\u0437\u0434\u0435\u043B\u0438\u043B \u043C\u044B\u0448\u043B\u0435\u043D\u0438\u0435 \u043D\u0430 \u0421\u0438\u0441\u0442\u0435\u043C\u0443 1 (\u0431\u044B\u0441\u0442\u0440\u0443\u044E, \u0438\u043D\u0442\u0443\u0438\u0442\u0438\u0432\u043D\u0443\u044E) \u0438 \u0421\u0438\u0441\u0442\u0435\u043C\u0443 2 (\u043C\u0435\u0434\u043B\u0435\u043D\u043D\u0443\u044E, \u0430\u043D\u0430\u043B\u0438\u0442\u0438\u0447\u0435\u0441\u043A\u0443\u044E). \u0422\u0443\u0440\u0438\u0441\u0442 \u043D\u0430 \u043E\u0442\u0434\u044B\u0445\u0435 \u0436\u0438\u0432\u0451\u0442 \u0432 \u0421\u0438\u0441\u0442\u0435\u043C\u0435 1 \u2014 \u0438 \u044D\u0442\u043E \u043A\u043B\u044E\u0447\u0435\u0432\u043E\u0439 \u0444\u0430\u043A\u0442."), [{
+      t: "Турист = Система 1",
+      d: "На отдыхе аналитическое мышление выключено. Решения принимаются эмоционально, быстро. Это значит: длинные объяснения и сложные тарифы не работают. Работает: показать красивый кадр (визуальный стимул → эмоция → «хочу»). Три секунды от «ого» до «давайте» — это нормально для Системы 1."
+    }, {
+      t: "Неприятие потери (loss aversion)",
+      d: "Потерять что-то → в 2 раза больнее, чем получить эквивалент. Применение: «Этот свет будет ещё 20 минут — потом солнце уйдёт» — не давление, а честный факт. Или: показать кандидный кадр и НЕ отдать сразу — «Хотите, я ещё сделаю и все вместе скину?» Кадр уже «их», не получить его — потеря."
+    }, {
+      t: "Энергия фотографа = ресурс Системы 2",
+      d: "После 3–4 часов холодных подходов Система 2 фотографа истощается — решения о подходе требуют воли. Решение не «взять себя в руки», а перейти к автоматизму: фиксированный процесс, якорные точки, скрипт-шпаргалка. Когда процесс — привычка, он работает на Системе 1."
+    }].map((x, i) => /*#__PURE__*/React.createElement(Card, {
+      key: i
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 12,
+        alignItems: "flex-start"
+      }
+    }, /*#__PURE__*/React.createElement(Num, {
+      n: i + 1
+    }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(H3, null, x.t), /*#__PURE__*/React.createElement(P, {
+      style: {
+        marginTop: 4
+      }
+    }, x.d)))))),
+    hormozi: /*#__PURE__*/React.createElement(Col, {
+      gap: 12
+    }, /*#__PURE__*/React.createElement(P, null, /*#__PURE__*/React.createElement("em", null, "\xAB$100M Offers\xBB"), " \u2014 \u0410\u043B\u0435\u043A\u0441 \u0425\u043E\u0440\u043C\u043E\u0437\u0438 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0438\u043B \u0444\u043E\u0440\u043C\u0443\u043B\u0443: \u0426\u0435\u043D\u043D\u043E\u0441\u0442\u044C = (\u0416\u0435\u043B\u0430\u0435\u043C\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \xD7 \u0412\u0435\u0440\u043E\u044F\u0442\u043D\u043E\u0441\u0442\u044C \u0434\u043E\u0441\u0442\u0438\u0436\u0435\u043D\u0438\u044F) \xF7 (\u0412\u0440\u0435\u043C\u044F \u0434\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430 \xD7 \u0423\u0441\u0438\u043B\u0438\u044F \u043A\u043B\u0438\u0435\u043D\u0442\u0430). \u041F\u0440\u0438\u043C\u0435\u043D\u0438\u043C \u043A\u0430\u0436\u0434\u044B\u0439 \u043C\u043D\u043E\u0436\u0438\u0442\u0435\u043B\u044C."), /*#__PURE__*/React.createElement(Grid, null, [{
+      n: "Результат ↑",
+      d: "Не «фото», а «профессиональные фото с отпуска, которые не стыдно показать». Конкретизация результата повышает ценность. Печатное фото — результат, который можно потрогать."
+    }, {
+      n: "Вероятность ↑",
+      d: "Показать портфолио на камере после кандидного кадра = доказательство, что результат будет. Вероятность в глазах клиента → 95%. Без доказательства → 50/50."
+    }, {
+      n: "Время ↓",
+      d: "«10 минут» — магическая фраза. Не «фотосессия» (звучит как час мучений), а «10 минут, и все фото у вас на телефоне». Минимальное время = максимальная ценность."
+    }, {
+      n: "Усилия ↓",
+      d: "Клиент не должен ничего делать: не позировать мучительно, не ждать обработки, не платить переводом на карту (СБП по QR — 5 секунд). Каждое снижение трения повышает ценность."
+    }].map((x, i) => /*#__PURE__*/React.createElement(Card, {
+      key: i
+    }, /*#__PURE__*/React.createElement(Label, null, x.n), /*#__PURE__*/React.createElement(P, {
+      style: {
+        fontSize: 13
+      }
+    }, x.d))))),
+    pine: /*#__PURE__*/React.createElement(Col, {
+      gap: 12
+    }, /*#__PURE__*/React.createElement(P, null, /*#__PURE__*/React.createElement("em", null, "\xAB\u042D\u043A\u043E\u043D\u043E\u043C\u0438\u043A\u0430 \u0432\u043F\u0435\u0447\u0430\u0442\u043B\u0435\u043D\u0438\u0439\xBB"), " \u2014 \u041F\u0430\u0439\u043D \u0438 \u0413\u0438\u043B\u043C\u043E\u0440: \u044D\u043A\u043E\u043D\u043E\u043C\u0438\u043A\u0430 \u043F\u0440\u043E\u0448\u043B\u0430 \u043F\u0443\u0442\u044C \u043E\u0442 \u0441\u044B\u0440\u044C\u044F \u2192 \u0442\u043E\u0432\u0430\u0440\u044B \u2192 \u0443\u0441\u043B\u0443\u0433\u0438 \u2192 \u0432\u043F\u0435\u0447\u0430\u0442\u043B\u0435\u043D\u0438\u044F. \u041A\u0430\u0436\u0434\u044B\u0439 \u043F\u0435\u0440\u0435\u0445\u043E\u0434 = \u043A\u0440\u0430\u0442\u043D\u044B\u0439 \u0440\u043E\u0441\u0442 \u043C\u0430\u0440\u0436\u0438. \u0423\u043B\u0438\u0447\u043D\u0430\u044F \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0438\u044F \u0441\u0442\u043E\u0438\u0442 \u043D\u0430 \u0433\u0440\u0430\u043D\u0438\u0446\u0435 \xAB\u0443\u0441\u043B\u0443\u0433\u0430 \u2194 \u0432\u043F\u0435\u0447\u0430\u0442\u043B\u0435\u043D\u0438\u0435\xBB."), [{
+      t: "Услуга: «Вас сфотографируют»",
+      d: "Это то, что делают сейчас все уличные фотографы. Конкурент — любой прохожий с iPhone. Маржа минимальная, потому что услуга стандартизирована и легко заменима."
+    }, {
+      t: "Впечатление: «Вам устроят мини-приключение»",
+      d: "Фотограф ведёт по красивым точкам, рассказывает историю места, смешит детей, ловит момент. Клиент уходит не с фотографиями — а с историей, которую будет рассказывать. Конкурентов у впечатления нет, потому что оно уникально."
+    }, {
+      t: "Как перейти: режиссура процесса",
+      d: "Практически: не «встаньте тут, щёлк» → а маршрут (2–3 точки), микро-сторителлинг («этот вид — лучший на всём побережье, здесь даже местные фоткаются»), неожиданные ракурсы. 10 минут — но запоминающихся. Пайн: «впечатление возникает, когда компания использует услуги как сцену, а товары как реквизит»."
+    }].map((x, i) => /*#__PURE__*/React.createElement(Card, {
+      key: i
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 12,
+        alignItems: "flex-start"
+      }
+    }, /*#__PURE__*/React.createElement(Num, {
+      n: i + 1
+    }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(H3, null, x.t), /*#__PURE__*/React.createElement(P, {
+      style: {
+        marginTop: 4
+      }
+    }, x.d))))))
+  };
+  return /*#__PURE__*/React.createElement(Col, {
+    gap: 24
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(H2, null, "\u0412\u043E\u0441\u0435\u043C\u044C \u043B\u0438\u043D\u0437 \u043D\u0430 \u043E\u0434\u043D\u0443 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u044E"), /*#__PURE__*/React.createElement(P, null, "\u041A\u0430\u0436\u0434\u044B\u0439 \u0444\u0440\u0435\u0439\u043C\u0432\u043E\u0440\u043A \u2014 \u043D\u0435 \u0442\u0435\u043E\u0440\u0438\u044F, \u0430 \u0441\u043F\u043E\u0441\u043E\u0431 \u0443\u0432\u0438\u0434\u0435\u0442\u044C \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435, \u043A\u043E\u0442\u043E\u0440\u043E\u0435 \u0441\u0435\u0439\u0447\u0430\u0441 \u043D\u0435 \u0434\u0435\u043B\u0430\u0435\u0442\u0441\u044F. \u0421\u0438\u043D\u0442\u0435\u0437 \u0432\u0441\u0435\u0445 \u0432\u043E\u0441\u044C\u043C\u0438 \u0434\u0430\u0451\u0442 \u0441\u0438\u0441\u0442\u0435\u043C\u0443, \u0430 \u043D\u0435 \u043D\u0430\u0431\u043E\u0440 \xAB\u043B\u0430\u0439\u0444\u0445\u0430\u043A\u043E\u0432\xBB.")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 6,
+      flexWrap: "wrap"
+    }
+  }, fws.map(f => /*#__PURE__*/React.createElement(Pill, {
+    key: f.id,
+    active: open === f.id,
+    onClick: () => setOpen(f.id)
+  }, f.label))), /*#__PURE__*/React.createElement(Card, null, panels[open]));
+}
+
+/* ═══ 10 ARCHETYPES DATA ═══ */
+const archetypes = [{
+  icon: "👨‍👩‍👧‍👦",
+  type: "Московская семья",
+  who: "Родители 35–45, 1–2 ребёнка. 7–8 дней. Доход 150K+. 50%+ всех туристов — москвичи.",
+  jtbd: "Нормальное семейное фото, где все вместе — не «прохожий обрезал головы»",
+  trigger: "Один родитель снимает остальных — мама просит папу, папа снимает снизу вверх",
+  approach: "К тому, кто снимает: «Давайте я вас всех вместе сниму! Вечно кто-то за кадром — знакомо?» Тон: тёплый. НЕ «фотосессия» — пугает ценой. Первый кадр бесплатно.",
+  sell: "После 2–3 кадров: «Смотрите! Хотите ещё? Тут есть точка с видом на косу — дети классно получаются. 15 минут».",
+  obj: [{
+    q: "«У нас хороший телефон»",
+    a: "Не спорить. Показать кандидный кадр: «Вот разница. Этот — ваш, бесплатно. Если хотите ещё — я рядом». Доказать, не убеждать."
+  }, {
+    q: "«Дети не будут позировать»",
+    a: "«А не надо! Дети лучше всего — когда играют. Давайте попробуем — не понравится, ничего не должны». Снятие риска."
+  }, {
+    q: "«Сколько стоит?» (настороженно)",
+    a: "Карточка с пакетами. Не устно — на бумаге. Цена не из уст = меньше неловкости. «Мини — 3 000 за 15 кадров, 10 минут»."
+  }],
+  check: "5 000 ₽",
+  conv: "50–60%",
+  freq: "Самый частый и маржинальный. 2–3/день.",
+  pipe: "Фокус на детях: смешить, давать камеру. 15–20 мин. 3 точки. Фото отдавать маме — она решает.",
+  val: "Для семьи с расходом 7–10K/сутки на жильё — 5 000 за фото = 5% бюджета поездки за результат навсегда."
+}, {
+  icon: "💑",
+  type: "Молодая пара",
+  who: "25–35, мини-отпуск 4–5 дней из Москвы/Питера. Снимают студию. Соцсети.",
+  jtbd: "Совместные фото для Instagram/VK — «как у блогеров», не селфи",
+  trigger: "Делают селфи на вытянутой руке. Девушка недовольна ракурсом парня.",
+  approach: "«Хотите покажу ракурс, откуда это место невероятно? Буквально 2 кадра — увидите разницу». Предложить РАКУРС, не услугу. Или кандидный момент → подойти с кадром.",
+  sell: "Показать: «Совсем другое дело! Тут через 50 м есть место с видом на закат — будет огонь для сторис».",
+  obj: [{
+    q: "«Мы торопимся»",
+    a: "«5 минут, 3 точки — быстрее, чем кофе заказать». Обещать скорость и выполнять."
+  }, {
+    q: "«Мы не фотогеничные»",
+    a: "«Это про свет и ракурс, не позирование. Идите как шли, обнимитесь — я поймаю». Убрать страх."
+  }],
+  check: "2 500 ₽",
+  conv: "40–50%",
+  freq: "Очень частый, особенно вечерами. 2–3/день.",
+  pipe: "Скорость! 7–10 мин max. 2–3 точки. Визитку обязательно — они выкладывают и отмечают.",
+  val: "2 500 за 10+ «блогерских» фото = дешевле ужина на набережной. Контент для соцсетей = социальный капитал."
+}, {
+  icon: "👩‍👧‍👦",
+  type: "Мама соло с детьми",
+  who: "30–42, без мужа. 1–3 ребёнка. «Мамский отпуск». Москва, Питер, регионы.",
+  jtbd: "Фото С детьми, где мама тоже в кадре и хорошо выглядит. Дома все фото — дети без мамы.",
+  trigger: "Мама фоткает детей. Или пытается селфи с ребёнком на руках — кривой кадр.",
+  approach: "«Давайте я вас вместе сниму! Дома наверняка 500 фото детей и ноль — где вы с ними. Знакомо?» Попасть в боль точно.",
+  sell: "«Наконец-то вы в кадре! Хотите ещё? Дети сейчас играют — я поймаю, вам не надо позировать».",
+  obj: [{
+    q: "«Я ужасно выгляжу»",
+    a: "«Вы прекрасно выглядите. Дети через 10 лет будут смотреть и говорить: мама красивая. Давайте один кадр?» Эмоция наследия."
+  }, {
+    q: "«Дети бегают, не получится»",
+    a: "«Бегающие дети — лучшие кадры! Я ловлю момент, а не прошу стоять смирно»."
+  }],
+  check: "3 500 ₽",
+  conv: "55–65%",
+  freq: "Частый в будни (мамы приезжают не в выходные).",
+  pipe: "Терпение. Давать маме передохнуть. Снимать кандидно. Самый эмоциональный сегмент — благодарят потом в Telegram.",
+  val: "500 фото детей и 0 с детьми — это не фото, а восстановление справедливости. Эмоциональная ценность максимальная."
+}, {
+  icon: "🥂",
+  type: "Пара 45–55 «дети выросли»",
+  who: "Впервые за годы вдвоём. Хороший доход. Не спешат. Ценят качество.",
+  jtbd: "Фото вдвоём «как раньше». Отметить новый этап. Вспомнить, что они пара.",
+  trigger: "Гуляют медленно, держатся за руки. Не фоткаются — «в нашем возрасте это несерьёзно».",
+  approach: "Кандидный кадр → «Вы так красиво шли вместе — не смогла пройти мимо. Вот». Мягко, уважительно, без суеты.",
+  sell: "«Свет сейчас невероятный — через 20 минут уйдёт. 10 минут — кадры, которые на стену повесить не стыдно».",
+  obj: [{
+    q: "«Мы не в том возрасте для фотосессий»",
+    a: "«Именно поэтому! Когда ещё? Вы красивая пара, и свет идеальный. Один кадр бесплатно — если не понравится, скажете». Дефицит момента + снятие риска."
+  }, {
+    q: "«Дорого»",
+    a: "«Момент — 1 500 за 5 кадров, 5 минут. Если захотите ещё — доплатите разницу». Эскалация."
+  }],
+  check: "3 500 ₽",
+  conv: "45–55%",
+  freq: "Средний, высокий чек и благодарность.",
+  pipe: "Не торопить. Показывать кадры — ахают. Обязательно печать. Мощнейший сарафан среди ровесников.",
+  val: "Фото вдвоём = «мы ещё пара». Печатное — на стену. Готовы платить за качество и внимание."
+}, {
+  icon: "👴👵",
+  type: "Бабушки-дедушки",
+  who: "60–75. С внуками или вдвоём. Санаторий или с семьёй.",
+  jtbd: "Фото «на память» — альбом, показать знакомым, отправить детям в WhatsApp.",
+  trigger: "Любуются морем. Фоткают внуков на старый телефон. Сами не фоткаются.",
+  approach: "«Вы так красиво тут — можно сфотографирую? Бесплатно, один кадр в подарок!» С внуками: «Какие внуки! Давайте всех вместе — отправите детям!»",
+  sell: "«Могу напечатать прямо здесь — настоящую фотографию, как раньше!» ПЕЧАТЬ — ключевое слово.",
+  obj: [{
+    q: "«Ой, мы старые, не надо»",
+    a: "«Внуки через 20 лет эту фотографию достанут — вот какие бабушка с дедушкой! Давайте один кадр?» Эмоция наследия."
+  }, {
+    q: "«Дорого для нас»",
+    a: "«1 500 за 5 фото и две напечатанных — как 3 магнита, но на всю жизнь». Сравнение с понятной тратой."
+  }],
+  check: "1 800 ₽",
+  conv: "50–60%",
+  freq: "Средний. Чек ниже, но конверсия высокая, сарафан мощный.",
+  pipe: "Наличные — сдача! Говорить чётко, не быстро. Фото крупно на экране. С внуками — фокус на детях.",
+  val: "Цифра абстрактна, печать = «настоящее фото». Показать знакомым, отправить детям, на полку."
+}, {
+  icon: "🗺",
+  type: "Калининградцы на выходных",
+  who: "25–45, из Калининграда на 1–2 дня. Знают Зеленоградск. Пары или семьи.",
+  jtbd: "«Нормально сфоткаться» в знакомом месте. Дома не снимаешься, а тут — почему нет.",
+  trigger: "Гуляют расслабленно, знают маршрут. Фоткают привычно, без усилий.",
+  approach: "Прямой: «Я фотограф на променаде — профессиональные фото за 10 минут. Вот что получается» → кандидный. Без «ой, какая красота» — они видели 100 раз.",
+  sell: "«Вы тут часто, но нормального совместного фото нет, да? Давайте исправим — 10 минут».",
+  obj: [{
+    q: "«Мы тут живём, чего не видели»",
+    a: "«Именно! 100 раз были — ни одного совместного. Местные всегда фоткают гостей, не себя. Исправим?»"
+  }, {
+    q: "«У нас знакомый фотограф»",
+    a: "«Он не здесь, а свет — вот он. Через 20 минут уйдёт. 5 минут?» Дефицит момента."
+  }],
+  check: "2 500 ₽",
+  conv: "30–40%",
+  freq: "Стабильный поток выходных.",
+  pipe: "Деловой подход, без ахов. Результат быстро. Визитка — вернутся или порекомендуют. Самый высокий потенциал LTV.",
+  val: "Местные = повторные. Приедут через 2 недели. Расскажут друзьям-калининградцам."
+}, {
+  icon: "🎒",
+  type: "Соло-путешественница",
+  who: "25–40, одна. 60% туристов — женщины (данные минтуризма КО). Блог/соцсети.",
+  jtbd: "Фото СЕБЯ без стрёма просить прохожих. Контент «уровня фотосессии».",
+  trigger: "Мучается с селфи. Или фоткает только пейзажи — себя не с кем.",
+  approach: "«Вижу, вы одна — хотите пару кадров? 3 минуты, будут фото не стыдно в сторис». Скорость + результат.",
+  sell: "«Вот, другое дело! У меня тут секретные точки — туристы не знают, свет нереальный».",
+  obj: [{
+    q: "«Стесняюсь позировать»",
+    a: "«Не надо! Идите как шли, повернитесь к морю — готово. Никакого позирования»."
+  }, {
+    q: "«Я сама хорошо фоткаю»",
+    a: "«Себя не сфоткаешь! Свет и ракурс — не повторишь с селфи. Один бесплатно?» Показать, не спорить."
+  }],
+  check: "2 000 ₽",
+  conv: "45–55%",
+  freq: "Средний, но быстро: 5–7 мин.",
+  pipe: "Лучший канал онлайн. Выкладывают, отмечают. 1 блогер с 5K подписчиков = 10 визиток. Визитка + просьба отметить.",
+  val: "Фото для соцсетей = инвестиция в личный бренд. 2 000 за 10 «инста-кадров» — ROI огромный."
+}, {
+  icon: "👯‍♀️",
+  type: "Компания подруг",
+  who: "25–35, 3–5 девушек. «Девичник-поездка». Тратят на впечатления.",
+  jtbd: "Групповое где все хорошо + индивидуальные «модельные» + контент.",
+  trigger: "Передают телефон по кругу, хохочут. Одна фоткает — потом сама без фото.",
+  approach: "«Девчонки, давайте нормально сниму — а то ещё час будете!» Или кандидный: смех → подойти с кадром.",
+  sell: "«3 000 на пятерых — 600 с человека, дешевле раф-латте! И каждая уйдёт с фото на полгода постов».",
+  obj: [{
+    q: "«Нас слишком много»",
+    a: "«Поместитесь! И групповую, и каждую отдельно — комплект». Больше = больше ценности."
+  }, {
+    q: "«Давайте за 2 000?» (торг)",
+    a: "«3 000 — 600 с человека, и каждая получит и групповое, и своё. Плюс лучшие точки. Ок?» Разбить + ценность."
+  }],
+  check: "3 500 ₽",
+  conv: "40–50%",
+  freq: "Средний, вечера и выходные.",
+  pipe: "Весёлая, командовать с юмором. Процесс = часть тусовки. И групповые, и по одной. Каждая = сарафан в своём городе.",
+  val: "Групповое фото → общий чат → вирусно. Каждая участница = потенциальный канал."
+}, {
+  icon: "🚌",
+  type: "Туристы после экскурсии",
+  who: "30–60, смешанный. Вернулись с Куршской косы / Светлогорска. Гуляют 1–2 ч.",
+  jtbd: "Зафиксировать финал поездки. «Были на косе — а фото нормальных нет».",
+  trigger: "Группа рассыпается. Пары и семьи из группы — с сувенирами. Видно, что «приезжие».",
+  approach: "«Только с косы? Невероятно! Хотите на фоне моря — на память? 5 минут». Привязать к свежему впечатлению.",
+  sell: "«Столько увидели — а фото вместе на фоне Балтики нет. Быстро, пока свет, — на всю жизнь».",
+  obj: [{
+    q: "«Устали, скоро уезжаем»",
+    a: "«5 минут, 3–5 кадров — поедете с идеальным фото. Дома будете жалеть!» Loss aversion."
+  }, {
+    q: "«Экскурсовод фоткал»",
+    a: "«На камеру с ракурсом — другое. Вот, смотрите» → кандидный. Показать разницу."
+  }],
+  check: "1 800 ₽",
+  conv: "30–40%",
+  freq: "Стабильный, 15–17ч (возврат с экскурсий).",
+  pipe: "Быстро! 5–7 мин. Пакет «Момент». Партнёрство с экскурсоводами = пассивный поток.",
+  val: "Последнее впечатление = оценка всей поездки (peak-end rule). Красивое фото делает отпуск «идеальным»."
+}, {
+  icon: "🌏",
+  type: "Китайские туристы",
+  who: "30–50, группы 5–15 чел. Растущий сегмент (фиксирует минтуризм). Янтарь, архитектура, коты.",
+  jtbd: "Фото в «европейском городе» для WeChat, Xiaohongshu. Эстетика, фон, архитектура.",
+  trigger: "Фоткаются у немецких фасадов, с котами (бренд Зеленоградска).",
+  approach: "Улыбка, кандидный кадр на экране. Минимум слов: «Photo? Professional photo?» Или карточка с ценами.",
+  sell: "Кадр → палец вверх → цена на карточке. Охотно платят за фото «в красивом месте».",
+  obj: [{
+    q: "Языковой барьер",
+    a: "Карточка с ценами + 拍照 (фото), 漂亮 (красиво). Жесты + камера + улыбка = универсально."
+  }, {
+    q: "Торг (культурно нормален)",
+    a: "Фиксированная цена на карточке. Улыбнуться, покачать головой. «+1 person — same price!»"
+  }],
+  check: "3 000 ₽",
+  conv: "35–45%",
+  freq: "Пока 1–2/нед → потенциально 1/день в пик.",
+  pipe: "WeChat Pay не работает в РФ. UnionPay — некоторые терминалы. Наличные + СБП. Фото с архитектурой и котами.",
+  val: "Опережающие инвестиции: 2–3 слова на китайском + фото в Xiaohongshu = вирусный канал будущих сезонов."
+}];
+
+/* ════════════════════════════════════════════
+   TAB 3: ARCHETYPES
+   ════════════════════════════════════════════ */
+function Arch() {
+  const [a, setA] = useState(0);
+  const d = archetypes[a];
+  return /*#__PURE__*/React.createElement(Col, {
+    gap: 20
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(H2, null, "10 \u0430\u0440\u0445\u0435\u0442\u0438\u043F\u043E\u0432: \u0440\u0435\u0430\u043B\u044C\u043D\u044B\u0435 \u043B\u044E\u0434\u0438 \u043D\u0430 \u043F\u0440\u043E\u043C\u0435\u043D\u0430\u0434\u0435"), /*#__PURE__*/React.createElement(P, null, "\u041F\u043E \u0434\u0430\u043D\u043D\u044B\u043C \u043C\u0438\u043D\u0442\u0443\u0440\u0438\u0437\u043C\u0430 \u041A\u041E (2025\u20132026): \u0441\u0440\u0435\u0434\u043D\u0438\u0439 \u0442\u0443\u0440\u0438\u0441\u0442 \u2014 43 \u0433\u043E\u0434\u0430, \u0434\u043E\u0445\u043E\u0434 118 \u0442\u044B\u0441. \u20BD, 60% \u0436\u0435\u043D\u0449\u0438\u043D\u044B. 50%+ \u043C\u043E\u0441\u043A\u0432\u0438\u0447\u0438. \u041E\u0441\u043D\u043E\u0432\u0430 \u2014 \u0441\u0435\u043C\u044C\u0438 \u0441 1\u20132 \u0434\u0435\u0442\u044C\u043C\u0438, \u0440\u0430\u0441\u0442\u0451\u0442 \u0441\u043F\u0440\u043E\u0441 \u043E\u0442 \u043F\u0430\u0440 \u0438 \u043A\u0438\u0442\u0430\u0439\u0441\u043A\u0438\u0445 \u0442\u0443\u0440\u0438\u0441\u0442\u043E\u0432. \u041A\u0430\u0436\u0434\u044B\u0439 \u0430\u0440\u0445\u0435\u0442\u0438\u043F = \u0438\u043D\u0434\u0438\u0432\u0438\u0434\u0443\u0430\u043B\u044C\u043D\u044B\u0439 \u043F\u0430\u0439\u043F\u043B\u0430\u0439\u043D + \u0432\u043E\u0437\u0440\u0430\u0436\u0435\u043D\u0438\u044F + \u043A\u0432\u0430\u043B\u0438\u0444\u0438\u043A\u0430\u0446\u0438\u044F \u043F\u043E\u0442\u0440\u0435\u0431\u043D\u043E\u0441\u0442\u0438 \u0432 \u043C\u0438\u0440\u0435 \u043A\u043B\u0438\u0435\u043D\u0442\u0430.")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 5,
+      flexWrap: "wrap"
+    }
+  }, archetypes.map((x, i) => /*#__PURE__*/React.createElement(Pill, {
+    key: i,
+    active: a === i,
+    onClick: () => setA(i)
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      marginRight: 3
+    }
+  }, x.icon), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 11.5
+    }
+  }, x.type)))), /*#__PURE__*/React.createElement(Card, {
+    style: {
+      padding: 24
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      flexWrap: "wrap",
+      gap: 10,
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 30
+    }
+  }, d.icon), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: ff.serif,
+      fontSize: 19,
+      fontWeight: 600,
+      color: C.text
+    }
+  }, d.type), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12.5,
+      color: C.muted,
+      fontFamily: ff.sans,
+      marginTop: 1
+    }
+  }, d.who))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 6,
+      flexWrap: "wrap"
+    }
+  }, /*#__PURE__*/React.createElement(Tag, {
+    color: C.green,
+    bg: C.greenBg
+  }, "\u0427\u0435\u043A: ", d.check), /*#__PURE__*/React.createElement(Tag, {
+    color: C.blue,
+    bg: C.blueBg
+  }, "\u041A\u043E\u043D\u0432: ", d.conv))), [{
+    l: "JTBD — зачем нанимают",
+    v: d.jtbd,
+    c: C.blue
+  }, {
+    l: "Триггер — когда подходить",
+    v: d.trigger,
+    c: C.amber
+  }, {
+    l: "Подход",
+    v: d.approach,
+    c: C.accent
+  }, {
+    l: "Переход к продаже",
+    v: d.sell,
+    c: C.green
+  }, {
+    l: "Ценность в мире клиента",
+    v: d.val,
+    c: C.blue
+  }, {
+    l: "Особенности пайплайна",
+    v: d.pipe,
+    c: C.amber
+  }].map((x, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      fontWeight: 600,
+      letterSpacing: 1.5,
+      textTransform: "uppercase",
+      color: x.c,
+      marginBottom: 2
+    }
+  }, x.l), /*#__PURE__*/React.createElement(P, {
+    style: {
+      fontSize: 13.5
+    }
+  }, x.v))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 6
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      fontWeight: 600,
+      letterSpacing: 1.5,
+      textTransform: "uppercase",
+      color: C.accent,
+      marginBottom: 6
+    }
+  }, "\u0412\u043E\u0437\u0440\u0430\u0436\u0435\u043D\u0438\u044F \u0438 \u043E\u0442\u0432\u0435\u0442\u044B"), /*#__PURE__*/React.createElement(Col, {
+    gap: 6
+  }, d.obj.map((o, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      background: C.bg,
+      borderRadius: 8,
+      padding: "10px 14px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: ff.sans,
+      fontSize: 13,
+      fontWeight: 600,
+      color: C.text,
+      marginBottom: 3
+    }
+  }, "\u2014 ", o.q), /*#__PURE__*/React.createElement(P, {
+    style: {
+      fontSize: 12.5,
+      color: C.green
+    }
+  }, o.a))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 10,
+      fontSize: 12,
+      color: C.muted,
+      fontFamily: ff.sans
+    }
+  }, "\u0427\u0430\u0441\u0442\u043E\u0442\u0430: ", d.freq)));
+}
+
+/* ════════════════════════════════════════════
+   TAB 4: PIPELINE
+   ════════════════════════════════════════════ */
+function Pipe() {
+  const steps = [{
+    n: "Сканирование",
+    dur: "постоянно",
+    desc: "Идёшь по якорной точке, смотришь на людей. Ищешь ТРИГГЕРЫ: кто-то фоткает семью (один за кадром), пара делает селфи, бабушка любуется видом, компания хохочет. Не подходишь ко всем подряд — ищешь момент.",
+    kpi: "Конверсия из наблюдения в подход: ~30%",
+    kaneman: "Система 1: паттерн-распознавание. После 50 подходов триггеры считываются автоматически."
+  }, {
+    n: "Кандидный кадр",
+    dur: "10–30 сек",
+    desc: "Замечаешь красивый момент — снимаешь 2–3 кадра. Открыто, с камерой, не скрытно. Это не «папарацци» — это профессионал, увидевший кадр. Расстояние: 3–5 метров, средний план или портрет.",
+    kpi: "Качество кадра: 7/10 минимум — он продаёт дальше",
+    kaneman: "Принцип взаимности Чалдини — создаётся ещё до подхода."
+  }, {
+    n: "Подход",
+    dur: "15–30 сек",
+    desc: "Подходишь с камерой, на экране — их кадр. «Простите, я фотограф — не смогла пройти мимо, вот что получилось». Показываешь НА ЭКРАНЕ КАМЕРЫ (не на телефоне — камера = авторитет). Ждёшь реакцию. Не продаёшь — даришь.",
+    kpi: "Конверсия из подхода в «ого, покажите»: 70–80%",
+    kaneman: "Система 1 клиента: визуальный стимул → эмоция → «хочу ещё»."
+  }, {
+    n: "Предложение",
+    dur: "15 сек",
+    desc: "После «ого»: «Хотите, я ещё несколько сделаю? 10 минут, покажу красивые точки тут рядом, и все фото — сразу вам на телефон». Ключевые слова: «10 минут» (Хормози: время ↓), «сразу на телефон» (усилия ↓).",
+    kpi: "Конверсия из «ого» в согласие: 50–60%",
+    kaneman: "Эскалация по Чалдини: маленькое «да» (посмотреть) → большое «да» (сессия)."
+  }, {
+    n: "Съёмка",
+    dur: "7–20 мин",
+    desc: "Ведёшь к 2–3 точкам (заранее знаешь, где лучший свет). Разговариваешь, шутишь, расслабляешь. С детьми — играешь. Это момент Пайна–Гилмора: услуга превращается во впечатление. Снимаешь 15–30 кадров.",
+    kpi: "Субъективный восторг клиента: «ой, как здорово!» — минимум 3 раза за сессию",
+    kaneman: "Режиссура опыта: не «встаньте тут, щёлк», а маршрут + сторителлинг."
+  }, {
+    n: "Показ + передача",
+    dur: "3–5 мин",
+    desc: "Показываешь лучшие 5–7 кадров на экране камеры. Отбираешь вместе. Скидываешь на телефон (AirDrop / через приложение камеры / Telegram). Быстро — не заставляй ждать.",
+    kpi: "Время передачи: <3 мин",
+    kaneman: "Канеман: пик-конец (peak-end rule) — последнее впечатление = финальная оценка."
+  }, {
+    n: "Оплата",
+    dur: "30 сек",
+    desc: "Называешь пакет и цену (или показываешь карточку). СБП по QR-коду — 5 сек. Наличные — иметь сдачу. Самозанятость — чек автоматически. Не извиняйся за цену, не предлагай скидку первой.",
+    kpi: "Средний чек: ≥3 000 ₽",
+    kaneman: "Ариели: якорная цена уже установлена пакетной структурой."
+  }, {
+    n: "Закрытие + LTV",
+    dur: "30 сек",
+    desc: "Визитка с QR на Telegram. «Буду рада, если выложите и отметите!» Если разрешат — сфоткать визитку с ними (для портфолио). Записать в блокнот/телефон: тип клиента, пакет, чек.",
+    kpi: "100% клиентов уходят с визиткой",
+    kaneman: "Сьюэлл: каждый контакт — начало отношений, а не конец транзакции."
+  }];
+  return /*#__PURE__*/React.createElement(Col, {
+    gap: 24
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(H2, null, "\u041F\u0430\u0439\u043F\u043B\u0430\u0439\u043D: \u043E\u0442 \u043D\u0430\u0431\u043B\u044E\u0434\u0435\u043D\u0438\u044F \u0434\u043E \u0432\u0438\u0437\u0438\u0442\u043A\u0438"), /*#__PURE__*/React.createElement(P, null, "\u041F\u043E\u043B\u043D\u044B\u0439 \u0446\u0438\u043A\u043B \u0440\u0430\u0431\u043E\u0442\u044B \u0441 \u043E\u0434\u043D\u0438\u043C \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u043C \u2014 15\u201325 \u043C\u0438\u043D\u0443\u0442. 5\u20137 \u0446\u0438\u043A\u043B\u043E\u0432 \u0432 \u0434\u0435\u043D\u044C = 12\u201320K \u20BD. \u041A\u0430\u0436\u0434\u044B\u0439 \u0448\u0430\u0433 \u043E\u0431\u043E\u0441\u043D\u043E\u0432\u0430\u043D \u0442\u0435\u043E\u0440\u0435\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u0438 \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u0435\u043C \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u0435\u043D\u043D\u043E.")), /*#__PURE__*/React.createElement(Col, {
+    gap: 10
+  }, steps.map((x, i) => /*#__PURE__*/React.createElement(Card, {
+    key: i
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 14,
+      alignItems: "flex-start"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: 4
+    }
+  }, /*#__PURE__*/React.createElement(Num, {
+    n: i + 1
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: C.light,
+      fontFamily: ff.mono,
+      whiteSpace: "nowrap"
+    }
+  }, x.dur)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement(H3, null, x.n), /*#__PURE__*/React.createElement(P, {
+    style: {
+      marginTop: 4,
+      marginBottom: 10
+    }
+  }, x.desc), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      flexWrap: "wrap"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 11.5,
+      background: C.greenBg,
+      border: `1px solid ${C.green}22`,
+      color: C.green,
+      padding: "3px 10px",
+      borderRadius: 4
+    }
+  }, "\uD83D\uDCCA ", x.kpi), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 11.5,
+      background: C.blueBg,
+      border: `1px solid ${C.blue}22`,
+      color: C.blue,
+      padding: "3px 10px",
+      borderRadius: 4
+    }
+  }, "\uD83E\uDDE0 ", x.kaneman))))))), /*#__PURE__*/React.createElement(Callout, {
+    color: C.green
+  }, /*#__PURE__*/React.createElement("strong", null, "\u0412\u043E\u0440\u043E\u043D\u043A\u0430 \u0440\u0435\u0430\u043B\u0438\u0441\u0442\u0430:"), " \u0423\u0432\u0438\u0434\u0435\u043B\u0430 20 \u043F\u043E\u0442\u0435\u043D\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0445 \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u0432 \u2192 \u043F\u043E\u0434\u043E\u0448\u043B\u0430 \u043A 6\u20137 (\u0442\u0440\u0438\u0433\u0433\u0435\u0440) \u2192 5 \u0441\u043E\u0433\u043B\u0430\u0441\u0438\u043B\u0438\u0441\u044C \u043F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u043A\u0430\u0434\u0440 \u2192 3\u20134 \u043F\u043E\u0448\u043B\u0438 \u043D\u0430 \u0441\u0435\u0441\u0441\u0438\u044E \u2192 3\u20134 \u043E\u043F\u043B\u0430\u0442\u0438\u043B\u0438. \u041A\u043E\u043D\u0432\u0435\u0440\u0441\u0438\u044F \u043D\u0430\u0431\u043B\u044E\u0434\u0435\u043D\u0438\u0435\u2192\u043E\u043F\u043B\u0430\u0442\u0430: ~15\u201320%. \u041F\u0440\u0438 \u043F\u043E\u0442\u043E\u043A\u0435 \u043F\u0440\u043E\u043C\u0435\u043D\u0430\u0434\u0430 \u044D\u0442\u043E 5+ \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u0432 \u0437\u0430 2 \u0440\u0430\u0431\u043E\u0447\u0438\u0445 \u0431\u043B\u043E\u043A\u0430."));
+}
+
+/* ════════════════════════════════════════════
+   TAB 5: GEAR
+   ════════════════════════════════════════════ */
+function Gear() {
+  return /*#__PURE__*/React.createElement(Col, {
+    gap: 24
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(H2, null, "\u0421\u043D\u0430\u0440\u044F\u0436\u0435\u043D\u0438\u0435: \u0447\u0442\u043E \u0432\u0437\u044F\u0442\u044C \u043D\u0430 \u043F\u0440\u043E\u043C\u0435\u043D\u0430\u0434"), /*#__PURE__*/React.createElement(P, null, "\u041E\u043F\u0442\u0438\u043C\u0438\u0437\u0430\u0446\u0438\u044F \u043D\u0430\u0431\u043E\u0440\u0430 \u043F\u043E\u0434 \u0440\u0435\u0430\u043B\u0438\u0438 2026 \u0433\u043E\u0434\u0430, \u0440\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u0438\u0439 \u0440\u044B\u043D\u043E\u043A \u0438 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u0443\u044E \u0437\u0430\u0434\u0430\u0447\u0443 \u2014 \u0443\u043B\u0438\u0447\u043D\u044B\u0435 \u043F\u043E\u0440\u0442\u0440\u0435\u0442\u044B \u043D\u0430 \u043F\u043E\u0431\u0435\u0440\u0435\u0436\u044C\u0435. \u041D\u0435 \xAB\u0447\u0442\u043E \u043A\u0443\u043F\u0438\u0442\u044C \u0432 \u0438\u0434\u0435\u0430\u043B\u0435\xBB, \u0430 \u0447\u0442\u043E \u0434\u0430\u0451\u0442 \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u044B\u0439 ROI \u043F\u0440\u044F\u043C\u043E \u0441\u0435\u0439\u0447\u0430\u0441.")), /*#__PURE__*/React.createElement(H3, null, "\u041A\u0430\u043C\u0435\u0440\u0430 (\u0443\u0436\u0435 \u0435\u0441\u0442\u044C)"), /*#__PURE__*/React.createElement(P, null, "\u0417\u0435\u0440\u043A\u0430\u043B\u043A\u0430 \u0438\u043B\u0438 \u0431\u0435\u0437\u0437\u0435\u0440\u043A\u0430\u043B\u043A\u0430 \u2014 \u043E\u0431\u0435 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0442. \u0412\u0430\u0436\u043D\u0435\u0435 \u043E\u0431\u044A\u0435\u043A\u0442\u0438\u0432 \u0438 \u0441\u0432\u0435\u0442, \u0447\u0435\u043C \u0442\u0443\u0448\u043A\u0430. \u0415\u0441\u043B\u0438 \u0432 \u0431\u0443\u0434\u0443\u0449\u0435\u043C \u0431\u0443\u0434\u0435\u0442 \u0430\u043F\u0433\u0440\u0435\u0439\u0434 \u2014 \u0431\u0435\u0437\u0437\u0435\u0440\u043A\u0430\u043B\u043A\u0430 \u043B\u0435\u0433\u0447\u0435 (\u0446\u0435\u043B\u044B\u0439 \u0434\u0435\u043D\u044C \u043D\u0430 \u043D\u043E\u0433\u0430\u0445), \u0431\u044B\u0441\u0442\u0440\u0435\u0435 \u0430\u0432\u0442\u043E\u0444\u043E\u043A\u0443\u0441 (\u0434\u0435\u0442\u0438), \u0442\u0438\u0448\u0435 (\u043D\u0435 \u043F\u0443\u0433\u0430\u0435\u0442 \u043B\u044E\u0434\u0435\u0439)."), /*#__PURE__*/React.createElement(H3, {
+    style: {
+      marginTop: 8
+    }
+  }, "\u041E\u0431\u044A\u0435\u043A\u0442\u0438\u0432\u044B \u2014 \u0433\u043B\u0430\u0432\u043D\u0430\u044F \u0438\u043D\u0432\u0435\u0441\u0442\u0438\u0446\u0438\u044F"), /*#__PURE__*/React.createElement(Grid, null, [{
+    name: "50mm f/1.8",
+    price: "7–12 тыс. ₽",
+    why: "«Полтинник» — рабочая лошадка уличного портретиста. Красивое боке, отделяет человека от фона. Лёгкий, компактный. Canon EF 50/1.8 STM, Nikon 50/1.8G, Sony 50/1.8 — все до 15K. Лучший ROI из всех объективов.",
+    use: "80% работы: портреты, пары, семьи крупным планом."
+  }, {
+    name: "35mm f/1.8–2.0",
+    price: "12–20 тыс. ₽",
+    why: "Шире — помещается группа и контекст (море, архитектура). Хорош для «прогулочных» сессий и компаний. Yongnuo 35/2 — бюджетный вариант от 5K.",
+    use: "Группы, семьи целиком, «человек в среде»."
+  }, {
+    name: "85mm f/1.8",
+    price: "15–25 тыс. ₽",
+    why: "Король портрета: сильное сжатие перспективы, кремовый фон. Но нужна дистанция — неудобно в тесных местах. Для вечерних портретов пар — идеален.",
+    use: "Премиум-портреты, вечерние сессии пар."
+  }].map((x, i) => /*#__PURE__*/React.createElement(Card, {
+    key: i
+  }, /*#__PURE__*/React.createElement(H3, {
+    style: {
+      color: C.accent
+    }
+  }, x.name), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: C.green,
+      fontWeight: 600,
+      margin: "4px 0 8px"
+    }
+  }, x.price), /*#__PURE__*/React.createElement(P, {
+    style: {
+      fontSize: 13,
+      marginBottom: 6
+    }
+  }, x.why), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: C.blue,
+      background: C.blueBg,
+      padding: "4px 10px",
+      borderRadius: 4
+    }
+  }, "\u041A\u043E\u0433\u0434\u0430: ", x.use)))), /*#__PURE__*/React.createElement(Callout, {
+    color: C.accent
+  }, /*#__PURE__*/React.createElement("strong", null, "\u041C\u0438\u043D\u0438\u043C\u0443\u043C \u0434\u043B\u044F \u0441\u0442\u0430\u0440\u0442\u0430:"), " \u0442\u0435\u043A\u0443\u0449\u0430\u044F \u043A\u0430\u043C\u0435\u0440\u0430 + 50mm f/1.8. \u0415\u0441\u043B\u0438 \u0435\u0441\u0442\u044C \u0442\u043E\u043B\u044C\u043A\u043E \u043A\u0438\u0442\u043E\u0432\u044B\u0439 18\u201355 \u2014 \u043F\u043E\u043B\u0442\u0438\u043D\u043D\u0438\u043A \u0437\u0430 7\u201310 \u0442\u044B\u0441. \u20BD = \u0441\u0430\u043C\u044B\u0439 \u0431\u044B\u0441\u0442\u0440\u044B\u0439 \u0430\u043F\u0433\u0440\u0435\u0439\u0434 \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u0430 \u043A\u0430\u0434\u0440\u0430. \u0420\u0430\u0437\u043D\u0438\u0446\u0430 \u0432\u0438\u0434\u043D\u0430 \u043D\u0435\u0432\u043E\u043E\u0440\u0443\u0436\u0451\u043D\u043D\u044B\u043C \u0433\u043B\u0430\u0437\u043E\u043C: \u0431\u043E\u043A\u0435, \u0440\u0435\u0437\u043A\u043E\u0441\u0442\u044C, \xAB\u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439\xBB \u0432\u0438\u0434 \u0444\u043E\u0442\u043E."), /*#__PURE__*/React.createElement(H3, null, "\u041F\u043E\u0440\u0442\u0430\u0442\u0438\u0432\u043D\u044B\u0439 \u043F\u0440\u0438\u043D\u0442\u0435\u0440"), /*#__PURE__*/React.createElement(Grid, {
+    min: 240
+  }, [{
+    name: "Canon Selphy CP1500",
+    price: "~12 000 ₽",
+    pros: "Лучшее качество печати среди портативных. Формат 10×15 — «настоящая» фотография. Сублимационная печать — не выцветает. Расходники: ~25 ₽/фото (набор на 108 фото ≈ 2 700 ₽).",
+    cons: "Нужна розетка или доп. аккумулятор (~3 500 ₽). Время печати ~45 сек. Вес 860 г."
+  }, {
+    name: "Fujifilm Instax Link Wide",
+    price: "~8 000 ₽",
+    pros: "Формат Wide — большие снимки. Печатает с телефона по Bluetooth. Лёгкий, на батарейках. «Instax-эстетика» — модно, нравится молодёжи.",
+    cons: "Расходники дороже: ~40–50 ₽/фото. Качество ниже Selphy. Цвета менее точные."
+  }, {
+    name: "Xiaomi Portable Photo Printer",
+    price: "~5 000 ₽",
+    pros: "Самый дешёвый вход. Компактный. Печатает с телефона.",
+    cons: "Формат маленький (6×9). Качество заметно ниже. Термопечать — выцветает."
+  }].map((x, i) => /*#__PURE__*/React.createElement(Card, {
+    key: i
+  }, /*#__PURE__*/React.createElement(H3, null, x.name), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: C.green,
+      fontWeight: 600,
+      margin: "4px 0 8px"
+    }
+  }, x.price), /*#__PURE__*/React.createElement(P, {
+    style: {
+      fontSize: 13,
+      marginBottom: 4
+    }
+  }, /*#__PURE__*/React.createElement("strong", {
+    style: {
+      color: C.green
+    }
+  }, "+"), " ", x.pros), /*#__PURE__*/React.createElement(P, {
+    style: {
+      fontSize: 13
+    }
+  }, /*#__PURE__*/React.createElement("strong", {
+    style: {
+      color: C.accent
+    }
+  }, "\u2212"), " ", x.cons)))), /*#__PURE__*/React.createElement(Callout, {
+    color: C.green
+  }, /*#__PURE__*/React.createElement("strong", null, "\u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F:"), " Canon Selphy CP1500 + \u0434\u043E\u043F. \u0430\u043A\u043A\u0443\u043C\u0443\u043B\u044F\u0442\u043E\u0440. \u0418\u0442\u043E\u0433\u043E ~15 500 \u20BD. \u041F\u0440\u0438 \u043F\u0440\u043E\u0434\u0430\u0436\u0435 \u043F\u0435\u0447\u0430\u0442\u0438 +500 \u20BD \u0438 40% \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u0432 \u2014 \u043E\u043A\u0443\u043F\u0430\u0435\u0442\u0441\u044F \u0437\u0430 5 \u0440\u0430\u0431\u043E\u0447\u0438\u0445 \u0434\u043D\u0435\u0439. ROI \u0437\u0430 \u0441\u0435\u0437\u043E\u043D: \xD720\u201330."), /*#__PURE__*/React.createElement(H3, null, "\u041E\u0441\u0442\u0430\u043B\u044C\u043D\u043E\u0435 \u0441\u043D\u0430\u0440\u044F\u0436\u0435\u043D\u0438\u0435"), /*#__PURE__*/React.createElement(Grid, {
+    min: 200
+  }, [{
+    n: "Передача фото",
+    d: "Если камера поддерживает Wi-Fi (Canon/Sony/Fuji) — через фирменное приложение, 30 сек. Если нет — OTG-кабель + адаптер SD→USB-C (~500 ₽), передача за 1 мин. AirDrop только для iPhone↔iPhone."
+  }, {
+    n: "Питание",
+    d: "Запасной аккумулятор камеры (~1 500 ₽) — обязательно. Power bank 20 000 mAh для телефона и принтера. Зарядка в обеденный перерыв."
+  }, {
+    n: "Сумка",
+    d: "Лёгкая наплечная сумка или поясная. НЕ рюкзак — надо быстро доставать камеру. Sling-сумка на одно плечо — оптимально. 2–3 тыс. ₽."
+  }, {
+    n: "QR-код для оплаты",
+    d: "СБП через приложение банка — распечатать QR на ламинированной карточке. Самозанятость через «Мой налог» — чек автоматически. Наличные: иметь сдачу с 5 000 ₽."
+  }, {
+    n: "Визитки",
+    d: "200 шт. в типографии — 1 000–1 500 ₽. Плотная бумага, QR на Telegram-канал. Давать КАЖДОМУ. Хватает на 1–2 недели."
+  }, {
+    n: "Защита от погоды",
+    d: "Дождевик для камеры (~800 ₽). Зонт — не для себя, а чтобы прикрыть клиента/камеру. Кепка/панама — 6–8 часов на солнце."
+  }].map((x, i) => /*#__PURE__*/React.createElement(Card, {
+    key: i
+  }, /*#__PURE__*/React.createElement(H3, {
+    style: {
+      fontSize: 15
+    }
+  }, x.n), /*#__PURE__*/React.createElement(P, {
+    style: {
+      fontSize: 13,
+      marginTop: 4
+    }
+  }, x.d)))), /*#__PURE__*/React.createElement(Card, {
+    style: {
+      background: C.amberBg,
+      border: `1px solid ${C.amber}33`
+    }
+  }, /*#__PURE__*/React.createElement(H3, {
+    style: {
+      color: C.amber
+    }
+  }, "\u041E\u0431\u0449\u0438\u0439 \u0431\u044E\u0434\u0436\u0435\u0442 \u043D\u0430 \u0441\u0442\u0430\u0440\u0442"), /*#__PURE__*/React.createElement(P, {
+    style: {
+      marginTop: 8
+    }
+  }, /*#__PURE__*/React.createElement("strong", null, "\u041C\u0438\u043D\u0438\u043C\u0443\u043C (\u0435\u0441\u0442\u044C \u043A\u0430\u043C\u0435\u0440\u0430 + \u043E\u0431\u044A\u0435\u043A\u0442\u0438\u0432):"), " \u0432\u0438\u0437\u0438\u0442\u043A\u0438 + QR-\u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430 + \u0441\u0434\u0430\u0447\u0430 = 2 000 \u20BD.", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "\u041E\u043F\u0442\u0438\u043C\u0443\u043C:"), " + 50mm f/1.8 + Selphy CP1500 + \u0430\u043A\u043A\u0443\u043C\u0443\u043B\u044F\u0442\u043E\u0440\u044B = ~30 000 \u20BD.", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("strong", null, "\u041E\u043A\u0443\u043F\u0430\u0435\u043C\u043E\u0441\u0442\u044C \u043E\u043F\u0442\u0438\u043C\u0443\u043C\u0430:"), " 7\u201310 \u0440\u0430\u0431\u043E\u0447\u0438\u0445 \u0434\u043D\u0435\u0439 \u043F\u0440\u0438 \u0441\u0438\u0441\u0442\u0435\u043C\u043D\u043E\u043C \u043F\u043E\u0434\u0445\u043E\u0434\u0435.")));
+}
+
+/* ════════════════════════════════════════════
+   TAB 6: SYSTEM
+   ════════════════════════════════════════════ */
+function Sys() {
+  const blocks = [{
+    t: "Метод «Кандидный кадр → подход»",
+    sub: "Решает проблему «кринжового» подхода. Синтез Чалдини (взаимность) + Ариели (бесплатное) + Пайн-Гилмор (впечатление).",
+    steps: ["Замечаешь триггер: момент, который хочется снять (объятие, смех ребёнка, силуэт на закате)", "Снимаешь 2–3 кадра открыто, с камерой — не прячась. Расстояние 3–5 м, средний план", "Подходишь с камерой, на экране — их кадр. «Простите, не смогла пройти мимо — вот что получилось»", "НЕ показываешь портфолио чужих людей (кринж). Показываешь ИХ фото — это принципиально другая механика", "Ждёшь реакцию. В 80% случаев: «Ой, как красиво!» Вот здесь — естественный переход: «Хотите ещё?»", "Это не продажа — это подарок с предложением продолжить. Psychologically: клиент чувствует благодарность, а не давление"]
+  }, {
+    t: "Пакетная система с якорем",
+    sub: "Ариели (якорь + приманка) + Хормози (уравнение ценности). Три уровня — средний продаётся чаще всего.",
+    steps: ["МОМЕНТ — 1 500 ₽: 3–5 кадров, 5 мин, цифра. Для тех, кому «просто один кадр». Быстро, без обязательств.", "МИНИ — 3 000 ₽: 10–15 кадров, 10–15 мин, 2–3 точки, цифра. ОСНОВНОЙ продукт — его покупают 60% клиентов.", "ПРОГУЛКА — 6 000 ₽: 25–30 кадров, 20–25 мин, лучшие точки, цифра + 3 печатных фото. Для семей и «хочу всё».", "Цены — на красивой карточке (не листок А4). Показывать, не проговаривать. Это переносит «неловкость» с живого разговора на физический объект.", "Верхний пакет работает как якорь: рядом с 6 000 ₽ пакет за 3 000 ₽ кажется разумным. Без якоря 3 000 кажется «дорого».", "Семьям: сразу предлагать МИНИ или ПРОГУЛКУ. Одиночкам и парам: МОМЕНТ или МИНИ."]
+  }, {
+    t: "Два рабочих блока вместо «целого дня»",
+    sub: "Канеман (истощение Системы 2) + Сьюэлл (система > героизм). Структура дня.",
+    steps: ["УТРЕННИЙ БЛОК 11:00–14:00 → цель: 3–4 клиента. Дневной свет, семьи, пожилые. Самое активное время подходов.", "ПЕРЕРЫВ 14:00–16:30 → обед, отдых, зарядка техники. НЕ «сижу на променаде и иногда подхожу» — честный уход.", "ВЕЧЕРНИЙ БЛОК 17:00–19:30 → цель: 2–3 клиента. Golden hour, пары, компании. Лучший свет = фото продают сами себя.", "Вечерний блок — НЕ опционален. Это самое маржинальное время: свет и аудитория идеальны.", "Между блоками — полный reset. Не «продолжаю работать», а «начинаю заново». Психологически это два коротких рабочих дня.", "В плохую погоду / мало людей: только один блок. Не выжигать себя — это марафон на 5 месяцев."]
+  }, {
+    t: "Инфраструктура LTV",
+    sub: "Сьюэлл (клиент — актив) + Байрон Шарп (ментальная и физическая доступность).",
+    steps: ["ВИЗИТКИ: давать каждому клиенту. QR → Telegram-канал. «Буду рада, если выложите и отметите!»", "TELEGRAM-КАНАЛ: лучшие кадры (с разрешения), stories с процессом, ссылка на запись. Это живое портфолио.", "Просить разрешение на публикацию — 10 секунд, 90% говорят «да». Каждый пост — социальное доказательство.", "Партнёрства: обойти 5–7 кафе и 3–4 отеля на променаде. Визитки на стойке. Бонус им: бесплатные фото интерьера/еды для их соцсетей.", "Учёт: простая таблица в телефоне — дата, тип клиента, пакет, чек. Через 2 недели видно паттерны."]
+  }, {
+    t: "Юридический минимум",
+    sub: "Реалии РФ, 2026 год",
+    steps: ["Самозанятость: приложение «Мой налог». 4% от физлиц, 6% от юрлиц. Регистрация — 5 минут. Чек формируется автоматически", "Право на изображение (ст. 152.1 ГК): согласие может следовать из поведения (позировал = согласился). Для публикации в Telegram — спрашивать устно, этого достаточно", "При доходе ~400K/мес налог ≈ 16–24K. Это 1–2 рабочих дня — приемлемо", "Ограничение самозанятости: доход до 2,4 млн ₽/год. За сезон (1,5–2,5 млн) — укладываемся"]
+  }];
+  return /*#__PURE__*/React.createElement(Col, {
+    gap: 28
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(H2, null, "\u0421\u0438\u0441\u0442\u0435\u043C\u0430: \u043E\u0442 \u0445\u0430\u043E\u0441\u0430 \u043A \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0443"), /*#__PURE__*/React.createElement(P, null, "\u041F\u043E \u0421\u044C\u044E\u044D\u043B\u043B\u0443, \u0431\u0438\u0437\u043D\u0435\u0441 \u2014 \u0441\u0438\u0441\u0442\u0435\u043C\u0430, \u043A\u043E\u0442\u043E\u0440\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u0434\u0430\u0436\u0435 \u0432 \u043F\u043B\u043E\u0445\u043E\u0439 \u0434\u0435\u043D\u044C. \u041F\u044F\u0442\u044C \u0431\u043B\u043E\u043A\u043E\u0432 \u043D\u0438\u0436\u0435 \u2014 \u043D\u0435 \u0441\u043E\u0432\u0435\u0442\u044B, \u0430 \u043E\u043F\u0435\u0440\u0430\u0446\u0438\u043E\u043D\u043D\u0430\u044F \u043C\u043E\u0434\u0435\u043B\u044C. \u041A\u0430\u0436\u0434\u044B\u0439 \u044D\u043B\u0435\u043C\u0435\u043D\u0442 \u043E\u0431\u043E\u0441\u043D\u043E\u0432\u0430\u043D \u0442\u0435\u043E\u0440\u0435\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u0438 \u043F\u0440\u0438\u0432\u044F\u0437\u0430\u043D \u043A \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044E.")), blocks.map((b, i) => /*#__PURE__*/React.createElement(Card, {
+    key: i
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 14,
+      alignItems: "baseline",
+      marginBottom: 4
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: ff.mono,
+      fontSize: 24,
+      fontWeight: 700,
+      color: C.accent
+    }
+  }, String(i + 1).padStart(2, "0")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(H3, null, b.t), /*#__PURE__*/React.createElement(P, {
+    style: {
+      fontSize: 13,
+      color: C.amber,
+      marginTop: 2
+    }
+  }, b.sub))), /*#__PURE__*/React.createElement(Col, {
+    gap: 6,
+    style: {
+      marginTop: 14
+    }
+  }, b.steps.map((st, j) => /*#__PURE__*/React.createElement("div", {
+    key: j,
+    style: {
+      display: "flex",
+      gap: 10,
+      alignItems: "flex-start"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: ff.mono,
+      fontSize: 11,
+      color: C.light,
+      minWidth: 20,
+      paddingTop: 4
+    }
+  }, String(j + 1).padStart(2, "0")), /*#__PURE__*/React.createElement(P, {
+    style: {
+      fontSize: 13.5
+    }
+  }, st)))))));
+}
+
+/* ════════════════════════════════════════════
+   TAB 7: KPI
+   ════════════════════════════════════════════ */
+function KPI() {
+  return /*#__PURE__*/React.createElement(Col, {
+    gap: 24
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(H2, null, "KPI: \u0447\u0442\u043E \u0438\u0437\u043C\u0435\u0440\u044F\u0442\u044C"), /*#__PURE__*/React.createElement(P, null, "\u0414\u0440\u0443\u043A\u0435\u0440: \xAB\u0427\u0442\u043E \u043D\u0435 \u0438\u0437\u043C\u0435\u0440\u044F\u0435\u0442\u0441\u044F \u2014 \u043D\u0435 \u0443\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442\u0441\u044F\xBB. \u041D\u043E \u0434\u043B\u044F \u0443\u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0430 \u043D\u0443\u0436\u0435\u043D \u0431\u0430\u043B\u0430\u043D\u0441: \u0441\u043B\u0438\u0448\u043A\u043E\u043C \u043C\u043D\u043E\u0433\u043E \u043C\u0435\u0442\u0440\u0438\u043A \u2192 \u043F\u0430\u0440\u0430\u043B\u0438\u0447, \u0441\u043B\u0438\u0448\u043A\u043E\u043C \u043C\u0430\u043B\u043E \u2192 \u0441\u043B\u0435\u043F\u043E\u0442\u0430. \u0414\u0432\u0435 \u0433\u0440\u0443\u043F\u043F\u044B: \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0435 (\u0441\u0447\u0438\u0442\u0430\u0435\u043C) \u0438 \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0435 (\u0447\u0443\u0432\u0441\u0442\u0432\u0443\u0435\u043C).")), /*#__PURE__*/React.createElement(H3, null, "\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0435 \u2014 \u0441\u0447\u0438\u0442\u0430\u0442\u044C \u043A\u0430\u0436\u0434\u044B\u0439 \u0434\u0435\u043D\u044C"), /*#__PURE__*/React.createElement(Grid, null, [{
+    n: "Подходы / день",
+    target: "8–12",
+    why: "Входная метрика воронки. Если подходов мало — всё остальное неважно. Считать палочками в блокноте.",
+    signal: "<6 = проблема с энергией или триггерами"
+  }, {
+    n: "Конверсия подход → сессия",
+    target: "40–60%",
+    why: "Качество подхода и оффера. Если подходов много, а сессий мало — проблема в скрипте или таргетинге.",
+    signal: "<30% = переработать подход для конкретного сегмента"
+  }, {
+    n: "Клиентов / день",
+    target: "5–7",
+    why: "Главная операционная метрика. Напрямую определяет доход.",
+    signal: "<3 = работает один блок вместо двух"
+  }, {
+    n: "Средний чек",
+    target: "3 000 ₽",
+    why: "Качество ценообразования. Если ниже — слишком много «моментов» или донатов.",
+    signal: "<2 000 = слишком часто соглашается на скидку"
+  }, {
+    n: "Выручка / час",
+    target: "2 500–3 500 ₽",
+    why: "Метрика эффективности. Показывает, какие часы и блоки самые прибыльные.",
+    signal: "Утро vs вечер — сравнить через 2 недели"
+  }, {
+    n: "% с печатью",
+    target: "30–50%",
+    why: "Эффективность апсейла. Если 0% — не предлагает. Если >50% — можно поднять цену печати.",
+    signal: "<20% = забывает предлагать или не та аудитория"
+  }].map((x, i) => /*#__PURE__*/React.createElement(Card, {
+    key: i
+  }, /*#__PURE__*/React.createElement(Label, null, x.n), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: ff.serif,
+      fontSize: 22,
+      fontWeight: 700,
+      color: C.green,
+      margin: "4px 0"
+    }
+  }, x.target), /*#__PURE__*/React.createElement(P, {
+    style: {
+      fontSize: 12.5,
+      marginBottom: 6
+    }
+  }, x.why), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11.5,
+      color: C.amber,
+      background: C.amberBg,
+      padding: "3px 8px",
+      borderRadius: 4
+    }
+  }, "\u26A0 ", x.signal)))), /*#__PURE__*/React.createElement(H3, null, "\u041A\u0430\u0447\u0435\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0435 \u2014 \u0440\u0435\u0444\u043B\u0435\u043A\u0441\u0438\u044F \u0440\u0430\u0437 \u0432 \u043D\u0435\u0434\u0435\u043B\u044E"), /*#__PURE__*/React.createElement(Grid, null, [{
+    n: "Энергия после рабочего дня",
+    desc: "По шкале 1–5. Если стабильно 1–2 — выгорание. Корректировать: меньше подходов, длиннее перерыв, выходной. Марафон на 5 месяцев — темп важнее спринтов."
+  }, {
+    n: "«Ого-реакции» клиентов",
+    desc: "Сколько раз за день клиент искренне восхитился кадром? Это прокси-метрика качества съёмки и режиссуры впечатления (Пайн–Гилмор). Если мало — пересмотреть точки и ракурсы."
+  }, {
+    n: "Повторные / сарафан",
+    desc: "Приходят ли люди «от подруги»? Пишут ли в Telegram? Если через 3 недели ноль повторных — визитки не работают или канал пустой."
+  }, {
+    n: "Лёгкость подхода",
+    desc: "Субъективное ощущение: подходить стало легче или тяжелее? Если тяжелее — процесс не стал привычкой. Вернуться к скриптам, упростить."
+  }].map((x, i) => /*#__PURE__*/React.createElement(Card, {
+    key: i
+  }, /*#__PURE__*/React.createElement(H3, {
+    style: {
+      fontSize: 15
+    }
+  }, x.n), /*#__PURE__*/React.createElement(P, {
+    style: {
+      fontSize: 13,
+      marginTop: 4
+    }
+  }, x.desc)))), /*#__PURE__*/React.createElement(Callout, {
+    color: C.blue
+  }, /*#__PURE__*/React.createElement("strong", null, "\u041F\u0440\u043E\u0441\u0442\u0435\u0439\u0448\u0438\u0439 \u0434\u043D\u0435\u0432\u043D\u043E\u0439 \u043B\u043E\u0433"), " (30 \u0441\u0435\u043A\u0443\u043D\u0434 \u0432\u0435\u0447\u0435\u0440\u043E\u043C): \u0434\u0430\u0442\u0430 | \u043F\u043E\u0434\u0445\u043E\u0434\u043E\u0432 | \u043A\u043B\u0438\u0435\u043D\u0442\u043E\u0432 | \u0432\u044B\u0440\u0443\u0447\u043A\u0430 | \u0441 \u043F\u0435\u0447\u0430\u0442\u044C\u044E | \u044D\u043D\u0435\u0440\u0433\u0438\u044F 1\u20135. \u0427\u0435\u0440\u0435\u0437 2 \u043D\u0435\u0434\u0435\u043B\u0438 \u2014 \u043F\u0430\u0442\u0442\u0435\u0440\u043D\u044B. \u0427\u0435\u0440\u0435\u0437 \u043C\u0435\u0441\u044F\u0446 \u2014 \u0434\u0430\u043D\u043D\u044B\u0435 \u0434\u043B\u044F \u043E\u043F\u0442\u0438\u043C\u0438\u0437\u0430\u0446\u0438\u0438. \u0422\u0430\u0431\u043B\u0438\u0446\u0430 \u0432 \u0437\u0430\u043C\u0435\u0442\u043A\u0430\u0445 \u0442\u0435\u043B\u0435\u0444\u043E\u043D\u0430 \u0438\u043B\u0438 Google Sheets."));
+}
+
+/* ════════════════════════════════════════════
+   TAB 8: PSYCHOLOGY
+   ════════════════════════════════════════════ */
+const beliefs = [{
+  cat: "Страх подхода",
+  belief: "«Я им мешаю, люди не хотят, чтобы к ним подходили»",
+  cost: "Потеря 3–5 подходов/день = 9–15K ₽/день",
+  why: "Проекция собственного дискомфорта. В реальности турист на отдыхе — в Системе 1 (Канеман): расслаблен, открыт к новому. Он не на работе, не спешит. 80% реакций на кандидный кадр — «ого, как красиво!», а не «отстаньте».",
+  reframe: "«Я не мешаю — я дарю первый кадр. Я предлагаю впечатление, а не продаю. Человек сам решит, хочет ли продолжить».",
+  technique: "Правило 3 секунд: увидела триггер → подошла в течение 3 секунд. Чем дольше думаешь, тем сильнее страх. Тело идёт первым, голова подтягивается."
+}, {
+  cat: "Страх подхода",
+  belief: "«Этот человек выглядит занятым / недружелюбным / не в настроении»",
+  cost: "Потеря 2–3 потенциальных клиентов/день",
+  why: "Мозг ищет причину НЕ подходить — это защитный механизм. Но ты не умеешь читать мысли. «Суровый» мужчина может быть лучшим клиентом — он просто по-другому выглядит на Балтийском ветру.",
+  reframe: "«Я не знаю, что у них внутри. Моя работа — предложить. Их работа — решить. Худшее, что случится — скажут «нет, спасибо»».",
+  technique: "Считай отказы, а не согласия. Цель на день: собрать 5 «нет». Парадоксально — когда ищешь «нет», страх подхода исчезает, а согласий становится больше."
+}, {
+  cat: "Страх подхода",
+  belief: "«Меня примут за мошенницу / навязчивого продавца»",
+  cost: "Полный ступор на 1–2 часа, потеря целого блока",
+  why: "Продавец давит и настаивает. Ты — даришь кадр и предлагаешь продолжить. Это принципиально разные механики. Чалдини: взаимность — самый «чистый» из шести принципов, потому что начинается с подарка.",
+  reframe: "«Продавец навязывает ненужное. Я показываю то, что человек уже хочет, но не может сделать сам. Фотография, где они ВСЕ вместе — это решение реальной проблемы».",
+  technique: "Переключись с «я продаю» на «я решаю проблему». Мысленно: «У этой семьи нет совместного фото. У меня есть решение. Было бы нечестно не предложить»."
+}, {
+  cat: "Самооценка",
+  belief: "«Мои фото недостаточно хорошие для того, чтобы за них платили»",
+  cost: "Либо не подходишь, либо просишь «донат» вместо цены = –50% дохода",
+  why: "Синдром самозванца. Ты сравниваешь свои рабочие кадры с финальными, отредактированными работами профессионалов в Instagram. Но клиент на променаде сравнивает твой кадр с их селфи на вытянутой руке. Разница — космическая, и они это видят.",
+  reframe: "«Мои фото в 10 раз лучше того, что клиент может сделать сам. Этого достаточно. Я не конкурирую с Annie Leibovitz — я конкурирую с плохим селфи».",
+  technique: "Сохрани 5 своих лучших кадров и 5 типичных «фото от прохожего». Когда накрывает сомнение — посмотри на разницу. Клиент видит именно её."
+}, {
+  cat: "Самооценка",
+  belief: "«Настоящие фотографы не работают на улице, это несерьёзно»",
+  cost: "Саботаж: откладывание, сокращение рабочих часов",
+  why: "Стигма «уличного торговца». Но уличная портретная фотография — это отдельный жанр с историей. Фотографы на Монмартре, на набережной Темзы, в Центральном парке — это профессия, а не попрошайничество.",
+  reframe: "«Я — фотограф, который работает в самом красивом студии мира: на побережье Балтики. Мой «офис» — это то, о чём мечтают люди в кабинетах».",
+  technique: "Назови себя «фотограф на променаде Зеленоградска», а не «фоткаю людей на улице». Позиционирование начинается с того, как ты сама себя называешь."
+}, {
+  cat: "Самооценка",
+  belief: "«У меня нет образования / сертификатов / достаточного опыта»",
+  cost: "Занижение цен, извинительная подача",
+  why: "Клиенту не нужен диплом. Ему нужен красивый кадр, который он получит через 10 минут. Он видит результат на экране камеры — и это единственный «сертификат», который имеет значение.",
+  reframe: "«Мой портфолио — мой диплом. Каждый довольный клиент — мой отзыв. Каждый день на променаде — мой мастер-класс».",
+  technique: "Веди «стену побед»: скриншоты благодарностей из Telegram, лучшие кадры недели, цифры дохода. Смотри на неё перед выходом."
+}, {
+  cat: "Деньги",
+  belief: "«Мне неловко называть цену / просить деньги за фото»",
+  cost: "–30–50% среднего чека (донаты, скидки, бесплатная работа)",
+  why: "Глубинное: «деньги = грязь, творчество = чистота». Но по Хормози: цена — это коммуникация ценности. Когда ты берёшь 3 000 ₽, ты говоришь клиенту: «это стоит того». Когда берёшь «сколько не жалко» — говоришь: «это не стоит ничего».",
+  reframe: "«Цена — не просьба, а часть продукта. Я не прошу деньги — я сообщаю стоимость впечатления. Врач не извиняется за прайс, и я не должна».",
+  technique: "Карточка с пакетами. Физический объект берёт «неловкость» на себя. Не «я беру 3 000» — а «вот пакеты, выбирайте». Руки делают, голова не мешает."
+}, {
+  cat: "Деньги",
+  belief: "«Для этих людей 3 000 — это дорого, им не по карману»",
+  cost: "Не подходишь к платёжеспособным клиентам или сразу предлагаешь минимум",
+  why: "Ты решаешь за клиента. Средний турист в Калининграде — 43 года, доход 118K ₽/мес, тратит 5–10K/сутки на жильё. 3 000 за фотосессию — это цена двух капучино на набережной. Они могут себе позволить — вопрос в ценности, не в деньгах.",
+  reframe: "«Я не знаю чужой кошелёк. Моя работа — предложить. Их работа — решить. Ценность определяет клиент, не я».",
+  technique: "Всегда предлагай средний пакет первым. Не начинай с «Момент за 1 500» — начинай с «Мини за 3 000, это наш основной». Апсейл на «Прогулку» — естественное продолжение."
+}, {
+  cat: "Деньги",
+  belief: "«Лучше возьму за донат, чем потеряю клиента»",
+  cost: "–1 000–2 000 ₽ с каждого «донатного» клиента",
+  why: "По Ариели, «бесплатно» и «дёшево» — две разные ментальные модели. Первый кадр бесплатно = подарок → благодарность. Вся услуга за донат = обесценивание. Донат — это не «лучше, чем ничего», это сигнал: «я сама не верю, что это стоит денег».",
+  reframe: "«Фиксированная цена уважает и меня, и клиента. Донат — это не скромность, это неуверенность. Клиенту проще заплатить понятную цену, чем мучиться с «а сколько нормально?»».",
+  technique: "Полностью убрать опцию «за донат». Есть три пакета — точка. Если клиент хочет меньше — «Момент за 1 500, это минимальный пакет»."
+}, {
+  cat: "Деньги",
+  belief: "«Надо сначала предложить скидку, чтобы они согласились»",
+  cost: "–500–1 500 ₽ с каждого клиента, эрозия ценности",
+  why: "Скидка до торга = самоподрыв. По Чалдини, последовательность: если ты сама снижаешь цену, клиент считает, что начальная была завышена. Доверие падает.",
+  reframe: "«Я не предлагаю скидку первой. Если клиент торгуется — предлагаю меньший пакет, а не меньшую цену за тот же объём. Цена фиксирована, объём — гибкий».",
+  technique: "На «дорого»: «Есть пакет Момент — 1 500, 5 кадров, 5 минут. Или Мини — 3 000 за полный набор. Что ближе?» Не «ладно, за 2 000 сделаю». Никогда."
+}, {
+  cat: "Отказы",
+  belief: "«Мне сказали «нет» — значит, я делаю что-то не так»",
+  cost: "Спираль: 1 отказ → ступор → потеря 2–3 часов",
+  why: "Персонализация отказа. Человек отказал не ТЕБЕ — он отказал предложению в данный момент. Может, он только что поел и хочет в туалет. Может, они ссорились минуту назад. У тебя нет контекста.",
+  reframe: "«Отказ — информация, не приговор. 40–60% конверсия — норма. Значит, 4–6 из 10 скажут «нет». Это не провал — это математика».",
+  technique: "После каждого «нет» — физическое действие: сделать 5 шагов, глубокий вдох, посмотреть на море. И подойти к следующему в течение 2 минут. Не давать мозгу время на спираль."
+}, {
+  cat: "Отказы",
+  belief: "«После нескольких отказов подряд лучше остановиться и уйти»",
+  cost: "Потеря целого рабочего блока = 5–10K ₽",
+  why: "Серийные отказы — нормальная дисперсия. 3 «нет» подряд не значит, что «сегодня плохой день». Это значит, что следующие 3 с высокой вероятностью скажут «да». Закон средних чисел.",
+  reframe: "«Мне осталось дойти до первого «да» — оно рядом. Каждый «нет» приближает к «да». Это не пораженческое мышление — это статистика».",
+  technique: "Правило «ещё три»: после любой серии отказов — ещё 3 подхода, прежде чем думать об остановке. 90% «плохих дней» заканчиваются нормально, если не уйти."
+}, {
+  cat: "Отказы",
+  belief: "«Этот отказ был грубым — люди злые»",
+  cost: "Эмоциональный удар → ступор на 30–60 мин",
+  why: "1 из 50 человек будет резким. Это про НИХ, не про тебя. У них мог быть плохой день, больная нога, ссора. Ты — случайный объект, не причина.",
+  reframe: "«Этот человек не в порядке прямо сейчас. Я не приняла это лично. Следующий — другой человек, другая история».",
+  technique: "«Мусорное ведро»: мысленно выбрось грубость в ведро, закрой крышку, иди дальше. Визуализация работает, потому что мозг обрабатывает метафоры как действия."
+}, {
+  cat: "Энергия",
+  belief: "«После обеда я уже не могу — нет сил подходить»",
+  cost: "Потеря вечернего блока = –2–3 клиента = –6–9K ₽/день",
+  why: "Это не лень — это истощение Системы 2 (Канеман). Холодные подходы требуют волевого усилия. К 14:00 ресурс воли исчерпан. Но решение — не «собраться», а перестроить систему.",
+  reframe: "«Мне не нужна «сила воли». Мне нужен настоящий перерыв 14–16:30 — уйти, поесть, отдохнуть. Вечерний блок — это новый рабочий день, не продолжение старого».",
+  technique: "В перерыв: никаких мыслей о работе. Уйти с променада физически. Поесть. 15 мин полежать. Вернуться в 17:00 как будто утро — свежей. Мозг перезагружается."
+}, {
+  cat: "Энергия",
+  belief: "«Сегодня уже хороший день (заработала 5K утром) — можно расслабиться»",
+  cost: "Потеря 5–10K ₽ вечернего дохода",
+  why: "Самосаботаж через «достаточно». Мозг получил дофамин от утренних продаж и хочет сохранить состояние. Но вечерний блок — самый маржинальный: лучший свет, платёжеспособная аудитория.",
+  reframe: "«Утренний успех — фундамент, не потолок. Вечер — это отдельная возможность. 5K утром + 7K вечером = 12K. Или 5K утром + 0 вечером = потерянные 7K».",
+  technique: "Дневная цель — не деньги, а количество клиентов. «5 клиентов до обеда, 3 после». Когда цель в действиях, а не в деньгах — самодовольство не включается."
+}, {
+  cat: "Энергия",
+  belief: "«Погода плохая / мало людей — нет смысла выходить»",
+  cost: "Потеря целого рабочего дня = 10–15K ₽",
+  why: "Пасмурная погода = мягкий свет = лучшие портреты. Мало людей = каждый подход заметнее, меньше «конкуренция» за внимание. Лёгкий дождь — люди прячутся в кафе, но те, кто остался — самые лояльные.",
+  reframe: "«Плохая погода — это фильтр: ленивые сидят дома, а я зарабатываю. И фото в пасмурную погоду — одни из лучших: нет резких теней, мягкий объёмный свет».",
+  technique: "Правило «30 минут»: выйди на 30 минут. Если через 30 минут реально никого нет — иди домой. Но 9 из 10 раз через 30 минут ты уже с клиентом."
+}, {
+  cat: "Продажа",
+  belief: "«Если человек сказал «нет», нельзя настаивать»",
+  cost: "Потеря 20–30% потенциальных клиентов",
+  why: "«Нет» ≠ «нет навсегда». Часто «нет» = «не сейчас» / «не понимаю ценность» / «привычная реакция». По Чалдини, первый отказ — автоматическая защита. После демонстрации ценности (кандидный кадр) реакция меняется.",
+  reframe: "«Я не настаиваю — я показываю. Настойчивость = «купите!». Демонстрация = «вот что получилось, решайте сами». Разные механики».",
+  technique: "На первое «нет»: «Окей, без проблем! Но вот — уже сделала один кадр, посмотрите» → показать на камере. 50% меняют решение после того, как видят себя."
+}, {
+  cat: "Продажа",
+  belief: "«Неудобно предлагать дорогой пакет — лучше сразу предложу минимальный»",
+  cost: "–1 500–3 000 ₽ с каждого клиента, который взял бы больше",
+  why: "Ты проецируешь свой дискомфорт на клиента. Но клиент в отпуске, настроен тратить. Средний турист в КО тратит 3–5K/день на развлечения. Предложить «Прогулку за 6 000» — это не наглость, это уважение к их возможностям.",
+  reframe: "«Мой дорогой пакет — это лучший продукт, который я могу предложить. Не предлагать его = лишить клиента выбора. Пусть решают сами».",
+  technique: "Всегда называй все три пакета, начиная с дорогого: «У меня есть Прогулка — 6 000, это полный набор. Мини — 3 000. И Момент — 1 500, если хотите быстро». Якорь Ариели."
+}, {
+  cat: "Продажа",
+  belief: "«Если я буду предлагать печать — это будет выглядеть как впаривание»",
+  cost: "–500 ₽ с 40–50% клиентов = –5–7K ₽/день",
+  why: "Для пожилых печатное фото — единственное, что имеет ценность. Для семей — подарок для бабушки. Для пар — «сувенир, но настоящий». Ты не впариваешь — ты предлагаешь то, что они хотят, но не знают, что можно получить на месте.",
+  reframe: "«Печать — это не допродажа, это другой продукт для другой потребности. Некоторым нужно цифру, некоторым — физическую вещь. Я даю выбор».",
+  technique: "Встроить в процесс: «Все фото скину на телефон. А если хотите — могу пару штук напечатать прямо здесь, настоящую фотографию». Предложить = уважение. Не предложить = упущение."
+}, {
+  cat: "Рост",
+  belief: "«Я уже хорошо зарабатываю, не надо ничего менять»",
+  cost: "Стагнация: 4–8K/день вместо 12–20K/день",
+  why: "Зона комфорта. 6K/день — хорошо. Но потенциал — ×2–3 при тех же часах. Отказ от роста — это тоже выбор, только скрытый. Сьюэлл: «Хорошее — враг отличного».",
+  reframe: "«6K — отличная точка старта. Но это не потолок — это пол. Каждое улучшение (пакеты, вечерний блок, печать) — +20–30%. Три улучшения вместе — ×2».",
+  technique: "Раз в неделю: «что одно я могу попробовать по-другому?» Не переделывать всё — менять одну вещь. Мини-эксперимент. Результат — через 7 дней."
+}, {
+  cat: "Рост",
+  belief: "«Завтра начну работать по-новому, а сегодня — как обычно»",
+  cost: "Бесконечное откладывание = недели/месяцы потерянного потенциала",
+  why: "«Завтра» — любимая ловушка мозга. Завтра мозг скажет то же самое. Перфекционизм под маской планирования: «сначала визитки, потом пакеты, потом... а пока — как обычно».",
+  reframe: "«Единственный день, в который я могу что-то изменить — сегодня. Не нужно менять всё. Достаточно одного: назвать фиксированную цену вместо «как скажете». Сегодня».",
+  technique: "Правило «одной вещи»: выбери ОДНО изменение и внедри его сегодня. Не три. Не «всю систему». Одно. Завтра — следующее."
+}];
+function Psych() {
+  const cats = ["Страх подхода", "Самооценка", "Деньги", "Отказы", "Энергия", "Продажа", "Рост"];
+  const [cat, setCat] = useState("all");
+  const filtered = cat === "all" ? beliefs : beliefs.filter(b => b.cat === cat);
+  const [expanded, setExpanded] = useState(null);
+  return /*#__PURE__*/React.createElement(Col, {
+    gap: 20
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(H2, null, "\u041F\u0441\u0438\u0445\u043E\u043B\u043E\u0433\u0438\u044F \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0430: 20 \u0443\u0431\u0435\u0436\u0434\u0435\u043D\u0438\u0439, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u0441\u0442\u043E\u044F\u0442 \u0434\u0435\u043D\u0435\u0433"), /*#__PURE__*/React.createElement(P, null, "\u0421\u0430\u043C\u044B\u0439 \u0447\u0430\u0441\u0442\u044B\u0439 \u043F\u043E\u0442\u043E\u043B\u043E\u043A \u2014 \u043D\u0435 \u0442\u0435\u0445\u043D\u0438\u043A\u0430, \u043D\u0435 \u043B\u043E\u043A\u0430\u0446\u0438\u044F, \u043D\u0435 \u0442\u0440\u0430\u0444\u0438\u043A. \u042D\u0442\u043E \u0442\u043E, \u0447\u0442\u043E \u043F\u0440\u043E\u0438\u0441\u0445\u043E\u0434\u0438\u0442 \u0432 \u0433\u043E\u043B\u043E\u0432\u0435 \u0432 \u043C\u043E\u043C\u0435\u043D\u0442 \u043C\u0435\u0436\u0434\u0443 \xAB\u0432\u0438\u0436\u0443 \u043A\u043B\u0438\u0435\u043D\u0442\u0430\xBB \u0438 \xAB\u043F\u043E\u0434\u0445\u043E\u0436\u0443\xBB. \u041A\u0430\u0436\u0434\u043E\u0435 \u0443\u0431\u0435\u0436\u0434\u0435\u043D\u0438\u0435 \u043D\u0438\u0436\u0435 \u0438\u043C\u0435\u0435\u0442 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u0443\u044E \u0446\u0435\u043D\u0443 \u0432 \u0440\u0443\u0431\u043B\u044F\u0445. \u041E\u0441\u043E\u0437\u043D\u0430\u043D\u0438\u0435 \u2192 \u043F\u0435\u0440\u0435\u043E\u0441\u043C\u044B\u0441\u043B\u0435\u043D\u0438\u0435 \u2192 \u043F\u0440\u0430\u043A\u0442\u0438\u043A\u0430.")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 5,
+      flexWrap: "wrap"
+    }
+  }, /*#__PURE__*/React.createElement(Pill, {
+    active: cat === "all",
+    onClick: () => setCat("all")
+  }, "\u0412\u0441\u0435 (", beliefs.length, ")"), cats.map(c => {
+    const cnt = beliefs.filter(b => b.cat === c).length;
+    return /*#__PURE__*/React.createElement(Pill, {
+      key: c,
+      active: cat === c,
+      onClick: () => setCat(c)
+    }, c, " (", cnt, ")");
+  })), /*#__PURE__*/React.createElement(Col, {
+    gap: 8
+  }, filtered.map((b, i) => {
+    const isOpen = expanded === b.belief;
+    return /*#__PURE__*/React.createElement(Card, {
+      key: i,
+      style: {
+        cursor: "pointer",
+        transition: "all .2s",
+        border: isOpen ? `1.5px solid ${C.accent}` : `1px solid ${C.bdr}`
+      },
+      onClick: () => setExpanded(isOpen ? null : b.belief)
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        gap: 10
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1,
+        minWidth: 0
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 8,
+        alignItems: "center",
+        marginBottom: 4,
+        flexWrap: "wrap"
+      }
+    }, /*#__PURE__*/React.createElement(Tag, {
+      color: C.blue,
+      bg: C.blueBg
+    }, b.cat), /*#__PURE__*/React.createElement(Tag, {
+      color: C.accent,
+      bg: C.accentBg,
+      nowrap: false
+    }, b.cost)), /*#__PURE__*/React.createElement(H3, {
+      style: {
+        fontSize: 15,
+        lineHeight: 1.4
+      }
+    }, b.belief)), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 18,
+        color: C.light,
+        flexShrink: 0,
+        transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+        transition: "transform .2s"
+      }
+    }, "\u25BE")), isOpen && /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 14
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginBottom: 12
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 10,
+        fontWeight: 600,
+        letterSpacing: 1.5,
+        textTransform: "uppercase",
+        color: C.accent,
+        marginBottom: 3
+      }
+    }, "\u041F\u043E\u0447\u0435\u043C\u0443 \u044D\u0442\u043E \u0441\u0442\u043E\u0438\u0442 \u0434\u0435\u043D\u0435\u0433"), /*#__PURE__*/React.createElement(P, {
+      style: {
+        fontSize: 13.5
+      }
+    }, b.why)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginBottom: 12,
+        background: C.greenBg,
+        border: `1px solid ${C.green}22`,
+        borderRadius: 8,
+        padding: "10px 14px"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 10,
+        fontWeight: 600,
+        letterSpacing: 1.5,
+        textTransform: "uppercase",
+        color: C.green,
+        marginBottom: 3
+      }
+    }, "\u041F\u0435\u0440\u0435\u043E\u0441\u043C\u044B\u0441\u043B\u0435\u043D\u0438\u0435"), /*#__PURE__*/React.createElement(P, {
+      style: {
+        fontSize: 13.5,
+        color: C.green,
+        fontWeight: 500
+      }
+    }, b.reframe)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: C.blueBg,
+        border: `1px solid ${C.blue}22`,
+        borderRadius: 8,
+        padding: "10px 14px"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 10,
+        fontWeight: 600,
+        letterSpacing: 1.5,
+        textTransform: "uppercase",
+        color: C.blue,
+        marginBottom: 3
+      }
+    }, "\u041F\u0440\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u0430\u044F \u0442\u0435\u0445\u043D\u0438\u043A\u0430"), /*#__PURE__*/React.createElement(P, {
+      style: {
+        fontSize: 13.5,
+        color: C.blue
+      }
+    }, b.technique))));
+  })), /*#__PURE__*/React.createElement(Callout, {
+    color: C.green
+  }, /*#__PURE__*/React.createElement("strong", null, "\u0413\u043B\u0430\u0432\u043D\u044B\u0439 \u0438\u043D\u0441\u0430\u0439\u0442:"), " \u0412\u0441\u0435 20 \u0443\u0431\u0435\u0436\u0434\u0435\u043D\u0438\u0439 \u2014 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u044B \u043E\u0434\u043D\u043E\u0433\u043E: \xAB\u042F \u043D\u0435\u0434\u043E\u0441\u0442\u0430\u0442\u043E\u0447\u043D\u043E \u0446\u0435\u043D\u043D\u0430, \u0447\u0442\u043E\u0431\u044B \u043F\u0440\u043E\u0441\u0438\u0442\u044C \u0434\u0435\u043D\u044C\u0433\u0438 \u0437\u0430 \u0441\u0432\u043E\u044E \u0440\u0430\u0431\u043E\u0442\u0443\xBB. \u042D\u0442\u043E \u043D\u0435\u043F\u0440\u0430\u0432\u0434\u0430. \u0422\u044B \u0440\u0435\u0448\u0430\u0435\u0448\u044C \u0440\u0435\u0430\u043B\u044C\u043D\u0443\u044E \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u0443 \u0440\u0435\u0430\u043B\u044C\u043D\u044B\u0445 \u043B\u044E\u0434\u0435\u0439. \u041E\u043D\u0438 \u043D\u0435 \u043C\u043E\u0433\u0443\u0442 \u0441\u0434\u0435\u043B\u0430\u0442\u044C \u0442\u043E, \u0447\u0442\u043E \u0434\u0435\u043B\u0430\u0435\u0448\u044C \u0442\u044B. \u0418 \u043E\u043D\u0438 \u0433\u043E\u0442\u043E\u0432\u044B \u0437\u0430 \u044D\u0442\u043E \u0437\u0430\u043F\u043B\u0430\u0442\u0438\u0442\u044C \u2014 \u0435\u0441\u043B\u0438 \u0442\u044B \u0434\u0430\u0448\u044C \u0438\u043C \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u044C."));
+}
+function Calc() {
+  const [cl, setCl] = useState(5);
+  const [ch, setCh] = useState(3000);
+  const [dy, setDy] = useState(25);
+  const [pr, setPr] = useState(40);
+  const base = cl * ch * dy;
+  const print = cl * dy * (pr / 100) * 500;
+  const total = base + print;
+  const exp = 3000 + cl * dy * (pr / 100) * 25 + 2000;
+  const net = total - exp;
+  const Slider = ({
+    label,
+    value,
+    onChange,
+    min,
+    max,
+    step = 1,
+    unit = ""
+  }) => /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      marginBottom: 6
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13,
+      color: C.muted
+    }
+  }, label), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: ff.serif,
+      fontSize: 18,
+      fontWeight: 700,
+      color: C.text
+    }
+  }, value, unit)), /*#__PURE__*/React.createElement("input", {
+    type: "range",
+    min: min,
+    max: max,
+    step: step,
+    value: value,
+    onChange: e => onChange(+e.target.value),
+    style: {
+      width: "100%",
+      accentColor: C.accent
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      fontSize: 10.5,
+      color: C.light
+    }
+  }, /*#__PURE__*/React.createElement("span", null, min, unit), /*#__PURE__*/React.createElement("span", null, max, unit)));
+  return /*#__PURE__*/React.createElement(Col, {
+    gap: 24
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(H2, null, "\u041A\u0430\u043B\u044C\u043A\u0443\u043B\u044F\u0442\u043E\u0440 \u0434\u043E\u0445\u043E\u0434\u0430"), /*#__PURE__*/React.createElement(P, null, "\u0418\u043D\u0442\u0435\u0440\u0430\u043A\u0442\u0438\u0432\u043D\u0430\u044F \u043C\u043E\u0434\u0435\u043B\u044C: \u0434\u0432\u0438\u0433\u0430\u0439 \u043F\u043E\u043B\u0437\u0443\u043D\u043A\u0438, \u0447\u0442\u043E\u0431\u044B \u0443\u0432\u0438\u0434\u0435\u0442\u044C, \u043A\u0430\u043A \u043A\u0430\u0436\u0434\u044B\u0439 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440 \u0432\u043B\u0438\u044F\u0435\u0442 \u043D\u0430 \u0438\u0442\u043E\u0433. \u0420\u0430\u0441\u0445\u043E\u0434\u044B \u0432\u043A\u043B\u044E\u0447\u0430\u044E\u0442 \u0440\u0430\u0441\u0445\u043E\u0434\u043D\u0438\u043A\u0438 \u043F\u0435\u0447\u0430\u0442\u0438, \u0432\u0438\u0437\u0438\u0442\u043A\u0438 \u0438 \u043D\u0430\u043B\u043E\u0433 \u0441\u0430\u043C\u043E\u0437\u0430\u043D\u044F\u0442\u043E\u0433\u043E (6%).")), /*#__PURE__*/React.createElement(Grid, null, /*#__PURE__*/React.createElement(Slider, {
+    label: "\u041A\u043B\u0438\u0435\u043D\u0442\u043E\u0432 \u0432 \u0434\u0435\u043D\u044C",
+    value: cl,
+    onChange: setCl,
+    min: 2,
+    max: 10
+  }), /*#__PURE__*/React.createElement(Slider, {
+    label: "\u0421\u0440\u0435\u0434\u043D\u0438\u0439 \u0447\u0435\u043A",
+    value: ch,
+    onChange: setCh,
+    min: 1500,
+    max: 6000,
+    step: 500,
+    unit: " \u20BD"
+  }), /*#__PURE__*/React.createElement(Slider, {
+    label: "\u0420\u0430\u0431\u043E\u0447\u0438\u0445 \u0434\u043D\u0435\u0439/\u043C\u0435\u0441",
+    value: dy,
+    onChange: setDy,
+    min: 15,
+    max: 30
+  }), /*#__PURE__*/React.createElement(Slider, {
+    label: "% \u0431\u0435\u0440\u0443\u0442 \u043F\u0435\u0447\u0430\u0442\u044C",
+    value: pr,
+    onChange: setPr,
+    min: 0,
+    max: 80,
+    step: 10,
+    unit: "%"
+  })), /*#__PURE__*/React.createElement(Grid, null, /*#__PURE__*/React.createElement(Metric, {
+    label: "\u0412\u044B\u0440\u0443\u0447\u043A\u0430 \u0441\u044A\u0451\u043C\u043A\u0430",
+    value: `${(base / 1000).toFixed(0)}K ₽`,
+    sub: "\u0432 \u043C\u0435\u0441\u044F\u0446",
+    color: C.blue
+  }), /*#__PURE__*/React.createElement(Metric, {
+    label: "\u0414\u043E\u0445\u043E\u0434 \u043F\u0435\u0447\u0430\u0442\u044C",
+    value: `${(print / 1000).toFixed(0)}K ₽`,
+    sub: "\u0432 \u043C\u0435\u0441\u044F\u0446",
+    color: C.amber
+  }), /*#__PURE__*/React.createElement(Metric, {
+    label: "\u0420\u0430\u0441\u0445\u043E\u0434\u044B",
+    value: `${(exp / 1000).toFixed(0)}K ₽`,
+    sub: "\u0440\u0430\u0441\u0445\u043E\u0434\u043D\u0438\u043A\u0438 + \u043D\u0430\u043B\u043E\u0433\u0438 + \u0432\u0438\u0437\u0438\u0442\u043A\u0438",
+    color: C.accent
+  }), /*#__PURE__*/React.createElement(Metric, {
+    label: "\u0427\u0438\u0441\u0442\u044B\u0439 \u0434\u043E\u0445\u043E\u0434",
+    value: `${(net / 1000).toFixed(0)}K ₽`,
+    sub: "\u043D\u0430 \u0440\u0443\u043A\u0438",
+    color: C.green
+  })), /*#__PURE__*/React.createElement(Card, {
+    style: {
+      textAlign: "center",
+      padding: 28
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: C.muted,
+      marginBottom: 6
+    }
+  }, "\u0412 \u043F\u0435\u0440\u0435\u0441\u0447\u0451\u0442\u0435 \u043D\u0430 \u0434\u0435\u043D\u044C"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: ff.serif,
+      fontSize: 36,
+      fontWeight: 700,
+      color: C.text
+    }
+  }, (net / dy / 1000).toFixed(1), "K \u20BD/\u0434\u0435\u043D\u044C"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: C.muted,
+      marginTop: 4
+    }
+  }, "vs. \u0442\u0435\u043A\u0443\u0449\u0438\u0435 4\u20138K \u2192 \u0440\u043E\u0441\u0442 \u0432 ", /*#__PURE__*/React.createElement("strong", {
+    style: {
+      color: C.green
+    }
+  }, (net / dy / 6000).toFixed(1), "\xD7"))), /*#__PURE__*/React.createElement(Card, {
+    style: {
+      textAlign: "center",
+      background: C.greenBg,
+      border: `1px solid ${C.green}33`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      color: C.green
+    }
+  }, /*#__PURE__*/React.createElement("strong", null, "\u0417\u0430 \u0441\u0435\u0437\u043E\u043D (5 \u043C\u0435\u0441):"), " \u2248 ", (net * 5 / 1000).toFixed(0), "K \u20BD \u0447\u0438\u0441\u0442\u044B\u043C\u0438")));
+}
+
+/* ════════════════════════════════════════════
+   TAB 9: ROADMAP
+   ════════════════════════════════════════════ */
+function Road() {
+  const Phase = ({
+    phase,
+    title,
+    time,
+    cost,
+    items
+  }) => /*#__PURE__*/React.createElement(Card, {
+    style: {
+      borderTop: `2px solid ${C.accent}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 16,
+      flexWrap: "wrap",
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Label, null, phase), /*#__PURE__*/React.createElement(H3, null, title)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "right"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: C.blue,
+      fontFamily: ff.sans
+    }
+  }, time), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: C.muted
+    }
+  }, cost))), /*#__PURE__*/React.createElement(Col, {
+    gap: 8
+  }, items.map((x, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      display: "flex",
+      gap: 12,
+      alignItems: "flex-start",
+      padding: "10px 14px",
+      background: C.bg,
+      borderRadius: 8
+    }
+  }, /*#__PURE__*/React.createElement(Num, {
+    n: i + 1
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: ff.sans,
+      fontWeight: 600,
+      color: C.text,
+      fontSize: 14,
+      marginBottom: 2
+    }
+  }, x.t), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 14,
+      fontSize: 12,
+      color: C.muted,
+      fontFamily: ff.sans,
+      flexWrap: "wrap"
+    }
+  }, /*#__PURE__*/React.createElement("span", null, "\u0423\u0441\u0438\u043B\u0438\u044F: ", x.e), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: C.green
+    }
+  }, "\u2192 ", x.r)))))));
+  return /*#__PURE__*/React.createElement(Col, {
+    gap: 28
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(H2, null, "\u0420\u043E\u0430\u0434\u043C\u0430\u043F \u0432\u043D\u0435\u0434\u0440\u0435\u043D\u0438\u044F"), /*#__PURE__*/React.createElement(P, null, "\u041D\u0435 \u0432\u0441\u0451 \u0441\u0440\u0430\u0437\u0443. \u0422\u0440\u0438 \u0444\u0430\u0437\u044B, \u043A\u0430\u0436\u0434\u0430\u044F \u043E\u043F\u0438\u0440\u0430\u0435\u0442\u0441\u044F \u043D\u0430 \u043F\u0440\u0435\u0434\u044B\u0434\u0443\u0449\u0443\u044E. \u041F\u0440\u0438\u043D\u0446\u0438\u043F: \u043C\u0438\u043D\u0438\u043C\u0430\u043B\u044C\u043D\u043E\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u2192 \u0431\u044B\u0441\u0442\u0440\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u2192 \u043C\u043E\u0442\u0438\u0432\u0430\u0446\u0438\u044F \u0434\u043B\u044F \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u0433\u043E \u0448\u0430\u0433\u0430. \u0418\u0437\u0431\u0435\u0433\u0430\u0435\u043C \xAB\u0438\u0434\u0435\u0430\u043B\u044C\u043D\u043E\u0439 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438\xBB, \u043A\u043E\u0442\u043E\u0440\u0430\u044F \u043D\u0438\u043A\u043E\u0433\u0434\u0430 \u043D\u0435 \u0437\u0430\u043A\u0430\u043D\u0447\u0438\u0432\u0430\u0435\u0442\u0441\u044F.")), /*#__PURE__*/React.createElement(Phase, {
+    phase: "\u0424\u0430\u0437\u0430 1 \xB7 \u0424\u0443\u043D\u0434\u0430\u043C\u0435\u043D\u0442",
+    title: "\u041C\u0438\u043D\u0438\u043C\u0443\u043C, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u043C\u0435\u043D\u044F\u0435\u0442 \u0432\u0441\u0451",
+    time: "\u041D\u0435\u0434\u0435\u043B\u044F 1",
+    cost: "~2 000 \u20BD",
+    items: [{
+      t: "Зафиксировать 3 пакета (Момент / Мини / Прогулка) с ценами",
+      e: "1 час",
+      r: "Рост среднего чека на 30–50% сразу"
+    }, {
+      t: "Напечатать 200 визиток с QR на Telegram-канал",
+      e: "Заказ — 2 дня",
+      r: "Запуск сарафанного радио"
+    }, {
+      t: "Создать Telegram-канал, выложить 15–20 лучших работ",
+      e: "2 часа",
+      r: "Живое портфолио + канал связи"
+    }, {
+      t: "Перейти на 2 блока: утро 11–14, вечер 17–19:30",
+      e: "Дисциплина",
+      r: "+2–3 клиента/день из вечернего блока"
+    }, {
+      t: "Начать кандидный подход: снял → подошёл → показал → предложил",
+      e: "3–5 дней практики",
+      r: "Конверсия подходов ×1.5–2"
+    }, {
+      t: "Завести дневной лог: подходы / клиенты / выручка / энергия",
+      e: "30 сек/вечер",
+      r: "Данные для оптимизации через 2 недели"
+    }]
+  }), /*#__PURE__*/React.createElement(Phase, {
+    phase: "\u0424\u0430\u0437\u0430 2 \xB7 \u041C\u0430\u0441\u0448\u0442\u0430\u0431\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435",
+    title: "\u0418\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u044B \u0438 \u043A\u0430\u043D\u0430\u043B\u044B",
+    time: "\u041D\u0435\u0434\u0435\u043B\u0438 2\u20134",
+    cost: "~15 000 \u20BD",
+    items: [{
+      t: "Купить Canon Selphy CP1500 + доп. аккумулятор",
+      e: "Разово",
+      r: "+500 ₽ с 30–50% клиентов"
+    }, {
+      t: "Купить 50mm f/1.8 (если нет подходящего портретника)",
+      e: "Разово",
+      r: "Заметный рост качества → рост конверсии"
+    }, {
+      t: "Обойти 5–7 кафе/отелей, оставить визитки",
+      e: "1 день",
+      r: "Пассивный поток 1–2 клиента/день"
+    }, {
+      t: "Сделать красивую карточку пакетов (типография, плотная бумага)",
+      e: "Заказ — 3 дня",
+      r: "Профессиональное впечатление при продаже"
+    }, {
+      t: "Начать просить разрешение на публикацию в Telegram",
+      e: "10 сек/клиент",
+      r: "Рост канала, соцдоказательство"
+    }, {
+      t: "QR-код для СБП: распечатать и заламинировать",
+      e: "30 мин",
+      r: "Оплата за 5 секунд — без трения"
+    }]
+  }), /*#__PURE__*/React.createElement(Phase, {
+    phase: "\u0424\u0430\u0437\u0430 3 \xB7 \u041E\u043F\u0442\u0438\u043C\u0438\u0437\u0430\u0446\u0438\u044F",
+    title: "\u0414\u0430\u043D\u043D\u044B\u0435, \u044D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442\u044B, \u0440\u043E\u0441\u0442",
+    time: "\u041C\u0435\u0441\u044F\u0446 2 \u0438 \u0434\u0430\u043B\u0435\u0435",
+    cost: "\u041F\u043E \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u0438",
+    items: [{
+      t: "Анализ лога: лучшие дни/часы/сегменты → фокус на прибыльном",
+      e: "1 час/неделю",
+      r: "Рост выручки/час на 20–30%"
+    }, {
+      t: "Instagram / VK: публикация лучших работ, отметки клиентов",
+      e: "30 мин/день",
+      r: "Онлайн-присутствие → предзаказы"
+    }, {
+      t: "Тестировать динамическое ценообразование: +500 ₽ по выходным",
+      e: "Эксперимент 2 нед",
+      r: "Рост среднего чека в пиковые дни"
+    }, {
+      t: "Мини-сайт с портфолио и формой записи (можно сделать вместе)",
+      e: "Разово",
+      r: "Предзаказы от туристов, которые планируют поездку"
+    }, {
+      t: "Подумать о втором фотографе на июль–август",
+      e: "Найти + обучить",
+      r: "×2 мощность без ×2 личных усилий"
+    }]
+  }), /*#__PURE__*/React.createElement(Card, {
+    style: {
+      textAlign: "center",
+      padding: 28,
+      background: `linear-gradient(135deg, ${C.accentBg}, ${C.greenBg})`,
+      border: `1px solid ${C.accent}22`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: ff.serif,
+      fontSize: 18,
+      fontWeight: 600,
+      color: C.text,
+      marginBottom: 8
+    }
+  }, "\u0418\u0442\u043E\u0433\u043E\u0432\u044B\u0439 \u043F\u043E\u0442\u0435\u043D\u0446\u0438\u0430\u043B \u0437\u0430 \u0441\u0435\u0437\u043E\u043D (\u043C\u0430\u0439\u2013\u0441\u0435\u043D\u0442\u044F\u0431\u0440\u044C)"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: ff.serif,
+      fontSize: 40,
+      fontWeight: 700,
+      color: C.green
+    }
+  }, "1.5\u20132.5 \u043C\u043B\u043D \u20BD"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      color: C.muted,
+      marginTop: 6
+    }
+  }, "\u043F\u0440\u0438 \u0441\u0438\u0441\u0442\u0435\u043C\u043D\u043E\u043C \u043F\u043E\u0434\u0445\u043E\u0434\u0435 \xB7 vs. \u0442\u0435\u043A\u0443\u0449\u0438\u0435 ~600\u2013900K \u20BD")));
+}
+
+/* ════════════════════════════════════════════
+   MAIN APP
+   ════════════════════════════════════════════ */
+function App() {
+  const [tab, setTab] = useState("diag");
+  const pages = {
+    diag: /*#__PURE__*/React.createElement(Diag, null),
+    lens: /*#__PURE__*/React.createElement(LensTab, null),
+    arch: /*#__PURE__*/React.createElement(Arch, null),
+    pipe: /*#__PURE__*/React.createElement(Pipe, null),
+    gear: /*#__PURE__*/React.createElement(Gear, null),
+    sys: /*#__PURE__*/React.createElement(Sys, null),
+    kpi: /*#__PURE__*/React.createElement(KPI, null),
+    psych: /*#__PURE__*/React.createElement(Psych, null),
+    calc: /*#__PURE__*/React.createElement(Calc, null),
+    road: /*#__PURE__*/React.createElement(Road, null)
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      minHeight: "100vh",
+      background: C.bg,
+      color: C.text,
+      fontFamily: ff.sans
+    }
+  }, /*#__PURE__*/React.createElement("link", {
+    href: "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap",
+    rel: "stylesheet"
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "36px 24px 0",
+      maxWidth: 920,
+      margin: "0 auto"
+    }
+  }, /*#__PURE__*/React.createElement(Label, null, "\u0431\u0438\u0437\u043D\u0435\u0441-\u0441\u0438\u0441\u0442\u0435\u043C\u0430"), /*#__PURE__*/React.createElement("h1", {
+    style: {
+      fontFamily: ff.serif,
+      fontSize: "clamp(28px,5vw,42px)",
+      fontWeight: 700,
+      margin: "6px 0 4px",
+      lineHeight: 1.1,
+      letterSpacing: -0.5,
+      color: C.text
+    }
+  }, "\u0424\u043E\u0442\u043E\u0433\u0440\u0430\u0444 \u043D\u0430 \u043F\u0440\u043E\u043C\u0435\u043D\u0430\u0434\u0435"), /*#__PURE__*/React.createElement(P, {
+    style: {
+      color: C.muted,
+      maxWidth: 480
+    }
+  }, "\u0417\u0435\u043B\u0435\u043D\u043E\u0433\u0440\u0430\u0434\u0441\u043A \xB7 \u0421\u0435\u0437\u043E\u043D 2026 \xB7 10 \u0430\u0440\u0445\u0435\u0442\u0438\u043F\u043E\u0432 \xB7 8 \u043B\u0438\u043D\u0437 \xB7 \u0421\u0438\u0441\u0442\u0435\u043C\u043D\u044B\u0439 \u043F\u043E\u0434\u0445\u043E\u0434")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "sticky",
+      top: 0,
+      zIndex: 100,
+      background: C.bg,
+      borderBottom: `1px solid ${C.border}`,
+      padding: "0 24px",
+      marginTop: 20
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 920,
+      margin: "0 auto",
+      display: "flex",
+      gap: 0,
+      overflowX: "auto",
+      WebkitOverflowScrolling: "touch",
+      scrollbarWidth: "none",
+      msOverflowStyle: "none"
+    }
+  }, TABS.map(t => /*#__PURE__*/React.createElement("button", {
+    key: t.id,
+    onClick: () => setTab(t.id),
+    style: {
+      padding: "12px 16px",
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      fontSize: 13.5,
+      fontFamily: ff.sans,
+      fontWeight: 500,
+      whiteSpace: "nowrap",
+      transition: "all .2s",
+      borderBottom: tab === t.id ? `2px solid ${C.accent}` : "2px solid transparent",
+      color: tab === t.id ? C.accent : C.muted
+    }
+  }, t.label)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 920,
+      margin: "0 auto",
+      padding: "28px 24px 64px"
+    }
+  }, pages[tab]));
+}
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(App, null));
+  </script>
+</body>
+</html>
