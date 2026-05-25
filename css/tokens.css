@@ -17,7 +17,7 @@
 :root {
   --font-display: "Unbounded", sans-serif;
   --font-body: "Golos Text", sans-serif;
-  --font-accent: Georgia, serif;
+  --font-accent: Georgia, "Times New Roman", serif;
   --font-weight-regular: 350;
   --font-weight-strong: 600;
 
@@ -32,28 +32,34 @@
   --line-body: 1.5;
   --letter-spacing-tight: 0;
   --letter-spacing-body: 0;
+  --text-gradient-warm: linear-gradient(
+    135deg,
+    var(--color-cream-80) 0%,
+    var(--color-copper-520) 58%,
+    var(--color-action-620) 100%
+  );
 
-  --color-ink-980: #171511;
-  --color-ink-900: #252119;
-  --color-ink-760: #50483c;
-  --color-ink-620: #756a5b;
-  --color-cream-80: #fffaf1;
-  --color-cream-120: #f8efe2;
-  --color-cream-180: #efe2cf;
-  --color-cream-260: #dfcfba;
-  --color-sage-500: #62735d;
-  --color-moss-700: #303a2b;
-  --color-copper-520: #a96f45;
-  --color-berry-420: #9b686b;
-  --color-sky-420: #6c8588;
-  --color-action-520: #2a72de;
-  --color-action-620: #195dc5;
+  --color-ink-980: #171410;
+  --color-ink-900: #241b15;
+  --color-ink-760: #55483b;
+  --color-ink-620: #7b6b5d;
+  --color-cream-80: #fff7ee;
+  --color-cream-120: #f1e7da;
+  --color-cream-180: #efe3d5;
+  --color-cream-260: #ddcdbb;
+  --color-sage-500: #746f62;
+  --color-moss-700: #302923;
+  --color-copper-520: #b98655;
+  --color-berry-420: #8f6f65;
+  --color-sky-420: #8d8376;
+  --color-action-520: #b98655;
+  --color-action-620: #c79a68;
 
   --surface-page: var(--color-cream-120);
   --surface-page-soft: var(--color-cream-80);
   --surface-panel: var(--color-cream-80);
   --surface-panel-muted: var(--color-cream-180);
-  --surface-panel-strong: #ffffff;
+  --surface-panel-strong: var(--color-cream-80);
   --surface-ink: var(--color-ink-980);
   --surface-soft: rgba(37, 33, 25, 0.06);
   --surface-soft-strong: rgba(37, 33, 25, 0.1);
@@ -61,19 +67,19 @@
   --surface-glass: rgba(255, 250, 241, 0.72);
   --surface-glass-strong: rgba(255, 250, 241, 0.86);
   --surface-nav-glass: rgba(255, 250, 241, 0.68);
-  --surface-nav-dark: rgba(23, 21, 17, 0.18);
+  --surface-nav-dark: rgba(24, 18, 14, 0.18);
   --media-wash-light: rgba(255, 250, 241, 0.88);
   --media-wash-soft: rgba(255, 250, 241, 0.48);
-  --media-wash-hero: rgba(255, 250, 241, 0.08);
+  --media-wash-hero: rgba(255, 247, 238, 0.1);
   --surface-warm: rgba(169, 111, 69, 0.14);
   --surface-sage: rgba(98, 115, 93, 0.14);
   --surface-sky: rgba(108, 133, 136, 0.14);
   --surface-berry: rgba(155, 104, 107, 0.14);
   --surface-inverse-soft: rgba(255, 250, 241, 0.08);
-  --media-overlay-soft: rgba(23, 21, 17, 0.16);
-  --media-overlay-strong: rgba(23, 21, 17, 0.5);
-  --media-overlay-deep: rgba(23, 21, 17, 0.66);
-  --media-overlay-hero: rgba(23, 21, 17, 0.42);
+  --media-overlay-soft: rgba(24, 18, 14, 0.16);
+  --media-overlay-strong: rgba(24, 18, 14, 0.38);
+  --media-overlay-deep: rgba(24, 18, 14, 0.68);
+  --media-overlay-hero: rgba(24, 18, 14, 0.08);
 
   --text-primary: var(--color-ink-980);
   --text-secondary: var(--color-ink-760);
@@ -105,6 +111,7 @@
   --radius-md: 0.75rem;
   --radius-lg: 1.125rem;
   --radius-pill: 999px;
+  --radius-hero: 2rem;
 
   --space-min: 0.25rem;
   --space-half: 0.5rem;
@@ -127,6 +134,25 @@
   --content-mobile-max: var(--content-sm);
   --section-padding-y: var(--space-lg);
   --section-padding-x: var(--space-base);
+  --hero-shell-width: 95vw;
+  --hero-shell-max: 96rem;
+  --hero-min-height: 86vh;
+  --hero-padding: clamp(var(--space-lg), 6vw, calc(var(--space-lg) * 1.5));
+  --hero-image-position: center center;
+  --hero-border: 1px solid rgba(255, 255, 255, 0.16);
+  --hero-shadow: 0 3rem 7rem rgba(36, 27, 21, 0.22);
+  --hero-overlay: linear-gradient(
+    90deg,
+    rgba(24, 18, 14, 0.68) 0%,
+    rgba(24, 18, 14, 0.38) 34%,
+    rgba(24, 18, 14, 0.08) 62%,
+    rgba(24, 18, 14, 0) 100%
+  );
+  --hero-tint: linear-gradient(
+    180deg,
+    rgba(185, 134, 85, 0.14),
+    rgba(24, 18, 14, 0.1)
+  );
   --promo-height: 2.25rem;
   --nav-height: 4.5rem;
   --nav-height-pdp: 5.625rem;
@@ -147,7 +173,8 @@
   --blur-nav-solid: blur(22px) saturate(150%);
   --motion-fast: 160ms ease;
 
-  --image-hero: url("https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=2200&q=80");
+  --image-hero: url("../assets/buffit-hero-home-training.png");
+  --image-brand-kit: none;
   --image-fitness: url("https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1400&q=80");
   --image-health: url("https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1400&q=80");
   --image-method: url("https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&w=2200&q=80");
