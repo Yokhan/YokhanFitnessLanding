@@ -1,5 +1,7 @@
 .hero {
-  min-height: calc(var(--viewport-full) - var(--promo-height) - var(--space-lg));
+  min-height: calc(
+    var(--viewport-full) - var(--promo-height) - var(--space-lg)
+  );
   display: grid;
   align-items: center;
   padding: 0 var(--section-padding-x) var(--space-1-5);
@@ -10,7 +12,9 @@
 }
 .hero__stage {
   width: 100%;
-  min-height: calc(var(--viewport-full) - var(--promo-height) - var(--space-lg));
+  min-height: calc(
+    var(--viewport-full) - var(--promo-height) - var(--space-lg)
+  );
   margin: 0 auto;
   display: grid;
   align-items: end;
@@ -26,7 +30,7 @@
     ),
     linear-gradient(180deg, transparent 60%, var(--media-overlay-soft)),
     linear-gradient(0deg, var(--media-overlay-soft), var(--media-overlay-soft)),
-    var(--image-hero) center / cover;
+    var(--surface-hero-product);
   border-radius: 0 0 var(--radius-md) var(--radius-md);
   box-shadow: var(--shadow-soft);
 }
@@ -52,7 +56,9 @@
   width: 100%;
   max-width: var(--layout-max);
   margin: 0 auto;
-  min-height: calc(var(--viewport-full) - var(--promo-height) - var(--space-lg));
+  min-height: calc(
+    var(--viewport-full) - var(--promo-height) - var(--space-lg)
+  );
   padding: calc(var(--nav-height) + var(--space-lg)) var(--section-padding-x)
     var(--space-half);
 }
@@ -204,6 +210,7 @@
   color: var(--accent-warm);
   font-size: var(--text-sm);
   font-weight: var(--font-weight-strong);
+  font-family: var(--font-display);
 }
 .hero-product__screen strong {
   color: var(--text-primary);
@@ -231,6 +238,7 @@
   padding: var(--space-base);
   text-align: center;
   text-decoration: none;
+  font-family: var(--font-display);
 }
 .hero-product__controls a:hover {
   background: var(--surface-panel-strong);
@@ -282,11 +290,13 @@
     padding: 0 0 var(--space-base);
   }
   .hero__stage {
-    min-height: calc(var(--viewport-full) - var(--promo-height) - var(--space-lg));
+    min-height: calc(
+      var(--viewport-full) - var(--promo-height) - var(--space-lg)
+    );
     border-radius: 0;
     background:
       linear-gradient(180deg, var(--media-wash-light), var(--surface-glass)),
-      var(--image-hero) center / cover;
+      var(--surface-hero-product);
   }
   .pdp-hero-page .hero__stage {
     min-height: calc(var(--viewport-full) - var(--space-base));

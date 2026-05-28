@@ -13,39 +13,392 @@
   <link rel="preload" href="fonts/GolosText-VariableFont_wght.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/nav.css">
   <link rel="stylesheet" href="css/hero.css">
   <link rel="stylesheet" href="css/programs.css">
   <link rel="stylesheet" href="css/sales.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/ecosystem.css">
+    <link rel="stylesheet" href="css/page-components.css">
   <link rel="stylesheet" href="css/cta.css">
+  <link rel="stylesheet" href="css/hero-shell-system.css">
+    <link rel="stylesheet" href="css/nav-dropdown-system.css">
+    <link rel="stylesheet" href="css/interaction-system.css">
+  <link rel="stylesheet" href="css/header-system.css">
 </head>
 <body>
-  <div class="promo-bar">BUFF IT: инвестиции в форму, энергию и спокойную голову</div>
-  <nav class="nav" aria-label="Основная навигация">
+  <a class="promo-bar" href="programs.html">BUFF IT FITNESS: форма, сила, ресурс</a>
+    <nav class="nav" aria-label="Основная навигация">
     <div class="nav__inner">
-      <a href="index.html" class="nav__brand heading" aria-label="BUFF IT">BUFF IT</a>
-      <div class="nav__links"><a href="training.html" class="nav__link" aria-current="page">Fitness</a><a href="health.html" class="nav__link">Health</a><a href="programs.html" class="nav__link">Programs</a><a href="app.html" class="nav__link">App</a><a href="calls-access.html" class="nav__link">Calls</a><a href="about.html" class="nav__link">Подход</a></div>
+      <a href="index.html" class="nav__brand brand-logo heading" aria-label="BUFF IT">BUFF IT</a>
+      <div class="nav__links">
+        <div class="nav__group">
+          <button class="nav__link nav__trigger" type="button" aria-haspopup="true">Программы тренировок</button>
+          <div class="nav__dropdown" data-menu="programs">
+            <article class="nav__drop-card nav__drop-card--lead">
+              <span>Диагностика</span>
+              <strong>Подобрать программу на 12 недель</strong>
+              <small>Цель, график, ограничения и формат тренировок. Получишь понятный маршрут и первый шаг.</small>
+              <div class="nav__quicklinks" aria-label="Подбор программы">
+                <a href="https://t.me/YokhanGym_bot?start=buffit_program_picker">Пройти диагностику</a>
+                <a href="programs.html">Все программы</a>
+              </div>
+            </article>
+            <div class="nav__drop-grid">
+              <section class="nav__drop-card">
+                <span>Женщинам</span>
+                <strong>Форма, вес и уверенность</strong>
+                <small>Быстрый вход в самые понятные женские маршруты.</small>
+                <div class="nav__quicklinks" aria-label="Программы для женщин">
+                  <a href="program-glutes.html">Топ ягодицы</a>
+                  <a href="program-weight-loss.html">Похудеть навсегда</a>
+                  <a href="program-new-image.html">Новый образ</a>
+                  <a href="program-flexible-body.html">Гибкое тело</a>
+                </div>
+              </section>
+              <section class="nav__drop-card">
+                <span>Мужчинам</span>
+                <strong>Сила, спина и силуэт</strong>
+                <small>Маршруты для плеч, спины, навыков и формы после работы.</small>
+                <div class="nav__quicklinks" aria-label="Программы для мужчин">
+                  <a href="program-athlete-body.html">Тело атлета</a>
+                  <a href="program-healthy-back.html">Сильная спина</a>
+                  <a href="program-pull-ups.html">Подтягивания</a>
+                  <a href="program-power-exit.html">Выход силой</a>
+                  <a href="program-front-hang.html">Передний вис</a>
+                </div>
+              </section>
+              <section class="nav__drop-card">
+                <span>Мягкий старт</span>
+                <strong>Если тело мешает жить</strong>
+                <small>Когда нужен аккуратный вход, спина, шея и безопасность.</small>
+                <div class="nav__quicklinks" aria-label="Безопасные маршруты">
+                  <a href="program-entry-fitness.html">Вход в фитнес</a>
+                  <a href="program-healthy-back.html">Спина и шея</a>
+                  <a href="health.html">Ограничения</a>
+                  <a href="safety.html">Первая помощь</a>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+        <div class="nav__group">
+          <button class="nav__link nav__trigger" type="button" aria-haspopup="true">Онлайн тренировки</button>
+          <div class="nav__dropdown" data-menu="online">
+            <article class="nav__drop-card nav__drop-card--lead">
+              <span>Личное ведение</span>
+              <strong>Как проходят онлайн тренировки</strong>
+              <small>Тренировки, чат, созвоны, питание и сервисы вокруг 12-недельного маршрута.</small>
+              <div class="nav__quicklinks" aria-label="Онлайн ведение">
+                <a href="training.html">Формат ведения</a>
+                <a href="coaching.html">С тренером</a>
+              </div>
+            </article>
+            <div class="nav__drop-grid">
+              <section class="nav__drop-card">
+                <span>План</span>
+                <strong>Отметки и структура</strong>
+                <small>План тренировок, домашние задания и контроль недели.</small>
+                <div class="nav__quicklinks" aria-label="План тренировок">
+                  <a href="app.html">BUFF IT APP</a>
+                  <a href="bot.html">Подбор маршрута</a>
+                  <a href="programs.html">Цели</a>
+                </div>
+              </section>
+              <section class="nav__drop-card">
+                <span>Связь</span>
+                <strong>Звонки и разборы</strong>
+                <small>Созвон, техника, ограничения, график и первый шаг.</small>
+                <div class="nav__quicklinks" aria-label="Связь и звонки">
+                  <a href="calls-access.html">BUFF IT CALLS</a>
+                  <a href="start.html">Начать</a>
+                  <a href="about.html">Как работаем</a>
+                </div>
+              </section>
+              <section class="nav__drop-card">
+                <span>Быт</span>
+                <strong>Питание и ритм</strong>
+                <small>Еда, корзина, восстановление и привычки вокруг нагрузки.</small>
+                <div class="nav__quicklinks" aria-label="Питание и ритм">
+                  <a href="nutrition.html">Питание</a>
+                  <a href="app.html#dayflow">DAYFLOW скоро</a>
+                  <a href="guide.html">Гайд новичка</a>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+        <div class="nav__group">
+          <button class="nav__link nav__trigger" type="button" aria-haspopup="true">Полезные материалы</button>
+          <div class="nav__dropdown" data-menu="materials">
+            <article class="nav__drop-card nav__drop-card--lead">
+              <span>Старт без хаоса</span>
+              <strong>Понять, с чего начать безопасно</strong>
+              <small>Материалы для первого шага: новичку, при боли, ограничениях и тревоге.</small>
+              <div class="nav__quicklinks" aria-label="Материалы для старта">
+                <a href="guide.html">Гайд новичка</a>
+                <a href="start.html">Подобрать старт</a>
+              </div>
+            </article>
+            <div class="nav__drop-grid">
+              <section class="nav__drop-card">
+                <span>Новичку</span>
+                <strong>Без стыда и перегруза</strong>
+                <small>Как войти в тренировки спокойно и не бросить через две недели.</small>
+                <div class="nav__quicklinks" aria-label="Новичку">
+                  <a href="guide.html">Гайд</a>
+                  <a href="program-entry-fitness.html">Вход в фитнес</a>
+                  <a href="programs.html">Цели</a>
+                </div>
+              </section>
+              <section class="nav__drop-card">
+                <span>Риски</span>
+                <strong>Боль, аптечка и ограничения</strong>
+                <small>Когда тело сигналит болью или есть ограничения по нагрузке.</small>
+                <div class="nav__quicklinks" aria-label="Риски и безопасность">
+                  <a href="safety.html">Первая помощь</a>
+                  <a href="health.html">Безопасный старт</a>
+                  <a href="program-healthy-back.html">Спина</a>
+                </div>
+              </section>
+              <section class="nav__drop-card">
+                <span>Карта</span>
+                <strong>Все входы BUFF IT</strong>
+                <small>Бот, канал, личка, приложение и быстрые маршруты в одном месте.</small>
+                <div class="nav__quicklinks" aria-label="Все входы">
+                  <a href="links.html">Карта ссылок</a>
+                  <a href="bot.html">Telegram-бот</a>
+                  <a href="app.html">Приложение</a>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+        <div class="nav__group">
+          <button class="nav__link nav__trigger" type="button" aria-haspopup="true">Подход</button>
+          <div class="nav__dropdown" data-menu="method">
+            <article class="nav__drop-card nav__drop-card--lead">
+              <span>Метод BUFF IT</span>
+              <strong>Форма встроена в жизнь</strong>
+              <small>Силовые, ходьба, питание, восстановление и реальный график без фитнес-театра.</small>
+              <div class="nav__quicklinks" aria-label="Метод BUFF IT">
+                <a href="method.html">Методика</a>
+                <a href="training.html">Как устроено ведение</a>
+              </div>
+            </article>
+            <div class="nav__drop-grid">
+              <section class="nav__drop-card">
+                <span>Принципы</span>
+                <strong>Как работаем</strong>
+                <small>Без стыда, угадайки и случайной нагрузки.</small>
+                <div class="nav__quicklinks" aria-label="Принципы">
+                  <a href="about.html">Принципы</a>
+                  <a href="coaching.html">Ведение</a>
+                  <a href="health.html">Безопасность</a>
+                </div>
+              </section>
+              <section class="nav__drop-card">
+                <span>Экосистема</span>
+                <strong>Сервисы вокруг здоровья</strong>
+                <small>Тренировки, связь, питание, материалы и ритм дня.</small>
+                <div class="nav__quicklinks" aria-label="Экосистема">
+                  <a href="ecosystem.html">Карта</a>
+                  <a href="app.html">APP</a>
+                  <a href="nutrition.html">FOOD</a>
+                </div>
+              </section>
+              <section class="nav__drop-card">
+                <span>Следующий шаг</span>
+                <strong>От интереса к маршруту</strong>
+                <small>Если уже понятно, что нужен старт, лучше пройти диагностику.</small>
+                <div class="nav__quicklinks" aria-label="Следующий шаг">
+                  <a href="start.html">Начать</a>
+                  <a href="bot.html">Подбор в Telegram</a>
+                  <a href="programs.html">Программы</a>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
       <a href="start.html" class="btn btn--primary nav__cta">Начать</a>
+      <button class="nav__mobile-toggle" type="button" aria-label="Menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+      </button>
     </div>
   </nav>
   <main>
-    <section class="hero"><div class="hero__stage"><div class="hero__inner"><div class="hero__content"><p class="eyebrow">BUFF IT FITNESS</p><h1 class="heading hero__title">Тренировки под тело, которое тебе нужно</h1><p class="hero__subtitle">Сила, вес, спина, ягодицы, осанка, энергия. Не выбирай тренировки как наказание. Выбирай результат, который реально нужен твоей жизни.</p><div class="hero__actions"><a href="programs.html" class="btn btn--primary">Выбрать цель</a><a href="coaching.html" class="btn btn--secondary">Хочу с тренером</a></div></div><aside class="hero__panel surface-card"><div class="hero__panel-top"><span class="status-dot" aria-hidden="true"></span><span>Что можно баффнуть</span></div><ul class="stack-list"><li>Форму в одежде и зеркале.</li><li>Спину после сидячей работы.</li><li>Силу, выносливость и уверенность.</li></ul></aside></div></div></section>
-    <section class="section section--cream"><div class="container"><div class="section-heading"><p class="eyebrow">Маршруты</p><h2 class="heading section-title">Не всем нужен одинаковый вход</h2></div><div class="pathway-grid"><a href="coaching.html" class="pathway-card"><span class="pathway-card__kicker">с тренером</span><h3>Когда нужен человек рядом</h3><p>Разбор цели, техника, нагрузка и поддержка, чтобы не слиться на второй неделе.</p></a><a href="self-training.html" class="pathway-card"><span class="pathway-card__kicker">самостоятельно</span><h3>Когда хочешь идти сам</h3><p>Программы, упражнения и календарь без постоянных созвонов.</p></a><a href="programs.html" class="pathway-card"><span class="pathway-card__kicker">по цели</span><h3>Когда результат уже понятен</h3><p>Вес, ягодицы, спина, сила, подтягивания, вход в фитнес.</p></a></div></div></section>
-    <section class="section cta-section"><div class="container cta-section__inner"><div><p class="eyebrow">Старт</p><h2 class="heading section-title">Ответь на несколько вопросов</h2></div><div class="cta-section__actions"><a href="https://t.me/YokhanGym_bot?start=buffit_fitness" target="_blank" rel="noopener" class="btn btn--primary">Пройти подбор</a><a href="links.html" class="btn btn--secondary">Все входы</a></div></div></section>
+    <section class="hero">
+      <div class="hero__stage">
+        <div class="hero__inner">
+          <div class="hero__content">
+            <p class="eyebrow">Фитнес-направление</p>
+            <h1 class="heading hero__title">Тренировки под тело, которое тебе нужно</h1>
+            <p class="hero__subtitle">12 недель под цель: сила, вес, спина, ягодицы, осанка, энергия. Не выбирай тренировки как наказание. Выбирай результат, который реально нужен твоей жизни.</p>
+            <div class="hero__actions">
+              <a href="programs.html" class="btn btn--primary">Выбрать цель</a>
+              <a href="coaching.html" class="btn btn--secondary">Хочу с тренером</a>
+            </div>
+          </div>
+          <aside class="hero__panel surface-card">
+            <div class="hero__panel-top"><span class="status-dot" aria-hidden="true"></span><span>Что можно баффнуть</span></div>
+            <ul class="stack-list">
+              <li>Форму в одежде и зеркале.</li>
+              <li>Спину после сидячей работы.</li>
+              <li>Силу, выносливость и уверенность.</li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--cream">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Маршруты</p>
+          <h2 class="heading section-title">Не всем нужен одинаковый вход</h2>
+        </div>
+        <div class="pathway-grid">
+          <a href="coaching.html" class="pathway-card"><span class="pathway-card__kicker">с тренером</span><h3>Когда нужен человек рядом</h3><p>Разбор цели, техника, нагрузка и поддержка, чтобы не слиться на второй неделе.</p></a>
+          <a href="self-training.html" class="pathway-card"><span class="pathway-card__kicker">самостоятельно</span><h3>Когда нужен бюджетный формат позже</h3><p>Записанные программы в приложении появятся позже как бюджетный сегмент. Сейчас основной продукт — ведение с тренером.</p></a>
+          <a href="programs.html" class="pathway-card"><span class="pathway-card__kicker">по цели</span><h3>Когда результат уже понятен</h3><p>Вес, ягодицы, спина, сила, подтягивания, вход в фитнес.</p></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section programs">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Структура</p>
+          <h2 class="heading section-title">Как собирается путь клиента</h2>
+        </div>
+        <div class="program-list-grid">
+          <article class="program-list-panel">
+            <h3>Сначала цель</h3>
+            <ul class="program-list">
+              <li><strong><a href="program-new-image.html">Образ</a></strong><span>Подготовить тело к новой одежде, фото, свиданиям, работе или роли.</span></li>
+              <li><strong><a href="program-glutes.html">Фигура</a></strong><span>Ягодицы, талия, вес, осанка и внешний вид без наказания себя.</span></li>
+              <li><strong><a href="program-athlete-body.html">Сила</a></strong><span>Подтягивания, тело атлета, выход силы, передний вис и понятный прогресс.</span></li>
+              <li><strong><a href="program-healthy-back.html">Спина</a></strong><span>Мобильность, устойчивость и тело, которое выдерживает сидячую работу.</span></li>
+            </ul>
+          </article>
+          <article class="program-list-panel">
+            <h3>Потом формат</h3>
+            <ul class="program-list">
+              <li><strong>С тренером</strong><span>Когда нужна техника, обратная связь, корректировки и внешний ритм.</span></li>
+              <li><strong>Самостоятельно</strong><span>Когда человек готов идти по структуре без постоянных созвонов.</span></li>
+              <li><strong>Подбор в Telegram</strong><span>Быстрый вход, сегментация и первый понятный маршрут.</span></li>
+              <li><strong>Сервисы рядом</strong><span>Звонки, питание, дневной ритм и материалы закрывают слабые места.</span></li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="section programs">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Где тренироваться</p>
+          <h2 class="heading section-title">Дом, зал или улица — выбираем под жизнь</h2>
+        </div>
+        <div class="product-offer-grid">
+          <article class="product-offer-card product-offer-card--accent"><span>дом</span><h3>Часто лучше по времени, деньгам и комфорту</h3><p>Не надо ехать, ждать тренажер, сравнивать себя с людьми вокруг. Минимальный инвентарь обычно стоит как 1-2 месяца зала и остается у тебя.</p></article>
+          <article class="product-offer-card"><span>зал</span><h3>Удобнее разнообразить и прогрессировать</h3><p>Если зал рядом и тебе там комфортно, маршрут легко адаптируется под тренажеры, свободные веса и больше вариантов нагрузки.</p></article>
+          <article class="product-offer-card"><span>улица</span><h3>Ходьба, турники и сезонная нагрузка</h3><p>Улица помогает закрывать аэробную базу, навыки и часть силовой работы, если это подходит по погоде и графику.</p></article>
+          <article class="product-offer-card"><span>реализм</span><h3>Главное — повторяемость</h3><p>Программа рассчитана на типичную жизнь Москвы, Питера и Казани: работа, дорога, усталость, дела, а не идеальную неделю из рекламы.</p></article>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="section section--cream">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">BUFF IT 12</p>
+          <h2 class="heading section-title">12 недель под цель, а не абонемент ради абонемента</h2>
+        </div>
+        <div class="product-format-grid">
+          <article class="product-format-card product-format-card--accent">
+            <span>2 тренировки + ДЗ</span>
+            <h3>Когда нужен сильный ритм без перегруза недели</h3>
+            <p>Две тренировки с тренером, домашнее задание, чат и корректировки. Подходит занятым, интровертам и тем, кто хочет встроить форму в жизнь без лишней логистики.</p>
+            <div class="product-price"><strong>26 000 ₽/мес</strong><small>стартовая цена на запуске, далее 32 000 ₽/мес</small></div>
+          </article>
+          <article class="product-format-card product-format-card--accent">
+            <span>3 тренировки</span>
+            <h3>Когда хочешь быстрее собрать привычку и технику</h3>
+            <p>Три тренировки в неделю, личный Telegram-чат, разборы и доступ к фитнес-сервисам. Это основной темп для тех, кому нужен внешний ритм.</p>
+            <div class="product-price"><strong>34 000 ₽/мес</strong><small>стартовая цена на запуске, далее 42 000 ₽/мес</small></div>
+          </article>
+        </div>
+        <div class="program-note">
+          <h3>Бесплатная диагностика на запуске</h3>
+          <p>Первые два месяца диагностика бесплатная: цель, ограничения, график, формат тренировок и стартовый маршрут. Потом диагностика станет отдельным платным входом.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="section programs--soft">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Что входит</p>
+          <h2 class="heading section-title">Не остаешься один на один с планом</h2>
+        </div>
+        <div class="product-offer-grid">
+          <article class="product-offer-card">
+            <span>связь</span>
+            <h3>Личный чат в Telegram</h3>
+            <p>Вопросы, обратная связь, корректировки и нормальный человеческий контакт без ощущения, что ты купил PDF и исчез.</p>
+          </article>
+          <article class="product-offer-card">
+            <span>созвоны</span>
+            <h3>P2P-защищенные звонки</h3>
+            <p>Разбор цели, техники, ограничений и графика через собственный сервис звонков.</p>
+          </article>
+          <article class="product-offer-card">
+            <span>еда</span>
+            <h3>Умная корзина</h3>
+            <p>Питание без отдельной религии: продукты, корзина и решения, которые помогают держать форму.</p>
+          </article>
+          <article class="product-offer-card">
+            <span>безопасность</span>
+            <h3>Гайды для старта и первой помощи</h3>
+            <p>Гайд по тренировкам для новичков, первая помощь и аптечка для дома, чтобы старт был спокойнее.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="section cta-section">
+      <div class="container cta-section__inner">
+        <div>
+          <p class="eyebrow">Старт</p>
+          <h2 class="heading section-title">Ответь на несколько вопросов</h2>
+        </div>
+        <div class="cta-section__actions">
+          <a href="https://t.me/YokhanGym_bot?start=buffit_fitness" target="_blank" rel="noopener" class="btn btn--primary">Пройти подбор</a>
+          <a href="links.html" class="btn btn--secondary">Все входы</a>
+        </div>
+      </div>
+    </section>
   </main>
   <footer class="footer">
     <div class="container footer__inner">
-      <span class="footer__brand heading">BUFF IT</span>
+      <a href="index.html" class="footer__brand brand-logo heading">BUFF IT</a>
       <div class="footer__links">
-        <a href="training.html">Fitness</a>
-        <a href="health.html">Health</a>
-        <a href="programs.html">Programs</a>
-        <a href="calls-access.html">Calls</a>
+        <a href="training.html">BUFF IT FITNESS</a>
+        <a href="health.html">BUFF IT HEALTH</a>
+        <a href="programs.html">Программы</a>
+        <a href="calls-access.html">BUFF IT CALLS</a>
         <a href="links.html">Все входы</a>
       </div>
     </div>
   </footer>
+  <script src="js/pointer-glow.js"></script>
+  <script src="js/nav-menu.js"></script>
+  <script src="js/nav-state.js"></script>
 </body>
 </html>

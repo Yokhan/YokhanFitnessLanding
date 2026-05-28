@@ -1,0 +1,294 @@
+.pdp-hero-page {
+  background:
+    radial-gradient(
+      circle at 82% 0%,
+      var(--surface-warm-strong),
+      transparent 36%
+    ),
+    linear-gradient(180deg, var(--surface-page), var(--surface-page-soft));
+}
+
+.pdp-hero-page .hero {
+  min-height: auto;
+  padding: 0 0 var(--space-1-5);
+}
+
+.pdp-hero-page .hero__stage {
+  width: 100vw;
+  max-width: none;
+  min-height: var(--hero-min-height);
+  border-width: 0 0 var(--border-width-strong);
+  border-radius: 0 0 var(--radius-hero) var(--radius-hero);
+  background:
+    var(--hero-overlay),
+    var(--hero-tint),
+    var(--image-hero) var(--hero-image-position) / cover;
+  box-shadow: var(--hero-shadow);
+}
+
+.pdp-hero-page .hero__inner {
+  min-height: var(--hero-min-height);
+  padding: calc(var(--nav-height) + var(--space-lg)) var(--hero-padding)
+    var(--hero-padding);
+}
+
+.pdp-hero-page .hero__content {
+  max-width: var(--content-lg);
+}
+
+.pdp-hero-page .hero__title em,
+.pdp-intro__title em {
+  background: var(--text-gradient-warm);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.pdp-hero-page .hero__title em {
+  background: var(--text-gradient-hero);
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow: var(--shadow-text-hero);
+}
+
+body:not(.pdp-hero-page) .hero__stage {
+  width: 100vw;
+  max-width: none;
+  min-height: var(--hero-min-height);
+  background:
+    radial-gradient(
+      circle at 82% 18%,
+      var(--surface-warm-strong),
+      transparent 34%
+    ),
+    radial-gradient(circle at 12% 88%, var(--surface-warm), transparent 30%),
+    var(--surface-hero-product);
+  border-radius: 0 0 var(--radius-hero) var(--radius-hero);
+}
+
+body:not(.pdp-hero-page) .hero {
+  min-height: auto;
+  padding: 0 0 var(--space-1-5);
+}
+
+body:not(.pdp-hero-page) .hero__inner {
+  min-height: var(--hero-min-height);
+  padding: calc(var(--nav-height) + var(--space-lg)) var(--hero-padding)
+    var(--hero-padding);
+}
+
+body:not(.pdp-hero-page) .hero__content,
+body:not(.pdp-hero-page) .hero__title {
+  background: none;
+  color: var(--text-inverse);
+}
+
+body:not(.pdp-hero-page) .hero__subtitle {
+  color: var(--text-inverse-muted);
+  font-weight: var(--font-weight-regular);
+}
+
+body:not(.pdp-hero-page) .hero__panel {
+  background: var(--surface-glass-strong);
+  border: var(--border-glass);
+  box-shadow: var(--shadow-glass);
+  backdrop-filter: var(--blur-glass);
+  -webkit-backdrop-filter: var(--blur-glass);
+}
+
+body:not(.pdp-hero-page) .hero__panel .stack-list,
+body:not(.pdp-hero-page) .hero__panel .spec-table {
+  display: grid;
+  gap: var(--space-base);
+}
+
+body:not(.pdp-hero-page) .hero__panel .stack-list li,
+body:not(.pdp-hero-page) .hero__panel .spec-table div {
+  background: var(--surface-soft);
+  border: var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: var(--space-base);
+}
+
+.product-card,
+.scenario-card,
+.pdp-feature__media,
+.investment-story {
+  box-shadow: var(--shadow-soft);
+}
+
+.product-card {
+  background:
+    linear-gradient(180deg, transparent 14%, var(--media-overlay-strong)),
+    linear-gradient(135deg, var(--surface-warm-strong), transparent 64%),
+    var(--image-fitness) center / cover;
+}
+
+.product-card--health {
+  background:
+    linear-gradient(180deg, transparent 18%, var(--media-overlay-strong)),
+    linear-gradient(135deg, var(--surface-warm-strong), transparent 64%),
+    var(--image-health) center / cover;
+}
+
+.product-card--women {
+  background:
+    linear-gradient(180deg, transparent 18%, var(--media-overlay-strong)),
+    linear-gradient(135deg, var(--surface-warm-strong), transparent 64%),
+    var(--image-women) center / cover;
+}
+
+.product-card--food {
+  background:
+    linear-gradient(180deg, transparent 18%, var(--media-overlay-strong)),
+    linear-gradient(135deg, var(--surface-warm-strong), transparent 64%),
+    var(--image-food) center / cover;
+}
+
+.product-card--calls {
+  background:
+    linear-gradient(180deg, transparent 18%, var(--media-overlay-strong)),
+    linear-gradient(135deg, var(--surface-warm-strong), transparent 64%),
+    var(--image-calls) center / cover;
+}
+
+.scenario-card,
+.pdp-feature__media,
+.investment-story {
+  background:
+    linear-gradient(180deg, transparent 26%, var(--media-overlay-strong)),
+    linear-gradient(135deg, var(--surface-warm-strong), transparent 60%),
+    var(--image-fitness) center / cover;
+}
+
+.scenario-card--health {
+  background:
+    linear-gradient(180deg, transparent 26%, var(--media-overlay-strong)),
+    linear-gradient(135deg, var(--surface-warm-strong), transparent 60%),
+    var(--image-health) center / cover;
+}
+
+.scenario-card--calls {
+  background:
+    linear-gradient(180deg, transparent 26%, var(--media-overlay-strong)),
+    linear-gradient(135deg, var(--surface-warm-strong), transparent 60%),
+    var(--image-calls) center / cover;
+}
+
+.scenario-card--women {
+  background:
+    linear-gradient(180deg, transparent 26%, var(--media-overlay-strong)),
+    linear-gradient(135deg, var(--surface-warm-strong), transparent 60%),
+    var(--image-women) center / cover;
+}
+
+.pdp-feature__media {
+  background:
+    linear-gradient(90deg, var(--media-overlay-deep), transparent 68%),
+    linear-gradient(180deg, transparent 48%, var(--media-overlay-strong)),
+    linear-gradient(135deg, var(--surface-warm-strong), transparent 60%),
+    var(--image-method) center / cover;
+}
+
+.program-card,
+.step-card,
+.route-card,
+.system-card div,
+.spec-table div,
+.friction-grid article,
+.faq-grid article,
+.route-mini a,
+.benefit-card,
+.pathway-card,
+.service-card,
+.link-card,
+.timeline-item,
+.feature-item,
+.quote-panel {
+  background:
+    linear-gradient(135deg, var(--surface-glass-strong), var(--surface-glass)),
+    var(--surface-panel);
+  border: var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.program-card--featured {
+  background:
+    linear-gradient(135deg, var(--surface-warm-strong), transparent 74%),
+    linear-gradient(180deg, var(--surface-panel-strong), var(--surface-panel));
+}
+
+.program-card__tag {
+  background: var(--surface-warm);
+  color: var(--accent-warm);
+}
+
+.outcome-section .benefit-card {
+  background: transparent;
+  border-top: var(--border-strong);
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 0;
+  box-shadow: none;
+}
+
+@media (max-width: 45rem) {
+
+
+
+
+
+
+
+
+
+  .pdp-hero-page .hero {
+    padding-bottom: var(--space-base);
+  }
+
+  .pdp-hero-page .hero__stage,
+  body:not(.pdp-hero-page) .hero__stage {
+    min-height: calc(var(--viewport-full) - var(--space-base));
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  }
+
+  .pdp-hero-page .hero__inner {
+    min-height: calc(var(--viewport-full) - var(--space-base));
+    padding: calc(var(--nav-height) + var(--space-lg)) var(--space-1-5)
+      var(--space-half);
+  }
+
+
+  body:not(.pdp-hero-page) .hero__inner {
+    min-height: calc(var(--viewport-full) - var(--space-base));
+    padding: calc(var(--nav-height) + var(--space-lg)) var(--space-1-5)
+      var(--space-2);
+  }
+
+  body:not(.pdp-hero-page) .hero__content {
+    width: min(100%, var(--content-mobile-max));
+    max-width: none;
+  }
+
+  body:not(.pdp-hero-page) .hero__title {
+    font-size: var(--text-xl);
+    max-width: var(--content-xs);
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  body:not(.pdp-hero-page) .hero__subtitle {
+    max-width: var(--content-xs);
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (min-width: 58.75rem) {
+  body:not(.pdp-hero-page) .hero__panel {
+    grid-column: 8 / 13;
+    align-self: center;
+    justify-self: end;
+    width: min(100%, var(--content-card));
+  }
+}

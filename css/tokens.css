@@ -33,27 +33,34 @@
   --letter-spacing-tight: 0;
   --letter-spacing-body: 0;
   --text-gradient-warm: linear-gradient(
-    135deg,
-    var(--color-cream-80) 0%,
-    var(--color-copper-520) 58%,
+    118deg,
+    var(--color-ink-980) 0%,
+    var(--color-moss-700) 34%,
+    var(--color-copper-520) 66%,
     var(--color-action-620) 100%
   );
+  --text-gradient-hero: linear-gradient(
+    118deg,
+    var(--color-cream-80) 0%,
+    var(--color-action-620) 58%,
+    var(--color-copper-520) 100%
+  );
 
-  --color-ink-980: #171410;
-  --color-ink-900: #241b15;
-  --color-ink-760: #55483b;
-  --color-ink-620: #7b6b5d;
-  --color-cream-80: #fff7ee;
-  --color-cream-120: #f1e7da;
-  --color-cream-180: #efe3d5;
-  --color-cream-260: #ddcdbb;
-  --color-sage-500: #746f62;
-  --color-moss-700: #302923;
-  --color-copper-520: #b98655;
-  --color-berry-420: #8f6f65;
-  --color-sky-420: #8d8376;
-  --color-action-520: #b98655;
-  --color-action-620: #c79a68;
+  --color-ink-980: oklch(15% 0.018 56);
+  --color-ink-900: oklch(22% 0.026 56);
+  --color-ink-760: oklch(39% 0.035 62);
+  --color-ink-620: oklch(52% 0.04 66);
+  --color-cream-80: oklch(97.5% 0.025 78);
+  --color-cream-120: oklch(92.5% 0.034 76);
+  --color-cream-180: oklch(88% 0.044 74);
+  --color-cream-260: oklch(80% 0.052 72);
+  --color-sage-500: oklch(55% 0.035 92);
+  --color-moss-700: oklch(25% 0.03 65);
+  --color-copper-520: oklch(62% 0.1 63);
+  --color-berry-420: oklch(49% 0.055 34);
+  --color-sky-420: oklch(58% 0.032 230);
+  --color-action-520: oklch(62% 0.1 63);
+  --color-action-620: oklch(72% 0.11 78);
 
   --surface-page: var(--color-cream-120);
   --surface-page-soft: var(--color-cream-80);
@@ -61,32 +68,99 @@
   --surface-panel-muted: var(--color-cream-180);
   --surface-panel-strong: var(--color-cream-80);
   --surface-ink: var(--color-ink-980);
-  --surface-soft: rgba(37, 33, 25, 0.06);
-  --surface-soft-strong: rgba(37, 33, 25, 0.1);
-  --surface-nav: rgba(248, 239, 226, 0.88);
-  --surface-glass: rgba(255, 250, 241, 0.72);
-  --surface-glass-strong: rgba(255, 250, 241, 0.86);
-  --surface-nav-glass: rgba(255, 250, 241, 0.68);
-  --surface-nav-dark: rgba(24, 18, 14, 0.18);
-  --media-wash-light: rgba(255, 250, 241, 0.88);
-  --media-wash-soft: rgba(255, 250, 241, 0.48);
-  --media-wash-hero: rgba(255, 247, 238, 0.1);
-  --surface-warm: rgba(169, 111, 69, 0.14);
-  --surface-sage: rgba(98, 115, 93, 0.14);
-  --surface-sky: rgba(108, 133, 136, 0.14);
-  --surface-berry: rgba(155, 104, 107, 0.14);
-  --surface-inverse-soft: rgba(255, 250, 241, 0.08);
-  --media-overlay-soft: rgba(24, 18, 14, 0.16);
-  --media-overlay-strong: rgba(24, 18, 14, 0.38);
-  --media-overlay-deep: rgba(24, 18, 14, 0.68);
-  --media-overlay-hero: rgba(24, 18, 14, 0.08);
+  --surface-hero-product: linear-gradient(
+    135deg,
+    var(--color-ink-980) 0%,
+    var(--color-moss-700) 48%,
+    var(--color-copper-520) 140%
+  );
+  --surface-soft: color-mix(in oklch, var(--color-ink-900) 6%, transparent);
+  --surface-soft-strong: color-mix(
+    in oklch,
+    var(--color-ink-900) 11%,
+    transparent
+  );
+  --surface-nav: color-mix(in oklch, var(--color-cream-80) 88%, transparent);
+  --surface-glass: color-mix(in oklch, var(--color-cream-80) 72%, transparent);
+  --surface-glass-strong: color-mix(
+    in oklch,
+    var(--color-cream-80) 86%,
+    transparent
+  );
+  --surface-nav-glass: color-mix(
+    in oklch,
+    var(--color-cream-80) 70%,
+    transparent
+  );
+  --surface-nav-dark: color-mix(
+    in oklch,
+    var(--color-ink-980) 20%,
+    transparent
+  );
+  --media-wash-light: color-mix(
+    in oklch,
+    var(--color-cream-80) 88%,
+    transparent
+  );
+  --media-wash-soft: color-mix(
+    in oklch,
+    var(--color-cream-80) 48%,
+    transparent
+  );
+  --media-wash-hero: color-mix(
+    in oklch,
+    var(--color-cream-80) 10%,
+    transparent
+  );
+  --surface-warm: color-mix(in oklch, var(--color-copper-520) 16%, transparent);
+  --surface-warm-strong: color-mix(
+    in oklch,
+    var(--color-action-620) 24%,
+    transparent
+  );
+  --surface-sage: color-mix(in oklch, var(--color-sage-500) 15%, transparent);
+  --surface-sky: color-mix(in oklch, var(--color-sky-420) 14%, transparent);
+  --surface-berry: color-mix(in oklch, var(--color-berry-420) 14%, transparent);
+  --surface-inverse-soft: color-mix(
+    in oklch,
+    var(--color-cream-80) 10%,
+    transparent
+  );
+  --media-overlay-soft: color-mix(
+    in oklch,
+    var(--color-ink-980) 17%,
+    transparent
+  );
+  --media-overlay-strong: color-mix(
+    in oklch,
+    var(--color-ink-980) 40%,
+    transparent
+  );
+  --media-overlay-deep: color-mix(
+    in oklch,
+    var(--color-ink-980) 72%,
+    transparent
+  );
+  --media-overlay-hero: color-mix(
+    in oklch,
+    var(--color-copper-520) 12%,
+    transparent
+  );
 
   --text-primary: var(--color-ink-980);
   --text-secondary: var(--color-ink-760);
-  --text-muted: rgba(37, 33, 25, 0.58);
+  --text-muted: color-mix(in oklch, var(--color-ink-900) 58%, transparent);
   --text-inverse: var(--color-cream-80);
-  --text-inverse-muted: rgba(255, 250, 241, 0.78);
-  --text-inverse-soft: rgba(255, 250, 241, 0.72);
+  --text-inverse-muted: color-mix(
+    in oklch,
+    var(--color-cream-80) 80%,
+    transparent
+  );
+  --text-inverse-soft: color-mix(
+    in oklch,
+    var(--color-cream-80) 72%,
+    transparent
+  );
   --accent-primary: var(--color-ink-980);
   --accent-primary-strong: var(--color-moss-700);
   --accent-warm: var(--color-copper-520);
@@ -96,22 +170,33 @@
   --accent-action: var(--color-action-520);
   --accent-action-strong: var(--color-action-620);
 
-  --border-subtle: 1px solid rgba(37, 33, 25, 0.12);
-  --border-strong: 1px solid rgba(37, 33, 25, 0.2);
-  --border-inverse: 1px solid rgba(255, 250, 241, 0.28);
-  --border-glass: 1px solid rgba(255, 250, 241, 0.44);
-  --border-nav-inverse: 1px solid rgba(255, 250, 241, 0.3);
-  --shadow-soft: 0 32px 90px rgba(37, 33, 25, 0.16);
-  --shadow-card: 0 20px 50px rgba(37, 33, 25, 0.1);
-  --shadow-glass: 0 22px 70px rgba(37, 33, 25, 0.18);
-  --shadow-nav-solid: 0 18px 64px rgba(37, 33, 25, 0.12);
+  --border-subtle: 1px solid
+    color-mix(in oklch, var(--color-ink-900) 12%, transparent);
+  --border-strong: 1px solid
+    color-mix(in oklch, var(--color-ink-900) 22%, transparent);
+  --border-inverse: 1px solid
+    color-mix(in oklch, var(--color-cream-80) 30%, transparent);
+  --border-glass: 1px solid
+    color-mix(in oklch, var(--color-cream-80) 44%, transparent);
+  --border-nav-inverse: 1px solid
+    color-mix(in oklch, var(--color-cream-80) 32%, transparent);
+  --shadow-soft: 0 32px 90px
+    color-mix(in oklch, var(--color-ink-900) 16%, transparent);
+  --shadow-card: 0 20px 50px
+    color-mix(in oklch, var(--color-ink-900) 10%, transparent);
+  --shadow-glass: 0 22px 70px
+    color-mix(in oklch, var(--color-ink-900) 18%, transparent);
+  --shadow-nav-solid: 0 18px 64px
+    color-mix(in oklch, var(--color-ink-900) 12%, transparent);
+  --shadow-text-hero: 0 0 2rem
+    color-mix(in oklch, var(--color-ink-980) 36%, transparent);
 
-  --radius-xs: 0.25rem;
-  --radius-sm: 0.5rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1.125rem;
+  --radius-xs: 0.375rem;
+  --radius-sm: 0.75rem;
+  --radius-md: 1.125rem;
+  --radius-lg: 1.6875rem;
   --radius-pill: 999px;
-  --radius-hero: 2rem;
+  --radius-hero: 3rem;
 
   --space-min: 0.25rem;
   --space-half: 0.5rem;
@@ -134,29 +219,86 @@
   --content-mobile-max: var(--content-sm);
   --section-padding-y: var(--space-lg);
   --section-padding-x: var(--space-base);
+  --shell-padding-x: var(--section-padding-x);
   --hero-shell-width: 95vw;
   --hero-shell-max: 96rem;
-  --hero-min-height: 86vh;
+  --hero-min-height: calc(var(--viewport-full) - var(--space-base));
+  --hero-shell-radius: var(--radius-md);
   --hero-padding: clamp(var(--space-lg), 6vw, calc(var(--space-lg) * 1.5));
   --hero-image-position: center center;
-  --hero-border: 1px solid rgba(255, 255, 255, 0.16);
-  --hero-shadow: 0 3rem 7rem rgba(36, 27, 21, 0.22);
+  --hero-border: 1px solid
+    color-mix(in oklch, var(--color-cream-80) 16%, transparent);
+  --hero-shadow: 0 3rem 7rem
+    color-mix(in oklch, var(--color-ink-900) 22%, transparent);
   --hero-overlay: linear-gradient(
     90deg,
-    rgba(24, 18, 14, 0.68) 0%,
-    rgba(24, 18, 14, 0.38) 34%,
-    rgba(24, 18, 14, 0.08) 62%,
-    rgba(24, 18, 14, 0) 100%
+    color-mix(in oklch, var(--color-ink-980) 74%, transparent) 0%,
+    color-mix(in oklch, var(--color-ink-900) 48%, transparent) 34%,
+    color-mix(in oklch, var(--color-copper-520) 16%, transparent) 62%,
+    transparent 100%
   );
   --hero-tint: linear-gradient(
     180deg,
-    rgba(185, 134, 85, 0.14),
-    rgba(24, 18, 14, 0.1)
+    color-mix(in oklch, var(--color-action-620) 14%, transparent),
+    color-mix(in oklch, var(--color-ink-900) 10%, transparent)
   );
   --promo-height: 2.25rem;
   --nav-height: 4.5rem;
   --nav-height-pdp: 5.625rem;
+  --nav-mobile-height: 9.75rem;
+  --nav-panel-radius: var(--radius-hero);
+  --nav-menu-panel-height: clamp(28rem, 50svh, 31rem);
+  --nav-menu-feature-min: 9rem;
+  --nav-menu-list-min: 4rem;
+  --nav-mobile-panel-max-height: calc(100svh - var(--nav-height) - var(--space-base));
+  --nav-menu-offset: calc(var(--nav-height) + var(--space-half));
   --nav-solid-offset: 7.5rem;
+  --nav-dropdown-surface: var(--surface-page-soft);
+  --nav-dropdown-surface-glow: radial-gradient(
+    circle at 24% 0%,
+    color-mix(in oklch, var(--color-action-620) 22%, transparent),
+    transparent 34%
+  );
+  --nav-dropdown-lead-overlay: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in oklch, var(--color-ink-980) 20%, transparent) 100%
+  );
+  --nav-dropdown-lead-surface: linear-gradient(
+    135deg,
+    color-mix(in oklch, var(--color-cream-260) 72%, var(--color-cream-80)),
+    color-mix(in oklch, var(--color-action-620) 30%, var(--color-cream-80))
+  );
+  --nav-card-surface: color-mix(
+    in oklch,
+    var(--color-cream-180) 56%,
+    var(--color-cream-80)
+  );
+  --nav-chip-surface: color-mix(
+    in oklch,
+    var(--color-cream-80) 72%,
+    transparent
+  );
+  --nav-chip-lead-surface: color-mix(
+    in oklch,
+    var(--color-cream-80) 88%,
+    transparent
+  );
+  --nav-chip-hover-surface: radial-gradient(
+      circle at 50% 0%,
+      var(--control-glow),
+      transparent 72%
+    ),
+    color-mix(in oklch, var(--color-action-620) 18%, var(--color-cream-80));
+  --nav-chip-hover-border: color-mix(
+    in oklch,
+    var(--color-action-620) 34%,
+    transparent
+  );
+  --nav-chip-hover-shadow: inset 0 0 0 var(--border-width-strong)
+      var(--control-glow-edge),
+    0 0 var(--control-glow-size)
+      color-mix(in oklch, var(--color-action-620) 10%, transparent);
   --button-min-height: 2.875rem;
   --media-section-min: 33.75rem;
   --media-card-min: 28.75rem;
@@ -165,13 +307,26 @@
   --card-min-lg: 18.75rem;
   --metric-dot-size: 0.625rem;
   --border-width-strong: 0.1875rem;
-  --focus-ring: 0 0 0 3px rgba(98, 115, 93, 0.32);
+  --focus-ring: 0 0 0 3px
+    color-mix(in oklch, var(--color-sage-500) 32%, transparent);
   --shadow-dot: 0 0 0 var(--space-half) var(--surface-warm);
+  --control-glow: color-mix(in oklch, var(--color-action-620) 44%, transparent);
+  --control-glow-edge: color-mix(in oklch, var(--color-cream-80) 8%, transparent);
+  --control-glow-size: 9rem;
   --blur-control: blur(18px) saturate(130%);
   --blur-glass: blur(26px) saturate(140%);
   --blur-nav-default: blur(28px) saturate(145%);
   --blur-nav-solid: blur(22px) saturate(150%);
-  --motion-fast: 160ms ease;
+  --motion-fast: 0ms;
+  --motion-reduced: 0.01ms;
+  --motion-nav-ui: 240ms;
+  --motion-nav-surface: 920ms;
+  --motion-nav: var(--motion-nav-ui);
+  --motion-nav-content: 220ms;
+  --motion-nav-content-delay: 0ms;
+  --motion-nav-close-delay: 140ms;
+  --motion-nav-switch: 120ms;
+  --motion-nav-ease: cubic-bezier(0.4, 0, 0.2, 1);
 
   --image-hero: url("../assets/buffit-hero-home-training.png");
   --image-brand-kit: none;

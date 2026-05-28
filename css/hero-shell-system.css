@@ -1,0 +1,35 @@
+/* Canonical BUFF IT hero frame contract. Loaded after page-level hero styles. */
+.hero,
+.pdp-hero-page .hero,
+body:not(.pdp-hero-page) .hero {
+  min-height: auto;
+  padding: 0 var(--shell-padding-x) var(--space-base);
+}
+
+.hero > .hero__stage,
+.pdp-hero-page .hero > .hero__stage,
+body:not(.pdp-hero-page) .hero > .hero__stage {
+  width: 100%;
+  max-width: var(--hero-shell-max);
+  min-height: var(--hero-min-height);
+  margin-inline: auto;
+  border: 0;
+  border-radius: 0 0 var(--hero-shell-radius) var(--hero-shell-radius);
+  box-shadow: var(--hero-shadow);
+  overflow: hidden;
+}
+
+.pdp-hero-page .hero__inner,
+body:not(.pdp-hero-page) .hero__inner {
+  min-height: var(--hero-min-height);
+  padding: var(--hero-padding);
+  padding-top: calc(var(--nav-height) + var(--space-lg));
+}
+
+@media (max-width: 48.75rem) {
+  .hero,
+  .pdp-hero-page .hero,
+  body:not(.pdp-hero-page) .hero {
+    padding: 0 var(--shell-padding-x) var(--space-base);
+  }
+}

@@ -1,8 +1,8 @@
-# YokhanFitness Token Table
+# BUFF IT Token Table
 
 Source of truth: `css/tokens.css`.
 
-This table is generated from the current light, warm, Oura-inspired token layer.
+Generated from the current warm wellness token layer. Color primitives use perceptual OKLCH values; derived surfaces use `color-mix(in oklch, ...)`.
 
 ## Typography
 
@@ -10,117 +10,225 @@ This table is generated from the current light, warm, Oura-inspired token layer.
 |---|---|
 | `--font-display` | `"Unbounded", sans-serif` |
 | `--font-body` | `"Golos Text", sans-serif` |
-| `--font-weight-light` | `300` |
-| `--font-weight-regular` | `400` |
-| `--font-weight-medium` | `500` |
-| `--font-weight-bold` | `700` |
-| `--text-xs` | `12px` |
-| `--text-sm` | `14px` |
-| `--text-md` | `16px` |
-| `--text-lg` | `18px` |
-| `--text-xl` | `22px` |
-| `--text-2xl` | `32px` |
-| `--text-3xl` | `46px` |
+| `--font-accent` | `Georgia, "Times New Roman", serif` |
+| `--font-weight-regular` | `350` |
+| `--font-weight-strong` | `600` |
+| `--text-xs` | `0.75rem` |
+| `--text-sm` | `0.875rem` |
+| `--text-md` | `1rem` |
+| `--text-lg` | `1.125rem` |
+| `--text-xl` | `2rem` |
+| `--text-2xl` | `3rem` |
 | `--line-tight` | `1.08` |
-| `--line-body` | `1.55` |
+| `--line-hero` | `1.08` |
+| `--line-body` | `1.5` |
 | `--letter-spacing-tight` | `0` |
 | `--letter-spacing-body` | `0` |
-| `--text-primary` | `var(--color-graphite-950)` |
-| `--text-secondary` | `var(--color-graphite-760)` |
-| `--text-muted` | `rgba(36, 33, 29, 0.58)` |
-| `--text-inverse` | `var(--color-ivory-100)` |
 
 ## Color Primitives
 
 | Token | Current value |
 |---|---|
-| `--color-graphite-950` | `#151411` |
-| `--color-graphite-900` | `#24211d` |
-| `--color-graphite-820` | `#3a352e` |
-| `--color-graphite-760` | `#574d43` |
-| `--color-ivory-100` | `#fbf7ef` |
-| `--color-ivory-240` | `#efe5d6` |
-| `--color-ivory-420` | `#c8b79f` |
-| `--color-moss-400` | `#24291f` |
-| `--color-moss-520` | `#4e6238` |
-| `--color-mineral-420` | `#667a78` |
-| `--color-clay-420` | `#a56f4e` |
-| `--color-rose-360` | `#b87a73` |
+| `--color-ink-980` | `oklch(15% 0.018 56)` |
+| `--color-ink-900` | `oklch(22% 0.026 56)` |
+| `--color-ink-760` | `oklch(39% 0.035 62)` |
+| `--color-ink-620` | `oklch(52% 0.04 66)` |
+| `--color-cream-80` | `oklch(97.5% 0.025 78)` |
+| `--color-cream-120` | `oklch(92.5% 0.034 76)` |
+| `--color-cream-180` | `oklch(88% 0.044 74)` |
+| `--color-cream-260` | `oklch(80% 0.052 72)` |
+| `--color-sage-500` | `oklch(55% 0.035 92)` |
+| `--color-moss-700` | `oklch(25% 0.03 65)` |
+| `--color-copper-520` | `oklch(62% 0.1 63)` |
+| `--color-berry-420` | `oklch(49% 0.055 34)` |
+| `--color-sky-420` | `oklch(58% 0.032 230)` |
+| `--color-action-520` | `oklch(62% 0.1 63)` |
+| `--color-action-620` | `oklch(72% 0.11 78)` |
 
 ## Semantic Surfaces
 
 | Token | Current value |
 |---|---|
-| `--surface-page` | `#eadfce` |
-| `--surface-panel` | `#f7efe4` |
-| `--surface-panel-strong` | `#fffaf2` |
-| `--surface-soft` | `rgba(36, 33, 29, 0.06)` |
-| `--surface-soft-strong` | `rgba(36, 33, 29, 0.1)` |
-| `--surface-accent` | `rgba(78, 98, 56, 0.12)` |
-| `--surface-warm` | `rgba(165, 111, 78, 0.14)` |
-| `--surface-mineral` | `rgba(102, 122, 120, 0.14)` |
-| `--surface-page-wash` | `rgba(255, 250, 242, 0.72)` |
-| `--surface-nav` | `rgba(234, 223, 206, 0.86)` |
-| `--section-wash-accent` | `rgba(78, 98, 56, 0.06)` |
-| `--section-wash-mineral` | `rgba(102, 122, 120, 0.08)` |
-| `--section-wash-warm` | `rgba(165, 111, 78, 0.08)` |
-| `--section-wash-cta` | `rgba(255, 250, 242, 0.72)` |
+| `--surface-page` | `var(--color-cream-120)` |
+| `--surface-page-soft` | `var(--color-cream-80)` |
+| `--surface-panel` | `var(--color-cream-80)` |
+| `--surface-panel-muted` | `var(--color-cream-180)` |
+| `--surface-panel-strong` | `var(--color-cream-80)` |
+| `--surface-ink` | `var(--color-ink-980)` |
+| `--surface-hero-product` | `linear-gradient( 135deg, var(--color-ink-980) 0%, var(--color-moss-700) 48%, var(--color-copper-520) 140% )` |
+| `--surface-soft` | `color-mix(in oklch, var(--color-ink-900) 6%, transparent)` |
+| `--surface-soft-strong` | `color-mix( in oklch, var(--color-ink-900) 11%, transparent )` |
+| `--surface-nav` | `color-mix(in oklch, var(--color-cream-80) 88%, transparent)` |
+| `--surface-glass` | `color-mix(in oklch, var(--color-cream-80) 72%, transparent)` |
+| `--surface-glass-strong` | `color-mix( in oklch, var(--color-cream-80) 86%, transparent )` |
+| `--surface-nav-glass` | `color-mix( in oklch, var(--color-cream-80) 70%, transparent )` |
+| `--surface-nav-dark` | `color-mix( in oklch, var(--color-ink-980) 20%, transparent )` |
+| `--media-wash-light` | `color-mix( in oklch, var(--color-cream-80) 88%, transparent )` |
+| `--media-wash-soft` | `color-mix( in oklch, var(--color-cream-80) 48%, transparent )` |
+| `--media-wash-hero` | `color-mix( in oklch, var(--color-cream-80) 10%, transparent )` |
+| `--surface-warm` | `color-mix(in oklch, var(--color-copper-520) 16%, transparent)` |
+| `--surface-warm-strong` | `color-mix( in oklch, var(--color-action-620) 24%, transparent )` |
+| `--surface-sage` | `color-mix(in oklch, var(--color-sage-500) 15%, transparent)` |
+| `--surface-sky` | `color-mix(in oklch, var(--color-sky-420) 14%, transparent)` |
+| `--surface-berry` | `color-mix(in oklch, var(--color-berry-420) 14%, transparent)` |
+| `--surface-inverse-soft` | `color-mix( in oklch, var(--color-cream-80) 10%, transparent )` |
+| `--media-overlay-soft` | `color-mix( in oklch, var(--color-ink-980) 17%, transparent )` |
+| `--media-overlay-strong` | `color-mix( in oklch, var(--color-ink-980) 40%, transparent )` |
+| `--media-overlay-deep` | `color-mix( in oklch, var(--color-ink-980) 72%, transparent )` |
+| `--media-overlay-hero` | `color-mix( in oklch, var(--color-copper-520) 12%, transparent )` |
+| `--promo-height` | `2.25rem` |
+| `--media-section-min` | `33.75rem` |
+| `--media-card-min` | `28.75rem` |
+| `--media-card-min-lg` | `38.75rem` |
 
-## Semantic Text And Accents
+## Text And Accents
 
 | Token | Current value |
 |---|---|
-| `--accent-primary` | `var(--color-moss-400)` |
-| `--accent-primary-strong` | `var(--color-moss-520)` |
-| `--accent-mineral` | `var(--color-mineral-420)` |
-| `--accent-warm` | `var(--color-clay-420)` |
-| `--accent-rose` | `var(--color-rose-360)` |
+| `--text-gradient-warm` | `linear-gradient( 118deg, var(--color-ink-980) 0%, var(--color-moss-700) 34%, var(--color-copper-520) 66%, var(--color-action-620) 100% )` |
+| `--text-gradient-hero` | `linear-gradient( 118deg, var(--color-cream-80) 0%, var(--color-action-620) 58%, var(--color-copper-520) 100% )` |
+| `--text-primary` | `var(--color-ink-980)` |
+| `--text-secondary` | `var(--color-ink-760)` |
+| `--text-muted` | `color-mix(in oklch, var(--color-ink-900) 58%, transparent)` |
+| `--text-inverse` | `var(--color-cream-80)` |
+| `--text-inverse-muted` | `color-mix( in oklch, var(--color-cream-80) 80%, transparent )` |
+| `--text-inverse-soft` | `color-mix( in oklch, var(--color-cream-80) 72%, transparent )` |
+| `--accent-primary` | `var(--color-ink-980)` |
+| `--accent-primary-strong` | `var(--color-moss-700)` |
+| `--accent-warm` | `var(--color-copper-520)` |
+| `--accent-sage` | `var(--color-sage-500)` |
+| `--accent-sky` | `var(--color-sky-420)` |
+| `--accent-berry` | `var(--color-berry-420)` |
+| `--accent-action` | `var(--color-action-520)` |
+| `--accent-action-strong` | `var(--color-action-620)` |
 
 ## Borders And Elevation
 
 | Token | Current value |
 |---|---|
-| `--border-subtle` | `1px solid rgba(36, 33, 29, 0.1)` |
-| `--border-strong` | `1px solid rgba(36, 33, 29, 0.18)` |
-| `--border-accent-hover` | `rgba(78, 98, 56, 0.38)` |
-| `--border-accent-muted` | `rgba(78, 98, 56, 0.24)` |
-| `--border-warm-muted` | `rgba(165, 111, 78, 0.28)` |
-| `--shadow-soft` | `0 28px 80px rgba(36, 33, 29, 0.16)` |
-| `--shadow-card` | `0 18px 44px rgba(36, 33, 29, 0.12)` |
+| `--border-subtle` | `1px solid color-mix(in oklch, var(--color-ink-900) 12%, transparent)` |
+| `--border-strong` | `1px solid color-mix(in oklch, var(--color-ink-900) 22%, transparent)` |
+| `--border-inverse` | `1px solid color-mix(in oklch, var(--color-cream-80) 30%, transparent)` |
+| `--border-glass` | `1px solid color-mix(in oklch, var(--color-cream-80) 44%, transparent)` |
+| `--border-nav-inverse` | `1px solid color-mix(in oklch, var(--color-cream-80) 32%, transparent)` |
+| `--shadow-soft` | `0 32px 90px color-mix(in oklch, var(--color-ink-900) 16%, transparent)` |
+| `--shadow-card` | `0 20px 50px color-mix(in oklch, var(--color-ink-900) 10%, transparent)` |
+| `--shadow-glass` | `0 22px 70px color-mix(in oklch, var(--color-ink-900) 18%, transparent)` |
+| `--shadow-nav-solid` | `0 18px 64px color-mix(in oklch, var(--color-ink-900) 12%, transparent)` |
+| `--shadow-text-hero` | `0 0 2rem color-mix(in oklch, var(--color-ink-980) 36%, transparent)` |
+| `--border-width-strong` | `0.1875rem` |
+| `--shadow-dot` | `0 0 0 var(--space-half) var(--surface-warm)` |
 
 ## Radius
 
 | Token | Current value |
 |---|---|
-| `--radius-xs` | `4px` |
-| `--radius-sm` | `8px` |
-| `--radius-md` | `12px` |
+| `--radius-xs` | `0.375rem` |
+| `--radius-sm` | `0.75rem` |
+| `--radius-md` | `1.125rem` |
+| `--radius-lg` | `1.6875rem` |
 | `--radius-pill` | `999px` |
+| `--radius-hero` | `3rem` |
 
 ## Spacing
 
 | Token | Current value |
 |---|---|
-| `--space-1` | `4px` |
-| `--space-2` | `8px` |
-| `--space-3` | `12px` |
-| `--space-4` | `16px` |
-| `--space-5` | `20px` |
-| `--space-6` | `24px` |
-| `--space-8` | `32px` |
-| `--space-10` | `40px` |
-| `--space-12` | `48px` |
-| `--space-16` | `64px` |
-| `--space-20` | `80px` |
+| `--space-min` | `0.25rem` |
+| `--space-half` | `0.5rem` |
+| `--space-base` | `1rem` |
+| `--space-1-5` | `1.5rem` |
+| `--space-2` | `2rem` |
+| `--space-lg` | `4rem` |
 
-## Layout And Motion
+## Layout And Sizing
 
 | Token | Current value |
 |---|---|
-| `--layout-max` | `1180px` |
-| `--section-padding-y` | `76px` |
-| `--section-padding-x` | `20px` |
-| `--nav-height` | `64px` |
-| `--button-min-height` | `48px` |
-| `--focus-ring` | `0 0 0 3px rgba(78, 98, 56, 0.28)` |
-| `--motion-fast` | `160ms ease` |
+| `--content-xs` | `16.25rem` |
+| `--content-sm` | `21.25rem` |
+| `--content-md` | `28.75rem` |
+| `--content-card` | `24.375rem` |
+| `--content-lg` | `47.5rem` |
+| `--content-xl` | `57.5rem` |
+| `--content-2xl` | `77.5rem` |
+| `--viewport-min` | `20rem` |
+| `--viewport-full` | `100svh` |
+| `--layout-max` | `var(--content-2xl)` |
+| `--layout-frame-inset` | `1.25rem` |
+| `--content-mobile-max` | `var(--content-sm)` |
+| `--section-padding-y` | `var(--space-lg)` |
+| `--section-padding-x` | `var(--space-base)` |
+| `--shell-padding-x` | `var(--section-padding-x)` |
+| `--hero-shell-width` | `95vw` |
+| `--hero-shell-max` | `96rem` |
+| `--hero-min-height` | `calc(var(--viewport-full) - var(--space-base))` |
+| `--hero-padding` | `clamp(var(--space-lg), 6vw, calc(var(--space-lg) * 1.5))` |
+| `--hero-image-position` | `center center` |
+| `--hero-border` | `1px solid color-mix(in oklch, var(--color-cream-80) 16%, transparent)` |
+| `--hero-shadow` | `0 3rem 7rem color-mix(in oklch, var(--color-ink-900) 22%, transparent)` |
+| `--hero-overlay` | `linear-gradient( 90deg, color-mix(in oklch, var(--color-ink-980) 74%, transparent) 0%, color-mix(in oklch, var(--color-ink-900) 48%, transparent) 34%, color-mix(in oklch, var(--color-copper-520) 16%, transparent) 62%, transparent 100% )` |
+| `--hero-tint` | `linear-gradient( 180deg, color-mix(in oklch, var(--color-action-620) 14%, transparent), color-mix(in oklch, var(--color-ink-900) 10%, transparent) )` |
+| `--nav-height` | `4.5rem` |
+| `--nav-height-pdp` | `5.625rem` |
+| `--nav-mobile-height` | `9.75rem` |
+| `--nav-panel-radius` | `var(--radius-hero)` |
+| `--nav-menu-panel-height` | `clamp(28rem, 50svh, 31rem)` |
+| `--nav-menu-feature-min` | `9rem` |
+| `--nav-menu-list-min` | `4rem` |
+| `--nav-mobile-panel-max-height` | `calc(100svh - var(--nav-height) - var(--space-base))` |
+| `--nav-menu-offset` | `calc(var(--nav-height) + var(--space-half))` |
+| `--nav-solid-offset` | `7.5rem` |
+| `--nav-dropdown-surface` | `var(--surface-page-soft)` |
+| `--nav-dropdown-surface-glow` | `radial-gradient(circle at 24% 0%, color-mix(in oklch, var(--color-action-620) 22%, transparent), transparent 34%)` |
+| `--nav-dropdown-lead-overlay` | `linear-gradient(180deg, transparent 0%, color-mix(in oklch, var(--color-ink-980) 20%, transparent) 100%)` |
+| `--nav-dropdown-lead-surface` | `linear-gradient(135deg, color-mix(in oklch, var(--color-cream-260) 72%, var(--color-cream-80)), color-mix(in oklch, var(--color-action-620) 30%, var(--color-cream-80)))` |
+| `--nav-card-surface` | `color-mix(in oklch, var(--color-cream-180) 56%, var(--color-cream-80))` |
+| `--nav-chip-surface` | `color-mix(in oklch, var(--color-cream-80) 72%, transparent)` |
+| `--nav-chip-lead-surface` | `color-mix(in oklch, var(--color-cream-80) 88%, transparent)` |
+| `--nav-chip-hover-surface` | `radial-gradient(circle at 50% 0%, var(--control-glow), transparent 72%), color-mix(in oklch, var(--color-action-620) 18%, var(--color-cream-80))` |
+| `--nav-chip-hover-border` | `color-mix(in oklch, var(--color-action-620) 34%, transparent)` |
+| `--nav-chip-hover-shadow` | `inset 0 0 0 var(--border-width-strong) var(--control-glow-edge), 0 0 var(--control-glow-size) color-mix(in oklch, var(--color-action-620) 10%, transparent)` |
+| `--button-min-height` | `2.875rem` |
+| `--card-min` | `14.375rem` |
+| `--card-min-lg` | `18.75rem` |
+| `--metric-dot-size` | `0.625rem` |
+| `--section-padding-y` | `calc(var(--space-lg) * 1.5)` |
+| `--section-padding-x` | `var(--space-2)` |
+
+## Effects And Motion
+
+| Token | Current value |
+|---|---|
+| `--focus-ring` | `0 0 0 3px color-mix(in oklch, var(--color-sage-500) 32%, transparent)` |
+| `--blur-control` | `blur(18px) saturate(130%)` |
+| `--blur-glass` | `blur(26px) saturate(140%)` |
+| `--blur-nav-default` | `blur(28px) saturate(145%)` |
+| `--blur-nav-solid` | `blur(22px) saturate(150%)` |
+| `--control-glow` | `color-mix(in oklch, var(--color-action-620) 44%, transparent)` |
+| `--control-glow-edge` | `color-mix(in oklch, var(--color-cream-80) 8%, transparent)` |
+| `--control-glow-size` | `9rem` |
+| `--motion-fast` | `0ms` |
+| `--motion-reduced` | `0.01ms` |
+| `--motion-nav-ui` | `240ms` |
+| `--motion-nav-surface` | `920ms` |
+| `--motion-nav` | `var(--motion-nav-ui)` |
+| `--motion-nav-content` | `220ms` |
+| `--motion-nav-content-delay` | `0ms` |
+| `--motion-nav-close-delay` | `140ms` |
+| `--motion-nav-switch` | `120ms` |
+| `--motion-nav-ease` | `cubic-bezier(0.4, 0, 0.2, 1)` |
+
+## Images
+
+| Token | Current value |
+|---|---|
+| `--image-hero` | `url("../assets/buffit-hero-home-training.png")` |
+| `--image-brand-kit` | `none` |
+| `--image-fitness` | `url("https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1400&q=80")` |
+| `--image-health` | `url("https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1400&q=80")` |
+| `--image-method` | `url("https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&w=2200&q=80")` |
+| `--image-women` | `url("https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1400&q=80")` |
+| `--image-men` | `url("https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=1400&q=80")` |
+| `--image-food` | `url("https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1400&q=80")` |
+| `--image-calls` | `url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80")` |

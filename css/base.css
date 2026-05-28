@@ -69,6 +69,7 @@ a {
 
 .eyebrow {
   color: var(--accent-warm);
+  font-family: var(--font-display);
   font-size: var(--text-xs);
   font-weight: var(--font-weight-strong);
   text-transform: uppercase;
@@ -126,16 +127,7 @@ a {
   transition:
     background-color var(--motion-fast),
     border-color var(--motion-fast),
-    box-shadow var(--motion-fast),
-    transform var(--motion-fast);
-}
-
-.btn:hover {
-  transform: translateY(-1px);
-}
-
-.btn:active {
-  transform: translateY(0);
+    box-shadow var(--motion-fast);
 }
 
 .btn:focus-visible,
@@ -185,6 +177,6 @@ a {
   *::before,
   *::after {
     scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
+    transition-duration: var(--motion-reduced) !important;
   }
 }

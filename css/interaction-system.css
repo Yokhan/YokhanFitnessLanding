@@ -1,0 +1,54 @@
+.btn,
+.nav__cta {
+  --pointer-x: 50%;
+  --pointer-y: 50%;
+  --control-glow-opacity: 0;
+  isolation: isolate;
+  overflow: hidden;
+  position: relative;
+  transform: none;
+}
+
+.btn::before,
+.nav__cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(
+    circle var(--control-glow-size) at var(--pointer-x) var(--pointer-y),
+    var(--control-glow) 0%,
+    var(--control-glow-edge) 48%,
+    transparent 78%
+  );
+  opacity: var(--control-glow-opacity);
+  pointer-events: none;
+}
+
+.btn:hover,
+.btn:focus-visible,
+.nav__cta:hover,
+.nav__cta:focus-visible {
+  --control-glow-opacity: 1;
+}
+
+.btn > *,
+.nav__cta > * {
+  position: relative;
+  z-index: 1;
+}
+
+.btn:hover,
+.btn:active,
+.nav__cta:hover,
+.nav__cta:active,
+.nav__link:hover,
+.product-card:hover,
+.benefit-card:hover,
+.pathway-card:hover,
+.service-card:hover,
+.link-card:hover,
+.route-card:hover,
+.route-mini a:hover {
+  transform: none;
+}
